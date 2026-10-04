@@ -1,0 +1,295 @@
+{
+  "groundnut": {
+    "name": "Groundnut",
+    "guj": "મગફળી",
+    "emoji": "🥜",
+    "unit": "kg",
+    "priceHint": "₹58–₹72 / kg (Rajkot mandi indicative)",
+    "priceHintGuj": "₹58–₹72 / કિ.ગ્રા. (રાજકોટ મંડી — સૂચક ભાવ)",
+    "grades": [
+      { "value": "bold-4050", "label": "Bold 40/50 Count", "guj": "બોલ્ડ 40/50" },
+      { "value": "bold-5060", "label": "Bold 50/60 Count", "guj": "બોલ્ડ 50/60" },
+      { "value": "java-6070", "label": "Java 60/70 Count", "guj": "જાવા 60/70" },
+      { "value": "tj11", "label": "TJ-11 Bold", "guj": "TJ-11 બોલ્ડ" },
+      { "value": "domestic", "label": "Domestic / Oil Grade", "guj": "ઘરેલુ / તેલ ગ્રેડ" }
+    ],
+    "specs": [
+      { "key": "moisture", "label": "Moisture (%)", "guj": "ભેજ (%)", "type": "select", "options": ["Max 7%", "Max 8%", "Max 9%"] },
+      { "key": "oilContent", "label": "Oil Content (%)", "guj": "તેલ ટકા", "type": "select", "options": ["44–46%", "46–48%", "48%+"] },
+      { "key": "aflatoxin", "label": "Aflatoxin Level", "guj": "અફ્લાટોક્સિન", "type": "select", "options": ["Below 4 ppb (EU Export)", "Below 10 ppb (USA)", "Domestic Standard"] },
+      { "key": "processing", "label": "Processing", "guj": "પ્રોસેસિંગ", "type": "select", "options": ["Raw", "Machine Sorted", "Sortex Cleaned", "Vacuum Packed"] }
+    ],
+    "packaging": ["25 kg Vacuum Bags", "50 kg Jute Bags", "Bulk / Loose"],
+    "moq": "500 kg",
+    "exportReady": true,
+    "varieties": ["GG-20", "TJ-11", "Kadiri-6", "TAG-24"],
+    "certifications": ["FSSAI", "Phytosanitary", "Aflatoxin Lab Report", "Organic (if applicable)"]
+  },
+  "jeera": {
+    "name": "Jeera (Cumin)",
+    "guj": "જીરું",
+    "emoji": "🌿",
+    "unit": "kg",
+    "priceHint": "₹290–₹360 / kg (Unjha mandi indicative)",
+    "priceHintGuj": "₹290–₹360 / કિ.ગ્રા. (ઉંઝા મંડી — સૂચક ભાવ)",
+    "grades": [
+      { "value": "premium-bold", "label": "Premium Bold (Singapore Quality)", "guj": "પ્રીમિયમ બોલ્ડ" },
+      { "value": "machine-clean", "label": "Machine Cleaned (99.5%)", "guj": "મશીન સ્વચ્છ" },
+      { "value": "sortex", "label": "Sortex Cleaned (99%)", "guj": "સૉર્ટેક્સ" },
+      { "value": "faq", "label": "FAQ (Fair Average Quality)", "guj": "FAQ ગ્રેડ" }
+    ],
+    "specs": [
+      { "key": "purity", "label": "Purity (%)", "guj": "શુદ્ધતા (%)", "type": "select", "options": ["99.5%+", "99%", "98%", "97%"] },
+      { "key": "moisture", "label": "Moisture (%)", "guj": "ભેજ (%)", "type": "select", "options": ["Max 7%", "Max 8%", "Max 9%"] },
+      { "key": "volatileOil", "label": "Volatile Oil (%)", "guj": "વૉલેટાઇલ ઓઇલ", "type": "select", "options": ["2.5%+", "2.0–2.5%", "Below 2.0%"] },
+      { "key": "origin", "label": "Origin", "guj": "ઉત્પત્તિ", "type": "select", "options": ["Unjha", "Mehsana", "Patan", "Banaskantha", "Other Gujarat"] }
+    ],
+    "packaging": ["50 kg PP Bags", "25 kg Paper Sacks", "50 kg Jute Bags"],
+    "moq": "500 kg",
+    "exportReady": true,
+    "varieties": ["Unjha Premium", "Guj Jeera-1", "RZ-19"],
+    "certifications": ["FSSAI", "Phytosanitary", "APEDA Spice Registration", "Organic (if applicable)"]
+  },
+  "sesame": {
+    "name": "Sesame (Til)",
+    "guj": "તલ",
+    "emoji": "🌿",
+    "unit": "kg",
+    "priceHint": "₹148–₹175 / kg (Rajkot mandi indicative)",
+    "priceHintGuj": "₹148–₹175 / કિ.ગ્રા. (રાજકોટ મંડી — સૂચક ભાવ)",
+    "grades": [
+      { "value": "natural-white-99", "label": "Natural White 99/1", "guj": "સફેદ 99/1" },
+      { "value": "natural-white-995", "label": "Natural White 99.5/0.5", "guj": "સફેદ 99.5" },
+      { "value": "hulled", "label": "Hulled Sesame (99%)", "guj": "હલ્ડ (છોલ્યા)" },
+      { "value": "black", "label": "Black Sesame", "guj": "કાળા તલ" }
+    ],
+    "specs": [
+      { "key": "moisture", "label": "Moisture (%)", "guj": "ભેજ (%)", "type": "select", "options": ["Max 5%", "Max 6%", "Max 7%"] },
+      { "key": "oilContent", "label": "Oil Content (%)", "guj": "તેલ ટકા", "type": "select", "options": ["50%+", "48–50%", "46–48%"] },
+      { "key": "ffa", "label": "FFA (%)", "guj": "FFA", "type": "select", "options": ["Max 1.5%", "Max 2%", "Max 3%"] },
+      { "key": "processing", "label": "Processing", "guj": "પ્રોસેસિંગ", "type": "select", "options": ["Sortex Cleaned", "Hand Cleaned", "Machine Cleaned"] }
+    ],
+    "packaging": ["25 kg Bags with Inner Poly Liner", "50 kg Jute Bags", "20 kg Bags"],
+    "moq": "1 MT",
+    "exportReady": true,
+    "varieties": ["Gujarat Til-1", "GT-2", "GT-10", "Purva"],
+    "certifications": ["FSSAI", "Phytosanitary", "Organic (if applicable)", "Non-GMO Certificate"]
+  },
+  "castor": {
+    "name": "Castor Seeds",
+    "guj": "એરંડા",
+    "emoji": "🌱",
+    "unit": "kg",
+    "priceHint": "₹108–₹128 / kg (Deesa mandi indicative)",
+    "priceHintGuj": "₹108–₹128 / કિ.ગ્રા. (ડીસા મંડી — સૂચક ભાવ)",
+    "grades": [
+      { "value": "faq", "label": "FAQ (Fair Average Quality)", "guj": "FAQ ગ્રેડ" },
+      { "value": "bold-high-oil", "label": "Bold High Oil (49%+)", "guj": "બોલ્ડ હાઈ-ઓઇલ" },
+      { "value": "new-crop", "label": "New Crop", "guj": "નવો પાક" }
+    ],
+    "specs": [
+      { "key": "oilContent", "label": "Oil Content (%)", "guj": "તેલ ટકા", "type": "select", "options": ["49%+", "48–49%", "47–48%", "Below 47%"] },
+      { "key": "moisture", "label": "Moisture (%)", "guj": "ભેજ (%)", "type": "select", "options": ["Max 6%", "Max 6.5%", "Max 7%"] },
+      { "key": "foreignMatter", "label": "Foreign Matter (%)", "guj": "ભેળ-સેળ (%)", "type": "select", "options": ["Max 0.5%", "Max 1%", "Max 1.5%"] },
+      { "key": "variety", "label": "Variety", "guj": "જાત", "type": "select", "options": ["GCH-4", "GCH-7", "Jwala", "Aruna", "Other"] }
+    ],
+    "packaging": ["Gunny Bags (50 kg)", "Loose Truck Load"],
+    "moq": "1 MT",
+    "exportReady": false,
+    "varieties": ["GCH-4", "GCH-7", "Jwala", "Aruna"],
+    "certifications": ["FSSAI", "Oil Content Lab Report"]
+  },
+  "isabgol": {
+    "name": "Isabgol (Psyllium)",
+    "guj": "ઈસબગોળ",
+    "emoji": "🌾",
+    "unit": "kg",
+    "priceHint": "₹125–₹165 / kg (Unjha mandi indicative)",
+    "priceHintGuj": "₹125–₹165 / કિ.ગ્રા. (ઉંઝા — સૂચક ભાવ)",
+    "grades": [
+      { "value": "husk-99", "label": "Husk 99% Purity", "guj": "ભૂસી 99%" },
+      { "value": "husk-85", "label": "Husk 85% Purity", "guj": "ભૂસી 85%" },
+      { "value": "seed", "label": "Whole Seed (Biji)", "guj": "આખી બીજ" },
+      { "value": "powder", "label": "Powder Grade", "guj": "પાવડર" }
+    ],
+    "specs": [
+      { "key": "purity", "label": "Husk Purity (%)", "guj": "ભૂસી શુદ્ધતા", "type": "select", "options": ["99%+", "98%", "95%", "85%"] },
+      { "key": "swellingFactor", "label": "Swelling Factor (ml/g)", "guj": "સ્વેલિંગ ફૅક્ટર", "type": "select", "options": ["45+", "40–45", "35–40"] },
+      { "key": "moisture", "label": "Moisture (%)", "guj": "ભેજ (%)", "type": "select", "options": ["Max 8%", "Max 10%", "Max 12%"] }
+    ],
+    "packaging": ["25 kg Bags", "20 kg Bags", "1 kg Consumer Packs (MOQ 500 kg)"],
+    "moq": "500 kg",
+    "exportReady": true,
+    "varieties": ["Gujarat Isabgol-2", "HI-75"],
+    "certifications": ["FSSAI", "Phytosanitary", "IP Non-GMO", "EU Organic (if applicable)"]
+  },
+  "cotton": {
+    "name": "Cotton (Kapas)",
+    "guj": "કપાસ",
+    "emoji": "🌸",
+    "unit": "kg",
+    "priceHint": "₹56–₹68 / kg kapas (Rajkot indicative)",
+    "priceHintGuj": "₹56–₹68 / કિ.ગ્રા. (રાજકોટ — સૂચક ભાવ)",
+    "grades": [
+      { "value": "shankar6-29mm", "label": "Shankar-6 (29mm Staple)", "guj": "શંકર-6" },
+      { "value": "shankar6-30mm", "label": "Shankar-6 (30mm+ Long Staple)", "guj": "શંકર-6 લૉન્ગ" },
+      { "value": "dch32", "label": "DCH-32 Long Staple", "guj": "DCH-32" },
+      { "value": "bt-medium", "label": "BT Cotton Medium Staple", "guj": "BT મધ્યમ" }
+    ],
+    "specs": [
+      { "key": "stapleLenght", "label": "Staple Length (mm)", "guj": "સ્ટેપલ લંબાઈ", "type": "select", "options": ["30mm+", "28–30mm", "25–28mm"] },
+      { "key": "moisture", "label": "Moisture (%)", "guj": "ભેજ (%)", "type": "select", "options": ["Max 8%", "Max 10%", "Max 12%"] },
+      { "key": "ginnigOutturn", "label": "Ginning Outturn (%)", "guj": "જિનિંગ આઉટ-ટર્ન", "type": "select", "options": ["38%+", "36–38%", "34–36%"] },
+      { "key": "trash", "label": "Trash Content (%)", "guj": "ટ્રૅશ (%)", "type": "select", "options": ["Max 2%", "Max 3%", "Max 4%"] }
+    ],
+    "packaging": ["Loose Kapas (Truck)", "50 kg Gunny Bags"],
+    "moq": "5 MT",
+    "exportReady": false,
+    "varieties": ["Shankar-6", "DCH-32", "NHH-44", "BCH-3"],
+    "certifications": ["CCI Quality Certificate", "Ginning Outturn Lab Report"]
+  },
+  "kesar-mango": {
+    "name": "Kesar Mango (GI Tagged)",
+    "guj": "કેસર કેરી",
+    "emoji": "🥭",
+    "unit": "kg",
+    "priceHint": "₹160–₹220 / kg (Junagadh peak season indicative)",
+    "priceHintGuj": "₹160–₹220 / કિ.ગ્રા. (જૂનાગઢ — સૂચક ભાવ)",
+    "grades": [
+      { "value": "export-a", "label": "Export Grade A (220–300g per fruit)", "guj": "નિકાસ ગ્રેડ A" },
+      { "value": "export-b", "label": "Export Grade B (180–220g per fruit)", "guj": "નિકાસ ગ્રેડ B" },
+      { "value": "domestic-premium", "label": "Domestic Premium", "guj": "ઘરેલુ પ્રીમિયમ" },
+      { "value": "processing", "label": "Processing Grade", "guj": "પ્રોસેસિંગ" }
+    ],
+    "specs": [
+      { "key": "brix", "label": "Sugar Content (Brix°)", "guj": "ખાંડ (Brix°)", "type": "select", "options": ["22°+", "20–22°", "18–20°", "Below 18°"] },
+      { "key": "weight", "label": "Average Fruit Weight", "guj": "ફળ વજન", "type": "select", "options": ["250–300g", "220–250g", "180–220g", "Below 180g"] },
+      { "key": "treatment", "label": "Treatment", "guj": "સારવાર", "type": "select", "options": ["Hot Water Treated (APEDA)", "Vapour Heat Treated", "Untreated (Domestic Only)"] },
+      { "key": "giTag", "label": "GI Tag Certified", "guj": "GI ટૅગ", "type": "select", "options": ["Yes – GI Registered", "No – Similar variety"] }
+    ],
+    "packaging": ["3 kg CFB Cartons (Export)", "5 kg CFB Boxes (Export)", "10 kg Local Crates"],
+    "moq": "500 kg",
+    "exportReady": true,
+    "varieties": ["Gir Kesar", "Talala Kesar"],
+    "certifications": ["GI Tag Certificate", "Phytosanitary", "APEDA Packhouse Approval", "HWT Certificate"]
+  },
+  "banana": {
+    "name": "Banana (Kela)",
+    "guj": "કેળા",
+    "emoji": "🍌",
+    "unit": "kg",
+    "priceHint": "₹18–₹32 / kg (Anand/Surat mandi indicative)",
+    "priceHintGuj": "₹18–₹32 / કિ.ગ્રા. (આણંદ/સુરત — સૂચક ભાવ)",
+    "grades": [
+      { "value": "export-a", "label": "Export Grade A (18–22cm finger)", "guj": "નિકાસ ગ્રેડ A" },
+      { "value": "export-b", "label": "Export Grade B", "guj": "નિકાસ ગ્રેડ B" },
+      { "value": "domestic", "label": "Domestic Grade", "guj": "ઘરેલુ" }
+    ],
+    "specs": [
+      { "key": "variety", "label": "Variety", "guj": "જાત", "type": "select", "options": ["Grand Naine (Cavendish)", "Robusta", "Dwarf Cavendish", "Nendran", "Red Banana"] },
+      { "key": "fingerLength", "label": "Finger Length (cm)", "guj": "આંગળી લંબાઈ", "type": "select", "options": ["18–22 cm", "15–18 cm", "Below 15 cm"] },
+      { "key": "maturity", "label": "Maturity Stage", "guj": "પક્વતા", "type": "select", "options": ["75% (export)", "Full Green (domestic)", "Ready to ripen"] }
+    ],
+    "packaging": ["13 kg CFB Boxes (Export)", "15 kg Local Crates", "Bulk Cluster"],
+    "moq": "500 kg",
+    "exportReady": true,
+    "varieties": ["Grand Naine", "Robusta", "Dwarf Cavendish"],
+    "certifications": ["Phytosanitary", "Pesticide Residue Test (for export)"]
+  },
+  "onion": {
+    "name": "Onion (Dungri)",
+    "guj": "ડુંગળી",
+    "emoji": "🧅",
+    "unit": "kg",
+    "priceHint": "₹18–₹38 / kg (Mahuva/Bhavnagar indicative)",
+    "priceHintGuj": "₹18–₹38 / કિ.ગ્રા. (મહુવા/ભાવનગર — સૂચક ભાવ)",
+    "grades": [
+      { "value": "export-a", "label": "Export Grade A (60mm+)", "guj": "નિકાસ A (60mm+)" },
+      { "value": "medium-b", "label": "Grade B (40–60mm)", "guj": "B (40–60mm)" },
+      { "value": "small-c", "label": "Grade C (Small, <40mm)", "guj": "C (<40mm)" }
+    ],
+    "specs": [
+      { "key": "size", "label": "Size (mm diameter)", "guj": "કદ (mm)", "type": "select", "options": ["70mm+", "60–70mm", "50–60mm", "40–50mm", "Below 40mm"] },
+      { "key": "moisture", "label": "Moisture (%)", "guj": "ભેજ (%)", "type": "select", "options": ["Max 80%", "Max 85%", "Max 88%"] },
+      { "key": "variety", "label": "Variety", "guj": "જાત", "type": "select", "options": ["Gujarat Red", "Nashik Red", "Bellary Red", "White Onion"] },
+      { "key": "dryNeck", "label": "Neck Condition", "guj": "ડોક", "type": "select", "options": ["Fully Dry Neck", "Semi-dry"] }
+    ],
+    "packaging": ["25 kg Mesh Bags", "50 kg Jute Bags", "20 kg Net Bags"],
+    "moq": "5 MT",
+    "exportReady": true,
+    "varieties": ["Gujarat Red", "Nashik Red", "Bellary", "White"],
+    "certifications": ["Phytosanitary", "Pesticide MRL Test"]
+  },
+  "garlic": {
+    "name": "Garlic (Lasan)",
+    "guj": "લસણ",
+    "emoji": "🧄",
+    "unit": "kg",
+    "priceHint": "₹80–₹140 / kg (Gondal/Rajkot mandi indicative)",
+    "priceHintGuj": "₹80–₹140 / કિ.ગ્રા. (ગોંડલ/રાજકોટ — સૂચક ભાવ)",
+    "grades": [
+      { "value": "export-sortex", "label": "Export Sortex (40mm+)", "guj": "નિકાસ સૉર્ટેક્સ" },
+      { "value": "medium", "label": "Medium (25–40mm)", "guj": "મધ્યમ" },
+      { "value": "small", "label": "Small (<25mm)", "guj": "નાનું" }
+    ],
+    "specs": [
+      { "key": "bulbSize", "label": "Bulb Size (mm)", "guj": "ડૂંડ કદ", "type": "select", "options": ["50mm+", "40–50mm", "30–40mm", "25–30mm"] },
+      { "key": "moisture", "label": "Moisture (%)", "guj": "ભેજ (%)", "type": "select", "options": ["Max 60%", "Max 65%", "Max 70%"] },
+      { "key": "variety", "label": "Variety", "guj": "જાત", "type": "select", "options": ["Desi (Local)", "Hybrid G-1", "G-3", "G-313"] },
+      { "key": "sheathing", "label": "Sheathing", "guj": "પડ", "type": "select", "options": ["Fully sheathed", "Partially sheathed"] }
+    ],
+    "packaging": ["10 kg Mesh Bags", "20 kg Bags", "5 kg Export Cartons"],
+    "moq": "1 MT",
+    "exportReady": true,
+    "varieties": ["G-1", "G-3", "G-313", "Desi"],
+    "certifications": ["Phytosanitary", "Pesticide MRL Test", "APEDA Registration"]
+  },
+  "wheat": {
+    "name": "Wheat (Ghau)",
+    "guj": "ઘઉં",
+    "emoji": "🌾",
+    "unit": "kg",
+    "priceHint": "₹22–₹27 / kg (Rajkot/Ahmedabad indicative)",
+    "priceHintGuj": "₹22–₹27 / કિ.ગ્રા. (રાજકોટ/અમદાવાદ — સૂચક ભાવ)",
+    "grades": [
+      { "value": "sharbati", "label": "Sharbati (Premium)", "guj": "શરબતી" },
+      { "value": "bold-faq", "label": "Bold FAQ (60g TKW+)", "guj": "બોલ્ડ FAQ" },
+      { "value": "standard", "label": "Standard Grade", "guj": "સ્ટાન્ડર્ડ" },
+      { "value": "feed", "label": "Feed / Mill Grade", "guj": "ફીડ / મિલ" }
+    ],
+    "specs": [
+      { "key": "moisture", "label": "Moisture (%)", "guj": "ભેજ (%)", "type": "select", "options": ["Max 10%", "Max 12%", "Max 14%"] },
+      { "key": "protein", "label": "Protein Content (%)", "guj": "પ્રોટીન (%)", "type": "select", "options": ["12%+", "11–12%", "10–11%"] },
+      { "key": "tkw", "label": "1000 Kernel Weight (g)", "guj": "1000 દાણા વજન", "type": "select", "options": ["65g+", "60–65g", "55–60g"] },
+      { "key": "variety", "label": "Variety", "guj": "જાત", "type": "select", "options": ["GW-322", "GW-496", "Lok-1", "Raj-3765", "Sharbati"] }
+    ],
+    "packaging": ["50 kg Jute Bags", "50 kg HDPE Bags", "Bulk Truck"],
+    "moq": "5 MT",
+    "exportReady": false,
+    "varieties": ["GW-322", "GW-496", "Lok-1", "Sharbati"],
+    "certifications": ["FSSAI", "FCI Quality Standards", "Pesticide Residue Report"]
+  },
+  "bajra": {
+    "name": "Bajra (Pearl Millet)",
+    "guj": "બાજરો",
+    "emoji": "🌾",
+    "unit": "kg",
+    "priceHint": "₹20–₹25 / kg (Surendranagar/Rajkot indicative)",
+    "priceHintGuj": "₹20–₹25 / કિ.ગ્રા. (સુરેન્દ્રનગર/રાજકોટ — સૂચક ભાવ)",
+    "grades": [
+      { "value": "bold", "label": "Bold Grade", "guj": "બોલ્ડ" },
+      { "value": "faq", "label": "FAQ", "guj": "FAQ" },
+      { "value": "feed", "label": "Animal Feed Grade", "guj": "ફીડ" }
+    ],
+    "specs": [
+      { "key": "moisture", "label": "Moisture (%)", "guj": "ભેજ (%)", "type": "select", "options": ["Max 10%", "Max 12%", "Max 14%"] },
+      { "key": "purity", "label": "Purity (%)", "guj": "શુદ્ધતા (%)", "type": "select", "options": ["98%+", "96–98%", "94–96%"] },
+      { "key": "variety", "label": "Variety", "guj": "જાત", "type": "select", "options": ["GHB-719", "GHB-558", "HHB-67", "Raj-171"] }
+    ],
+    "packaging": ["50 kg Jute Bags", "50 kg HDPE Bags", "Bulk"],
+    "moq": "5 MT",
+    "exportReady": false,
+    "varieties": ["GHB-719", "GHB-558", "HHB-67"],
+    "certifications": ["FSSAI", "Pesticide Residue Report"]
+  }
+}
