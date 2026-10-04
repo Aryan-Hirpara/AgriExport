@@ -13,21 +13,21 @@ import cropAttributes from '../../data/crop_attributes.json';
 const STEPS = ['Crop', 'Specs', 'Qty & Target Price', 'Destination & Terms', 'Preview'];
 
 const DESTINATIONS = [
-  { country: 'UAE (Dubai)', flag: '🇦🇪', guj: 'યુ.એ.ઇ. (દુબઈ)' },
-  { country: 'UK (London)', flag: '🇬🇧', guj: 'યુકે (લંડન)' },
-  { country: 'Vietnam', flag: '🇻🇳', guj: 'વિયેટનામ' },
-  { country: 'USA', flag: '🇺🇸', guj: 'યુ.એસ.એ.' },
-  { country: 'South Korea', flag: '🇰🇷', guj: 'દક્ષિણ કોરિયા' },
-  { country: 'Saudi Arabia', flag: '🇸🇦', guj: 'સાઉદી અરેબિયા' },
-  { country: 'Germany', flag: '🇩🇪', guj: 'જર્મની' },
-  { country: 'Japan', flag: '🇯🇵', guj: 'જાપાન' },
-  { country: 'Domestic (India)', flag: '🇮🇳', guj: 'ભારત (ઘરેલુ)' },
+  { country: 'UAE (Dubai)', flag: '🇦🇪' },
+  { country: 'UK (London)', flag: '🇬🇧' },
+  { country: 'Vietnam', flag: '🇻🇳' },
+  { country: 'USA', flag: '🇺🇸' },
+  { country: 'South Korea', flag: '🇰🇷' },
+  { country: 'Saudi Arabia', flag: '🇸🇦' },
+  { country: 'Germany', flag: '🇩🇪' },
+  { country: 'Japan', flag: '🇯🇵' },
+  { country: 'Domestic (India)', flag: '🇮🇳' },
 ];
 
 const DELIVERY_MODES = [
-  { id: 'Ex-Farm Pickup', label: 'Ex-Farm Pickup', guj: 'ખેતરેથી પિકઅપ', icon: '🚜' },
-  { id: 'Mandi / Yard Delivery', label: 'Mandi / Yard Delivery', guj: 'મંડી / યાર્ડ ડિલિવરી', icon: '🚚' },
-  { id: 'Port CFS / FOB Delivery', label: 'Port CFS / FOB Delivery', guj: 'પોર્ટ CFS ડિલિવરી', icon: '🚢' },
+  { id: 'Ex-Farm Pickup', label: 'Ex-Farm Pickup', icon: '🚜' },
+  { id: 'Mandi / Yard Delivery', label: 'Mandi / Yard Delivery', icon: '🚚' },
+  { id: 'Port CFS / FOB Delivery', label: 'Port CFS / FOB Delivery', icon: '🚢' },
 ];
 
 const PAYMENT_OPTIONS = [
@@ -39,7 +39,7 @@ const PAYMENT_OPTIONS = [
 ];
 
 export default function PostRequirement() {
-  const { t, lang, addToast, user, addBuyerRequirement } = useApp();
+  const { addToast, user, addBuyerRequirement } = useApp();
   const navigate = useNavigate();
 
   const [step, setStep] = useState(0);
@@ -105,15 +105,12 @@ export default function PostRequirement() {
       id: `br_${Date.now()}`,
       enterpriseId: user?.id || 'e1',
       enterpriseName: user?.name || 'Ahmed Spice Exports',
-      gujEnterpriseName: user?.gujName || 'અહેમદ સ્પાઈસ એક્સ્પોર્ટ',
       buyerType: 'Export House',
       verified: true,
       crop: cropObj.id,
       cropName: cropObj.name,
-      gujCrop: cropObj.guj,
       emoji: cropObj.emoji,
       title: `Need ${qty} ${unit === 'ton' ? 'Tons' : unit} ${cropObj.name} for ${dest.country.split(' ')[0]}`,
-      gujTitle: `${dest.country.split(' ')[0]} માટે ${qty} ${unit === 'ton' ? 'ટન' : unit} ${cropObj.guj} ની જરૂર`,
       qty: Number(qty),
       unit,
       targetPrice: Number(price),
@@ -122,9 +119,7 @@ export default function PostRequirement() {
       flag: dest.flag,
       urgency,
       urgencyLabel: urgency === 'urgent' ? 'Urgent Requirement' : 'Active Requirement',
-      gujUrgencyLabel: urgency === 'urgent' ? 'તાત્કાલિક જરૂર' : 'સક્રિય જરૂર',
       deliveryTerms: delivery,
-      gujDeliveryTerms: delivery === 'Ex-Farm Pickup' ? 'ખેતરેથી પિકઅપ' : 'મંડી ડિલિવરી',
       paymentTerms: payment,
       deadline: deadline || '2026-10-31',
       notes: notes || `Looking for ${selectedGradeLabel} quality clean lots. Prompt payment guaranteed.`,
@@ -137,7 +132,6 @@ export default function PostRequirement() {
         ...(exportReady ? { exportQuality: 'Export Standard' } : {}),
       },
       posted: 'Just now',
-      gujPosted: 'હમણાં જ',
       quotesCount: 0,
       quotes: [],
       status: 'active',
@@ -147,7 +141,7 @@ export default function PostRequirement() {
       addBuyerRequirement(newReq);
       setLoading(false);
       addToast(
-        t('Buying requirement posted successfully! Visible to Gujarat farmers. 🎉', 'ખરીદી માંગણી સફળતાપૂર્વક ઉમેરાઈ! હવે તમામ ખેડૂતોને દેખાશે. 🎉'),
+        'Buying requirement posted successfully! Visible to Gujarat farmers. 🎉',
         'success'
       );
       navigate('/enterprise/requirements');
@@ -161,14 +155,14 @@ export default function PostRequirement() {
         <div className="container">
           <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8 }}>
             <span style={{ background: 'rgba(255,255,255,0.2)', padding: '4px 10px', borderRadius: 20, color: '#fff', fontSize: '0.8rem', fontWeight: 600 }}>
-              🏢 {t('Enterprise Buying Portal', 'એન્ટરપ્રાઇઝ ખરીદી પોર્ટલ')}
+              🏢 Enterprise Buying Portal
             </span>
           </div>
           <h2 style={{ color: '#fff', fontFamily: 'var(--font-heading)', marginBottom: 8 }}>
-            {t('Post Buying Requirement', 'ખરીદી માંગણી ઉમેરો')}
+            Post Buying Requirement
           </h2>
           <p style={{ color: 'rgba(255,255,255,0.85)', margin: 0 }}>
-            {t(`Step ${step + 1} of ${STEPS.length}: ${STEPS[step]}`, `પગલું ${step + 1}/${STEPS.length}: ${STEPS[step]}`)}
+            Step {step + 1} of {STEPS.length}: {STEPS[step]}
           </p>
         </div>
       </div>
@@ -211,10 +205,10 @@ export default function PostRequirement() {
               {step === 0 && (
                 <div>
                   <h4 style={{ fontFamily: 'var(--font-heading)', marginBottom: 6 }}>
-                    {t('What crop do you want to purchase?', 'તમે કયો પાક ખરીદવા માંગો છો?')}
+                    What crop do you want to purchase?
                   </h4>
                   <p style={{ color: 'var(--text-secondary)', fontSize: '0.875rem', marginBottom: 20 }}>
-                    {t('Select from Gujarat’s 12 major export crops to configure attributes & specifications.', 'ગુજરાતના ૧૨ મુખ્ય પાકોમાંથી પસંદ કરો.')}
+                    Select from Gujarat’s 12 major export crops to configure attributes & specifications.
                   </p>
 
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(130px, 1fr))', gap: 12 }}>
@@ -228,7 +222,7 @@ export default function PostRequirement() {
                       >
                         <span className="crop-emoji">{crop.emoji}</span>
                         <span className="crop-name">
-                          {lang === 'gu' ? crop.guj : crop.name}
+                          {crop.name}
                         </span>
                         {selectedCrop === crop.id && <Check size={16} color="var(--green-primary)" />}
                       </motion.div>
@@ -239,7 +233,7 @@ export default function PostRequirement() {
                   {cropAttr.priceHint && (
                     <div style={{ marginTop: 20, background: 'var(--green-light)', borderRadius: 12, padding: '12px 16px', fontSize: '0.875rem', color: 'var(--green-primary)', display: 'flex', gap: 8, alignItems: 'center' }}>
                       <Info size={16} />
-                      <span>{lang === 'gu' ? cropAttr.priceHintGuj : cropAttr.priceHint}</span>
+                      <span>{cropAttr.priceHint}</span>
                     </div>
                   )}
 
@@ -252,7 +246,7 @@ export default function PostRequirement() {
                         onChange={e => setUrgency(e.target.checked ? 'urgent' : 'active')}
                         style={{ accentColor: 'var(--green-primary)', width: 18, height: 18 }}
                       />
-                      <span>🔥 {t('Mark as Urgent Requirement (needed within 7–10 days)', 'તાત્કાલિક જરૂરિયાત તરીકે દર્શાવો (૭-૧૦ દિવસમાં)')}</span>
+                      <span>🔥 Mark as Urgent Requirement (needed within 7–10 days)</span>
                     </label>
 
                     <label style={{ display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer', fontSize: '0.9rem', fontWeight: 500 }}>
@@ -262,7 +256,7 @@ export default function PostRequirement() {
                         onChange={e => setOrganic(e.target.checked)}
                         style={{ accentColor: 'var(--green-primary)', width: 18, height: 18 }}
                       />
-                      <span>🌱 {t('Require Organically Grown Produce (NPOP / EU Organic Certified)', 'ઓર્ગેનિક પ્રમાણિત પાક જરૂરી (NPOP / EU પ્રમાણપત્ર)')}</span>
+                      <span>🌱 Require Organically Grown Produce (NPOP / EU Organic Certified)</span>
                     </label>
 
                     <label style={{ display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer', fontSize: '0.9rem', fontWeight: 500 }}>
@@ -272,7 +266,7 @@ export default function PostRequirement() {
                         onChange={e => setExportReady(e.target.checked)}
                         style={{ accentColor: 'var(--green-primary)', width: 18, height: 18 }}
                       />
-                      <span>✈️ {t('Export Grade Quality Required (with lab analysis & phytosanitary certificate)', 'નિકાસ ગુણવત્તાવાળો પાક (લેબ ટેસ્ટિંગ અને ફાયટોસેનિટરી જરૂરી)')}</span>
+                      <span>✈️ Export Grade Quality Required (with lab analysis & phytosanitary certificate)</span>
                     </label>
                   </div>
                 </div>
@@ -287,10 +281,10 @@ export default function PostRequirement() {
                     <span style={{ fontSize: '1.8rem' }}>{cropObj.emoji}</span>
                     <div>
                       <h4 style={{ fontFamily: 'var(--font-heading)', margin: 0 }}>
-                        {t('Crop Specifications & Quality Parameters', 'પાક ગુણવત્તા અને વિશિષ્ટતાઓ')}
+                        Crop Specifications & Quality Parameters
                       </h4>
                       <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', margin: 0 }}>
-                        <strong>{lang === 'gu' ? cropObj.guj : cropObj.name}</strong> • {t('Specify exact standards for farmers to match.', 'ખેડૂતો સાથે સ્પષ્ટતા માટે ગુણવત્તા પસંદ કરો.')}
+                        <strong>{cropObj.name}</strong> • Specify exact standards for farmers to match.
                       </p>
                     </div>
                   </div>
@@ -299,7 +293,7 @@ export default function PostRequirement() {
                   {cropAttr.grades && cropAttr.grades.length > 0 && (
                     <div className="form-group" style={{ marginTop: 22, marginBottom: 20 }}>
                       <label className="form-label" style={{ fontWeight: 600 }}>
-                        {t('Required Grade / Quality', 'જરૂરી ગ્રેડ / ક્વોલિટી')} *
+                        Required Grade / Quality *
                       </label>
                       <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
                         {cropAttr.grades.map(g => (
@@ -307,10 +301,10 @@ export default function PostRequirement() {
                             key={g.value}
                             type="button"
                             onClick={() => setGrade(g.value)}
-                            className={`chip ${grade === g.value ? 'active' : ''}`}
+                            className={`chip notranslate ${grade === g.value ? 'active' : ''}`}
                             style={{ padding: '8px 14px', fontSize: '0.875rem' }}
                           >
-                            {lang === 'gu' ? g.guj : g.label}
+                            {g.label}
                           </button>
                         ))}
                       </div>
@@ -321,23 +315,23 @@ export default function PostRequirement() {
                   {cropAttr.specs && cropAttr.specs.length > 0 && (
                     <div style={{ marginBottom: 20 }}>
                       <label className="form-label" style={{ fontWeight: 600, marginBottom: 12 }}>
-                        {t('Specific Parameters & Limits', 'ચોક્કસ ગુણવત્તા માપદંડ')}
+                        Specific Parameters & Limits
                       </label>
                       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
                         {cropAttr.specs.map(spec => (
                           <div key={spec.key} className="form-group" style={{ marginBottom: 0 }}>
                             <label className="form-label" style={{ fontSize: '0.8125rem' }}>
-                              {lang === 'gu' ? spec.guj : spec.label}
+                              {spec.label}
                             </label>
                             {spec.type === 'select' ? (
                               <div style={{ position: 'relative' }}>
                                 <select
-                                  className="form-select"
+                                  className="form-select notranslate"
                                   value={specValues[spec.key] || ''}
                                   onChange={e => setSpecValues(prev => ({ ...prev, [spec.key]: e.target.value }))}
                                   style={{ paddingRight: 32 }}
                                 >
-                                  <option value="">{t('Any / Standard', 'સામાન્ય / ગમે તે')}</option>
+                                  <option value="">Any / Standard</option>
                                   {spec.options.map(opt => (
                                     <option key={opt} value={opt}>{opt}</option>
                                   ))}
@@ -356,7 +350,7 @@ export default function PostRequirement() {
                               </div>
                             ) : (
                               <input
-                                className="form-input"
+                                className="form-input notranslate"
                                 placeholder={spec.label}
                                 value={specValues[spec.key] || ''}
                                 onChange={e => setSpecValues(prev => ({ ...prev, [spec.key]: e.target.value }))}
@@ -372,7 +366,7 @@ export default function PostRequirement() {
                   {cropAttr.packaging && cropAttr.packaging.length > 0 && (
                     <div className="form-group" style={{ marginBottom: 20 }}>
                       <label className="form-label" style={{ fontWeight: 600 }}>
-                        {t('Required Packaging Format', 'જરૂરી પેકિંગ')}
+                        Required Packaging Format
                       </label>
                       <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
                         {cropAttr.packaging.map(p => (
@@ -380,7 +374,7 @@ export default function PostRequirement() {
                             key={p}
                             type="button"
                             onClick={() => setPackaging(p)}
-                            className={`chip ${packaging === p ? 'active' : ''}`}
+                            className={`chip notranslate ${packaging === p ? 'active' : ''}`}
                             style={{ padding: '8px 14px' }}
                           >
                             📦 {p}
@@ -394,7 +388,7 @@ export default function PostRequirement() {
                   {cropAttr.certifications && cropAttr.certifications.length > 0 && (
                     <div className="form-group" style={{ marginBottom: 20 }}>
                       <label className="form-label" style={{ fontWeight: 600 }}>
-                        {t('Required Documents & Certifications', 'જરૂરી પ્રમાણપત્રો')}
+                        Required Documents & Certifications
                       </label>
                       <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
                         {cropAttr.certifications.map(c => {
@@ -404,7 +398,7 @@ export default function PostRequirement() {
                               key={c}
                               type="button"
                               onClick={() => toggleCert(c)}
-                              className={`chip ${isSelected ? 'active' : ''}`}
+                              className={`chip notranslate ${isSelected ? 'active' : ''}`}
                               style={{ padding: '7px 12px', fontSize: '0.8125rem' }}
                             >
                               {isSelected ? '✓ ' : '+ '} {c}
@@ -419,7 +413,7 @@ export default function PostRequirement() {
                   {cropAttr.moq && (
                     <div style={{ background: '#FFF8E1', borderRadius: 12, padding: '12px 16px', fontSize: '0.8125rem', color: '#78350F', display: 'flex', gap: 8, alignItems: 'center' }}>
                       <Info size={15} />
-                      <span>{t('Standard Commercial MOQ:', 'ન્યૂનતમ લોટ સાઈઝ (MOQ):')} <strong>{cropAttr.moq}</strong></span>
+                      <span>Standard Commercial MOQ: <strong className="notranslate">{cropAttr.moq}</strong></span>
                     </div>
                   )}
                 </div>
@@ -431,14 +425,14 @@ export default function PostRequirement() {
               {step === 2 && (
                 <div>
                   <h4 style={{ fontFamily: 'var(--font-heading)', marginBottom: 20 }}>
-                    {t('Quantity & Target Buying Price', 'જથ્થો અને લક્ષ્ય ભાવ')}
+                    Quantity & Target Buying Price
                   </h4>
 
                   <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
                     {/* Quantity Field */}
                     <div>
                       <label className="form-label" style={{ marginBottom: 10, fontWeight: 600 }}>
-                        {t('Required Total Quantity', 'જરૂરી કુલ જથ્થો')} *
+                        Required Total Quantity *
                       </label>
                       <div style={{ display: 'flex', gap: 16, alignItems: 'center' }}>
                         <div className="stepper" style={{ flex: 1 }}>
@@ -450,7 +444,7 @@ export default function PostRequirement() {
                             −
                           </button>
                           <input
-                            className="stepper-input"
+                            className="stepper-input notranslate"
                             type="number"
                             value={qty}
                             onChange={e => setQty(Math.max(1, Number(e.target.value)))}
@@ -469,7 +463,7 @@ export default function PostRequirement() {
                               key={u}
                               type="button"
                               onClick={() => setUnit(u)}
-                              className={`chip ${unit === u ? 'active' : ''}`}
+                              className={`chip notranslate ${unit === u ? 'active' : ''}`}
                               style={{ minWidth: 70, textTransform: 'capitalize' }}
                             >
                               {u}
@@ -483,11 +477,11 @@ export default function PostRequirement() {
                     <div>
                       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
                         <label className="form-label" style={{ fontWeight: 600, margin: 0 }}>
-                          {t('Target Buying Price (₹/kg)', 'લક્ષ્ય ખરીદ ભાવ પ્રતિ કિ.ગ્રા. (₹)')} *
+                          Target Buying Price (₹/kg) *
                         </label>
                         {mandiData && (
                           <span style={{ fontSize: '0.8125rem', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: 4 }}>
-                            {t('Mandi today:', 'મંડી આજે:')}
+                            Mandi today:
                             <button
                               type="button"
                               onClick={() => setPrice(mandiData.today)}
@@ -502,7 +496,7 @@ export default function PostRequirement() {
                                 fontSize: '0.8125rem',
                               }}
                             >
-                              ₹{mandiData.today} (Use)
+                              <span className="notranslate">₹{mandiData.today}</span> (Use)
                             </button>
                           </span>
                         )}
@@ -517,7 +511,7 @@ export default function PostRequirement() {
                           −
                         </button>
                         <input
-                          className="stepper-input"
+                          className="stepper-input notranslate"
                           type="number"
                           value={price}
                           onChange={e => setPrice(Math.max(1, Number(e.target.value)))}
@@ -534,7 +528,7 @@ export default function PostRequirement() {
                       {cropAttr.priceHint && (
                         <p style={{ fontSize: '0.8125rem', color: 'var(--text-muted)', marginTop: 8, display: 'flex', gap: 6, alignItems: 'center' }}>
                           <Info size={14} />
-                          <span>{lang === 'gu' ? cropAttr.priceHintGuj : cropAttr.priceHint}</span>
+                          <span>{cropAttr.priceHint}</span>
                         </p>
                       )}
                     </div>
@@ -543,13 +537,13 @@ export default function PostRequirement() {
                     <div style={{ background: 'var(--green-light)', borderRadius: 16, padding: '18px 22px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                       <div>
                         <span style={{ display: 'block', fontWeight: 600, color: 'var(--text-secondary)', fontSize: '0.875rem' }}>
-                          {t('Estimated Total Budget', 'અંદાજિત કુલ બજેટ')}
+                          Estimated Total Budget
                         </span>
-                        <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
+                        <span className="notranslate" style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
                           {qty} {unit} × ₹{price}/kg
                         </span>
                       </div>
-                      <span style={{ fontFamily: 'var(--font-heading)', fontWeight: 900, fontSize: '1.6rem', color: 'var(--green-primary)' }}>
+                      <span className="notranslate" style={{ fontFamily: 'var(--font-heading)', fontWeight: 900, fontSize: '1.6rem', color: 'var(--green-primary)' }}>
                         ₹{totalValue}
                       </span>
                     </div>
@@ -563,13 +557,13 @@ export default function PostRequirement() {
               {step === 3 && (
                 <div>
                   <h4 style={{ fontFamily: 'var(--font-heading)', marginBottom: 20 }}>
-                    {t('Destination & Delivery Terms', 'ડિલિવરી અને નિકાસ વિગતો')}
+                    Destination & Delivery Terms
                   </h4>
 
                   {/* Destination */}
                   <div style={{ marginBottom: 20 }}>
                     <label className="form-label" style={{ fontWeight: 600 }}>
-                      {t('Target Export Destination', 'લક્ષ્ય નિકાસ દેશ')}
+                      Target Export Destination
                     </label>
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 8 }}>
                       {DESTINATIONS.map(d => (
@@ -577,10 +571,10 @@ export default function PostRequirement() {
                           key={d.country}
                           type="button"
                           onClick={() => setDest(d)}
-                          className={`chip ${dest.country === d.country ? 'active' : ''}`}
+                          className={`chip notranslate ${dest.country === d.country ? 'active' : ''}`}
                           style={{ padding: '9px 10px', fontSize: '0.85rem', textAlign: 'center', justifyContent: 'center' }}
                         >
-                          {d.flag} {lang === 'gu' ? d.guj : d.country.split(' ')[0]}
+                          {d.flag} {d.country.split(' ')[0]}
                         </button>
                       ))}
                     </div>
@@ -589,7 +583,7 @@ export default function PostRequirement() {
                   {/* Delivery Mode */}
                   <div style={{ marginBottom: 20 }}>
                     <label className="form-label" style={{ fontWeight: 600 }}>
-                      {t('Delivery Mode Preference', 'ડિલિવરી શરતો')}
+                      Delivery Mode Preference
                     </label>
                     <div style={{ display: 'flex', gap: 10 }}>
                       {DELIVERY_MODES.map(mode => (
@@ -601,7 +595,7 @@ export default function PostRequirement() {
                           style={{ flex: 1, padding: '12px 10px', textAlign: 'center', justifyContent: 'center', fontWeight: 600, fontSize: '0.85rem' }}
                         >
                           <span style={{ marginRight: 6 }}>{mode.icon}</span>
-                          {lang === 'gu' ? mode.guj : mode.label}
+                          {mode.label}
                         </button>
                       ))}
                     </div>
@@ -610,7 +604,7 @@ export default function PostRequirement() {
                   {/* Payment Terms */}
                   <div className="form-group" style={{ marginBottom: 20 }}>
                     <label className="form-label" style={{ fontWeight: 600 }}>
-                      {t('Payment Terms Offered to Farmers', 'ચુકવણી શરતો')}
+                      Payment Terms Offered to Farmers
                     </label>
                     <select
                       className="form-select"
@@ -626,11 +620,11 @@ export default function PostRequirement() {
                   {/* Deadline */}
                   <div className="form-group" style={{ marginBottom: 20 }}>
                     <label className="form-label" style={{ fontWeight: 600 }}>
-                      {t('Required By / Deadline Date', 'જરૂરી તારીખ')}
+                      Required By / Deadline Date
                     </label>
                     <input
                       type="date"
-                      className="form-input"
+                      className="form-input notranslate"
                       value={deadline}
                       onChange={e => setDeadline(e.target.value)}
                     />
@@ -639,12 +633,12 @@ export default function PostRequirement() {
                   {/* Notes */}
                   <div className="form-group" style={{ marginBottom: 0 }}>
                     <label className="form-label" style={{ fontWeight: 600 }}>
-                      {t('Special Instructions / Notes for Farmers', 'ખેડૂતો માટે વિશેષ સૂચના / નોંધ')}
+                      Special Instructions / Notes for Farmers
                     </label>
                     <textarea
                       rows={3}
                       className="form-input"
-                      placeholder={t('e.g. Ready stock preferred. Farm inspection available. Clean sortex lots get fast payment.', 'દા.ત. તૈયાર માલ જોઈએ છે. ખેતરેથી તપાસણી ઉપલબ્ધ. સૉર્ટેક્સ માલ માટે ઝડપી ચુકવણી.')}
+                      placeholder="e.g. Ready stock preferred. Farm inspection available. Clean sortex lots get fast payment."
                       value={notes}
                       onChange={e => setNotes(e.target.value)}
                     />
@@ -658,10 +652,10 @@ export default function PostRequirement() {
               {step === 4 && (
                 <div>
                   <h4 style={{ fontFamily: 'var(--font-heading)', marginBottom: 6 }}>
-                    {t('Requirement Preview', 'માંગણી પૂર્વાવલોકન')}
+                    Requirement Preview
                   </h4>
                   <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', marginBottom: 20 }}>
-                    {t('Review all crop attributes and terms before publishing to Gujarat farmers.', 'પ્રકાશિત કરતા પહેલા તમામ વિગતો ચકાસી લો.')}
+                    Review all crop attributes and terms before publishing to Gujarat farmers.
                   </p>
 
                   {/* Buyer Requirement Card Preview */}
@@ -694,14 +688,14 @@ export default function PostRequirement() {
                       <div style={{ flex: 1 }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
                           <h4 style={{ fontFamily: 'var(--font-heading)', margin: 0 }}>
-                            {lang === 'gu' ? cropObj.guj : cropObj.name}
+                            {cropObj.name}
                           </h4>
                           {urgency === 'urgent' && (
                             <span className="badge badge-red" style={{ fontSize: '0.75rem' }}>
-                              🔥 {t('Urgent', 'તાત્કાલિક')}
+                              🔥 Urgent
                             </span>
                           )}
-                          <span className="badge badge-blue">
+                          <span className="badge badge-blue notranslate">
                             {dest.flag} {dest.country}
                           </span>
                         </div>
@@ -711,11 +705,11 @@ export default function PostRequirement() {
                       </div>
 
                       <div style={{ textAlign: 'right' }}>
-                        <div style={{ fontFamily: 'var(--font-heading)', fontSize: '1.4rem', fontWeight: 900, color: 'var(--green-primary)' }}>
+                        <div className="notranslate" style={{ fontFamily: 'var(--font-heading)', fontSize: '1.4rem', fontWeight: 900, color: 'var(--green-primary)' }}>
                           ₹{price}/kg
                         </div>
                         <div style={{ fontSize: '0.8125rem', color: 'var(--text-muted)' }}>
-                          {qty} {unit} {t('demanded', 'માંગ')}
+                          <span className="notranslate">{qty} {unit}</span> demanded
                         </div>
                       </div>
                     </div>
@@ -723,32 +717,32 @@ export default function PostRequirement() {
                     {/* Spec Chips Row */}
                     <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, paddingTop: 12, borderTop: '1px solid rgba(0,0,0,0.06)' }}>
                       {grade && (
-                        <span className="badge badge-green">
+                        <span className="badge badge-green notranslate">
                           🏷️ {cropAttr.grades?.find(g => g.value === grade)?.label || grade}
                         </span>
                       )}
                       {packaging && (
-                        <span className="badge">
+                        <span className="badge notranslate">
                           📦 {packaging}
                         </span>
                       )}
                       {organic && (
                         <span className="badge badge-green">
-                          🌱 {t('Organic Certified', 'ઓર્ગેનિક')}
+                          🌱 Organic Certified
                         </span>
                       )}
                       {exportReady && (
                         <span className="badge" style={{ background: '#E3F2FD', color: '#1565C0' }}>
-                          ✈️ {t('Export Grade', 'નિકાસ ગ્રેડ')}
+                          ✈️ Export Grade
                         </span>
                       )}
                       {Object.entries(specValues).filter(([, v]) => v).map(([k, v]) => (
-                        <span key={k} className="badge">
+                        <span key={k} className="badge notranslate">
                           {v}
                         </span>
                       ))}
                       {certifications.map(c => (
-                        <span key={c} className="badge badge-amber" style={{ fontSize: '0.75rem' }}>
+                        <span key={c} className="badge badge-amber notranslate" style={{ fontSize: '0.75rem' }}>
                           📜 {c}
                         </span>
                       ))}
@@ -758,20 +752,20 @@ export default function PostRequirement() {
                   {/* Summary Grid */}
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, fontSize: '0.875rem' }}>
                     {[
-                      [t('Crop', 'પાક'), lang === 'gu' ? cropObj.guj : cropObj.name],
-                      [t('Required Grade', 'ગ્રેડ'), cropAttr.grades?.find(g => g.value === grade)?.label || grade || '—'],
-                      [t('Target Quantity', 'જથ્થો'), `${qty} ${unit}`],
-                      [t('Target Buying Price', 'ખરીદ ભાવ'), `₹${price}/kg`],
-                      [t('Total Estimated Budget', 'કુલ બજેટ'), `₹${totalValue}`],
-                      [t('Destination', 'દેશ'), `${dest.flag} ${dest.country}`],
-                      [t('Delivery Mode', 'ડિલિવરી'), delivery],
-                      [t('Payment Terms', 'ચુકવણી શરત'), payment],
-                      [t('Packaging', 'પેકિંગ'), packaging || 'Standard'],
-                      [t('Required Date', 'તારીખ'), deadline || 'Within 30 days'],
-                    ].map(([label, val]) => (
+                      ['Crop', cropObj.name, false],
+                      ['Required Grade', cropAttr.grades?.find(g => g.value === grade)?.label || grade || '—', true],
+                      ['Target Quantity', `${qty} ${unit}`, true],
+                      ['Target Buying Price', `₹${price}/kg`, true],
+                      ['Total Estimated Budget', `₹${totalValue}`, true],
+                      ['Destination', `${dest.flag} ${dest.country}`, true],
+                      ['Delivery Mode', delivery, false],
+                      ['Payment Terms', payment, false],
+                      ['Packaging', packaging || 'Standard', true],
+                      ['Required Date', deadline || 'Within 30 days', true],
+                    ].map(([label, val, notranslate]) => (
                       <div key={label} style={{ background: 'var(--bg-page)', borderRadius: 10, padding: '10px 14px' }}>
                         <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: 2 }}>{label}</div>
-                        <div style={{ fontWeight: 600, color: 'var(--text-primary)' }}>{val}</div>
+                        <div className={notranslate ? 'notranslate' : ''} style={{ fontWeight: 600, color: 'var(--text-primary)' }}>{val}</div>
                       </div>
                     ))}
                   </div>
@@ -799,7 +793,7 @@ export default function PostRequirement() {
                 style={{ display: 'flex', alignItems: 'center', gap: 6 }}
               >
                 <ArrowLeft size={16} />
-                <span>{t('Back', 'પાછળ')}</span>
+                <span>Back</span>
               </button>
             ) : (
               <div />
@@ -812,7 +806,7 @@ export default function PostRequirement() {
                 onClick={() => setStep(s => s + 1)}
                 style={{ display: 'flex', alignItems: 'center', gap: 6 }}
               >
-                <span>{t('Next Step', 'આગળ')}</span>
+                <span>Next Step</span>
                 <ArrowRight size={16} />
               </button>
             ) : (
@@ -823,7 +817,7 @@ export default function PostRequirement() {
                 style={{ display: 'flex', alignItems: 'center', gap: 6 }}
               >
                 <Check size={16} />
-                <span>{t('Publish Buying Requirement', 'ખરીદી માંગણી પ્રકાશિત કરો')}</span>
+                <span>Publish Buying Requirement</span>
               </SpinnerBtn>
             )}
           </div>

@@ -38,8 +38,7 @@ const PAYMENT_OPTIONS = [
 ];
 
 export default function MyRequirements() {
-  const {
-    t, lang, addToast, user,
+  const { addToast, user,
     buyerRequirements, deleteBuyerRequirement, updateBuyerRequirement, acceptQuoteOnRequirement
   } = useApp();
   const navigate = useNavigate();
@@ -83,14 +82,14 @@ export default function MyRequirements() {
   const handleDelete = (id) => {
     deleteBuyerRequirement(id);
     setDeleteModal(null);
-    addToast(t('Requirement deleted', 'માંગણી હટાવી'), 'info');
+    addToast('Requirement deleted', 'info');
   };
 
   const toggleStatus = (req) => {
     const nextStatus = req.status === 'closed' ? 'active' : 'closed';
     updateBuyerRequirement(req.id, { status: nextStatus });
     addToast(
-      nextStatus === 'closed' ? t('Requirement closed', 'માંગણી બંધ કરી') : t('Requirement re-activated!', 'માંગણી સક્રિય કરી!'),
+      nextStatus === 'closed' ? 'Requirement closed' : 'Requirement re-activated!',
       'success'
     );
   };
@@ -139,7 +138,7 @@ export default function MyRequirements() {
     };
 
     updateBuyerRequirement(editReq.id, updated);
-    addToast(t('Requirement updated successfully! 🎉', 'ખરીદી માંગણી સફળતાપૂર્વક સુધારાઈ! 🎉'), 'success');
+    addToast('Requirement updated successfully! 🎉', 'success');
     setEditReq(null);
   };
 
@@ -148,7 +147,7 @@ export default function MyRequirements() {
       acceptQuoteOnRequirement(req.id, quote.id);
     }
     addToast(
-      t(`Accepted quote from ${quote.farmerName} at ₹${quote.price}/kg! 🎉`, `${quote.farmerName}ની ₹${quote.price}/kg ની ઑફર સ્વીકારાઈ! 🎉`),
+      `Accepted quote from ${quote.farmerName} at ₹${quote.price}/kg! 🎉`,
       'success'
     );
     if (selectedQuoteModal && selectedQuoteModal.quote.id === quote.id) {
@@ -169,14 +168,14 @@ export default function MyRequirements() {
         <div className="container" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 14 }}>
           <div>
             <h2 style={{ color: '#fff', fontFamily: 'var(--font-heading)', margin: 0 }}>
-              {t('My Requirements', 'મારી ખરીદી માંગણીઓ')}
+              {'My Requirements'}
             </h2>
             <p style={{ color: 'rgba(255,255,255,0.8)', margin: '4px 0 0' }}>
-              {myDemands.length} {t('total requirements posted', 'કુલ માંગણીઓ')}
+              {myDemands.length} {'total requirements posted'}
             </p>
           </div>
           <Link to="/enterprise/post-requirement" className="btn btn-amber">
-            <PlusCircle size={18} /> {t('Post Requirement', 'નવી માંગણી')}
+            <PlusCircle size={18} /> {'Post Requirement'}
           </Link>
         </div>
       </div>
@@ -185,8 +184,8 @@ export default function MyRequirements() {
         {/* Tabs */}
         <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} style={{ background: '#fff', borderRadius: 20, padding: '8px', boxShadow: 'var(--shadow-md)', marginBottom: 24, display: 'flex', gap: 6 }}>
           {[
-            { id: 'active', label: t('Active Requirements', 'સક્રિય માંગણીઓ'), count: myDemands.filter(r => r.status !== 'closed').length },
-            { id: 'closed', label: t('Closed', 'બંધ કરેલ'), count: myDemands.filter(r => r.status === 'closed').length },
+            { id: 'active', label: 'Active Requirements', count: myDemands.filter(r => r.status !== 'closed').length },
+            { id: 'closed', label: 'Closed', count: myDemands.filter(r => r.status === 'closed').length },
           ].map(tab => (
             <button
               key={tab.id}
@@ -215,9 +214,9 @@ export default function MyRequirements() {
           {filtered.length === 0 ? (
             <div className="empty-state">
               <div className="empty-state-icon">📋</div>
-              <h3>{t('No requirements here', 'કોઈ માંગણી નથી')}</h3>
+              <h3>{'No requirements here'}</h3>
               <Link to="/enterprise/post-requirement" className="btn btn-primary" style={{ marginTop: 16 }}>
-                + {t('Post Requirement', 'નવી માંગણી ઉમેરો')}
+                + {'Post Requirement'}
               </Link>
             </div>
           ) : filtered.map((req, i) => {
@@ -242,10 +241,10 @@ export default function MyRequirements() {
                           </h5>
                           <div style={{ display: 'flex', gap: 8, alignItems: 'center', flexWrap: 'wrap' }}>
                             <span className={`badge badge-${isClosed ? 'gray' : 'green'}`}>
-                              {isClosed ? t('Closed', 'બંધ') : t('Active Live', 'સક્રિય')}
+                              {isClosed ? 'Closed' : 'Active Live'}
                             </span>
                             {req.urgency === 'urgent' && (
-                              <span className="badge badge-red" style={{ fontSize: '0.7rem' }}>🔥 {t('Urgent', 'તાત્કાલિક')}</span>
+                              <span className="badge badge-red" style={{ fontSize: '0.7rem' }}>🔥 {'Urgent'}</span>
                             )}
                             {req.flag && (
                               <span className="badge badge-blue" style={{ fontSize: '0.7rem' }}>
@@ -261,7 +260,7 @@ export default function MyRequirements() {
                             ₹{req.targetPrice}/kg
                           </div>
                           <div style={{ fontSize: '0.8125rem', color: 'var(--text-muted)' }}>
-                            {req.qty} {req.unit || 'ton'} {t('needed', 'જરૂર')}
+                            {req.qty} {req.unit || 'ton'} {'needed'}
                           </div>
                         </div>
                       </div>
@@ -298,10 +297,10 @@ export default function MyRequirements() {
                                 cursor: 'pointer',
                                 transition: 'all 0.2s',
                               }}
-                              title={t('Click to show received farmer quotes', 'મળેલી ખેડૂત ઑફર્સ જોવા ક્લિક કરો')}
+                              title={'Click to show received farmer quotes'}
                             >
                               <span style={{ fontSize: '0.8125rem', fontWeight: 700, color: '#B45309' }}>
-                                💬 {quotesList.length} {t('quotes received', 'ખેડૂત ઑફર્સ')}
+                                💬 {quotesList.length} {'quotes received'}
                               </span>
                               {isExpanded ? <ChevronUp size={14} color="#B45309" /> : <ChevronDown size={14} color="#B45309" />}
                             </button>
@@ -321,10 +320,10 @@ export default function MyRequirements() {
                                 color: '#92400E',
                                 fontWeight: 700,
                               }}
-                              title={t('View and compare quotes side-by-side', 'બધી ઑફર્સ સરખાવો')}
+                              title={'View and compare quotes side-by-side'}
                             >
                               <Sparkles size={12} color="#D97706" />
-                              {t('Compare Quotes', 'સરખાવો')}
+                              {'Compare Quotes'}
                             </button>
                           </div>
                         )}
@@ -339,7 +338,7 @@ export default function MyRequirements() {
                   {/* Actions Footer with EDIT Button */}
                   <div style={{ display: 'flex', gap: 8, marginTop: 14, paddingTop: 14, borderTop: '1px solid var(--border)', alignItems: 'center', flexWrap: 'wrap' }}>
                     <button className="btn btn-secondary btn-sm" onClick={() => toggleStatus(req)}>
-                      {isClosed ? t('Re-activate', 'ફરી ખોલો') : t('Close', 'બંધ કરો')}
+                      {isClosed ? 'Re-activate' : 'Close'}
                     </button>
 
                     <button
@@ -347,7 +346,7 @@ export default function MyRequirements() {
                       style={{ display: 'inline-flex', alignItems: 'center', gap: 5 }}
                       onClick={() => handleOpenEdit(req)}
                     >
-                      <Edit size={14} /> {t('Edit', 'સુધારો')}
+                      <Edit size={14} /> {'Edit'}
                     </button>
 
                     <button
@@ -355,7 +354,7 @@ export default function MyRequirements() {
                       style={{ marginLeft: 'auto', display: 'inline-flex', alignItems: 'center', gap: 5 }}
                       onClick={() => setDeleteModal(req.id)}
                     >
-                      <Trash2 size={14} /> {t('Delete', 'ડિલીટ')}
+                      <Trash2 size={14} /> {'Delete'}
                     </button>
                   </div>
 
@@ -371,16 +370,16 @@ export default function MyRequirements() {
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 14, flexWrap: 'wrap', gap: 8 }}>
                           <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
                             <h6 style={{ fontFamily: 'var(--font-heading)', margin: 0, fontSize: '0.95rem', color: 'var(--text-primary)', fontWeight: 700 }}>
-                              💬 {t('Received Farmer Quotes:', 'મળેલી ખેડૂત ઑફર્સ:')} ({quotesList.length})
+                              💬 {'Received Farmer Quotes:'} ({quotesList.length})
                             </h6>
                             <span className="badge badge-green" style={{ fontSize: '0.7rem' }}>
-                              ✓ {t('Verified Gujarat Farmers', 'ચકાસાયેલ ખેડૂતો')}
+                              ✓ {'Verified Gujarat Farmers'}
                             </span>
                           </div>
 
                           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                             <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
-                              {t('Click any quote to inspect lot specs & farmer details', 'સંપૂર્ણ વિગત જોવા ઑફર પર ક્લિક કરો')}
+                              {'Click any quote to inspect lot specs & farmer details'}
                             </span>
                             <button
                               type="button"
@@ -389,7 +388,7 @@ export default function MyRequirements() {
                               onClick={() => setCompareModal({ req, quotes: quotesList })}
                             >
                               <Sparkles size={13} color="#D97706" />
-                              {t('Compare Side-by-Side', 'બંને ઑફર્સ સરખાવો')}
+                              {'Compare Side-by-Side'}
                             </button>
                           </div>
                         </div>
@@ -398,8 +397,7 @@ export default function MyRequirements() {
                           {quotesList.map((q, idx) => {
                             const farmer = FARMERS.find(f => f.id === q.farmerId || f.name === q.farmerName) || {
                               name: q.farmerName || 'Gujarat Farmer',
-                              gujName: q.farmerGujName || 'ગુજરાત ખેડૂત',
-                              village: q.village || 'Unjha',
+                                                            village: q.village || 'Unjha',
                               district: q.district || 'Mehsana',
                               rating: q.rating || 4.8,
                               reviews: q.reviews || 32,
@@ -451,7 +449,7 @@ export default function MyRequirements() {
                                   <div style={{ flex: 1 }}>
                                     <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap' }}>
                                       <span style={{ fontWeight: 700, fontSize: '0.975rem', color: 'var(--text-primary)' }}>
-                                        {lang === 'gu' ? (q.farmerGujName || farmer.gujName || q.farmerName) : q.farmerName}
+                                        {q.farmerName}
                                       </span>
                                       {farmer.verified && (
                                         <span title="Verified APMC Farmer" style={{ display: 'inline-flex', alignItems: 'center' }}>
@@ -460,20 +458,20 @@ export default function MyRequirements() {
                                       )}
                                       {isAccepted && (
                                         <span className="badge badge-green" style={{ fontSize: '0.7rem', padding: '2px 8px' }}>
-                                          ✓ {t('Accepted Deal', 'સ્વીકારેલ સોદો')}
+                                          ✓ {'Accepted Deal'}
                                         </span>
                                       )}
                                       {targetDiff > 0 ? (
                                         <span className="badge badge-green" style={{ fontSize: '0.7rem', padding: '2px 8px' }}>
-                                          💚 ₹{targetDiff}/kg {t('below target', 'બચત')}
+                                          💚 ₹{targetDiff}/kg {'below target'}
                                         </span>
                                       ) : targetDiff === 0 ? (
                                         <span className="badge badge-blue" style={{ fontSize: '0.7rem', padding: '2px 8px' }}>
-                                          🎯 {t('Exact Target Price', 'લક્ષ્ય ભાવે')}
+                                          🎯 {'Exact Target Price'}
                                         </span>
                                       ) : (
                                         <span className="badge badge-amber" style={{ fontSize: '0.7rem', padding: '2px 8px' }}>
-                                          ⚠️ ₹{Math.abs(targetDiff)}/kg {t('above target', 'વધારે')}
+                                          ⚠️ ₹{Math.abs(targetDiff)}/kg {'above target'}
                                         </span>
                                       )}
                                     </div>
@@ -550,7 +548,7 @@ export default function MyRequirements() {
                                       }}
                                     >
                                       <FileText size={13} />
-                                      {t('View Full Quote Details', 'વિગતવાર માહિતી જુઓ')}
+                                      {'View Full Quote Details'}
                                     </button>
 
                                     {isAccepted ? (
@@ -567,7 +565,7 @@ export default function MyRequirements() {
                                           handleAcceptQuote(q, req);
                                         }}
                                       >
-                                        ✓ {t('Accept', 'સ્વીકારો')}
+                                        ✓ {'Accept'}
                                       </button>
                                     )}
                                   </div>
@@ -636,16 +634,16 @@ export default function MyRequirements() {
                     <div>
                       <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                         <h3 style={{ margin: 0, fontFamily: 'var(--font-heading)' }}>
-                          {t('Farmer Quote & Lot Details', 'ખેડૂત ઑફર અને ગુણવત્તા વિગતો')}
+                          {'Farmer Quote & Lot Details'}
                         </h3>
                         {isAccepted && (
                           <span className="badge badge-green" style={{ fontSize: '0.75rem', padding: '2px 8px' }}>
-                            ✓ {t('Deal Accepted', 'સ્વીકારેલ')}
+                            ✓ {'Deal Accepted'}
                           </span>
                         )}
                       </div>
                       <p style={{ margin: '4px 0 0', fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
-                        {req.cropName} • {t('Requirement ID:', 'માંગણી ક્રમાંક:')} {req.id} • {req.destination || 'Export Ready'}
+                        {req.cropName} • {'Requirement ID:'} {req.id} • {req.destination || 'Export Ready'}
                       </p>
                     </div>
                   </div>
@@ -668,11 +666,11 @@ export default function MyRequirements() {
                     <div>
                       <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
                         <span style={{ fontWeight: 800, fontSize: '1.1rem', color: 'var(--text-primary)' }}>
-                          {lang === 'gu' ? (quote.farmerGujName || farmer.gujName || quote.farmerName) : quote.farmerName}
+                          {quote.farmerName}
                         </span>
                         {farmer.verified && (
                           <span className="badge badge-green" style={{ fontSize: '0.7rem', padding: '2px 6px', display: 'inline-flex', alignItems: 'center', gap: 4 }}>
-                            <ShieldCheck size={13} /> {t('Verified APMC Farmer', 'ચકાસાયેલ ખેડૂત')}
+                            <ShieldCheck size={13} /> {'Verified APMC Farmer'}
                           </span>
                         )}
                       </div>
@@ -680,7 +678,7 @@ export default function MyRequirements() {
                         📍 {quote.village || farmer.village}, {quote.district || farmer.district}, Gujarat • ⭐ {farmer.rating} ({farmer.reviews} verified reviews)
                       </p>
                       <p style={{ margin: '2px 0 0', fontSize: '0.78rem', color: 'var(--text-secondary)' }}>
-                        🚜 Land: {farmer.land || '12 bigha'} • Member since {farmer.since || '2023'} • 💬 {t('Direct Chat Available', 'પ્લેટફોર્મ ચેટ ઉપલબ્ધ')}
+                        🚜 Land: {farmer.land || '12 bigha'} • Member since {farmer.since || '2023'} • 💬 {'Direct Chat Available'}
                       </p>
                     </div>
                   </div>
@@ -694,7 +692,7 @@ export default function MyRequirements() {
                         navigate('/farmer/chat');
                       }}
                     >
-                      <MessageCircle size={15} /> {t('Chat with Farmer', 'ખેડૂત સાથે ચેટ કરો')}
+                      <MessageCircle size={15} /> {'Chat with Farmer'}
                     </button>
                   </div>
                 </div>
@@ -704,7 +702,7 @@ export default function MyRequirements() {
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 12, flexWrap: 'wrap', gap: 10 }}>
                     <div>
                       <span style={{ fontSize: '0.78rem', color: '#92400E', fontWeight: 600 }}>
-                        {t('Your Target Buying Price:', 'તમારો લક્ષ્ય ભાવ:')}
+                        {'Your Target Buying Price:'}
                       </span>
                       <div style={{ fontWeight: 800, fontSize: '1.35rem', color: '#78350F' }}>
                         ₹{req.targetPrice}/kg
@@ -713,7 +711,7 @@ export default function MyRequirements() {
 
                     <div style={{ textAlign: 'right' }}>
                       <span style={{ fontSize: '0.78rem', color: '#92400E', fontWeight: 600 }}>
-                        {t('Farmer Quoted Price:', 'ખેડૂતે આપેલ ભાવ:')}
+                        {'Farmer Quoted Price:'}
                       </span>
                       <div style={{ fontWeight: 900, fontSize: '1.55rem', color: 'var(--green-primary)' }}>
                         ₹{quote.price}/kg
@@ -725,40 +723,40 @@ export default function MyRequirements() {
                   {targetDiff > 0 ? (
                     <div style={{ background: '#E8F5E9', color: 'var(--green-primary)', padding: '8px 14px', borderRadius: 10, fontSize: '0.85rem', fontWeight: 700, display: 'flex', alignItems: 'center', gap: 8, marginBottom: 14 }}>
                       <Check size={18} />
-                      <span>{t(`Below your target rate by ₹${targetDiff}/kg! Total cost savings of ₹${totalSavings} on this ${quote.qty} Ton lot.`, `તમારા ભાવ કરતાં પ્રતિ કિલો ₹${targetDiff} ઓછો! આ ${quote.qty} ટન પર કુલ ₹${totalSavings} ની બચત.`)}</span>
+                      <span>{`Below your target rate by ₹${targetDiff}/kg! Total cost savings of ₹${totalSavings} on this ${quote.qty} Ton lot.`}</span>
                     </div>
                   ) : targetDiff === 0 ? (
                     <div style={{ background: '#E0F2FE', color: '#0369A1', padding: '8px 14px', borderRadius: 10, fontSize: '0.85rem', fontWeight: 700, display: 'flex', alignItems: 'center', gap: 8, marginBottom: 14 }}>
                       <Check size={18} />
-                      <span>{t('Matches your exact target buying price! Ready for transaction.', 'તમારા લક્ષ્ય ભાવ સાથે સંપૂર્ણ મેળ ખાય છે!')}</span>
+                      <span>{'Matches your exact target buying price! Ready for transaction.'}</span>
                     </div>
                   ) : (
                     <div style={{ background: '#FEF3C7', color: '#B45309', padding: '8px 14px', borderRadius: 10, fontSize: '0.85rem', fontWeight: 700, display: 'flex', alignItems: 'center', gap: 8, marginBottom: 14 }}>
                       <AlertCircle size={18} />
-                      <span>{t(`Quoted rate is ₹${Math.abs(targetDiff)}/kg above target price. You can accept or negotiate.`, `લક્ષ્ય ભાવ કરતાં ₹${Math.abs(targetDiff)}/kg વધારે છે. તમે ચેટ દ્વારા વાટાઘાટો કરી શકો છો.`)}</span>
+                      <span>{`Quoted rate is ₹${Math.abs(targetDiff)}/kg above target price. You can accept or negotiate.`}</span>
                     </div>
                   )}
 
                   {/* Deal Financials Grid */}
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 12, borderTop: '1px dashed #FDE68A', paddingTop: 14, fontSize: '0.875rem', color: '#78350F' }}>
                     <div>
-                      <span style={{ fontSize: '0.75rem', opacity: 0.8, display: 'block' }}>{t('Quoted Supply Quantity:', 'પુરવઠો જથ્થો:')}</span>
+                      <span style={{ fontSize: '0.75rem', opacity: 0.8, display: 'block' }}>{'Quoted Supply Quantity:'}</span>
                       <strong style={{ fontSize: '1rem' }}>{quote.qty} {req.unit || 'Tons'} ({quote.qty * 1000} kg)</strong>
                     </div>
                     <div>
-                      <span style={{ fontSize: '0.75rem', opacity: 0.8, display: 'block' }}>{t('Total Lot Deal Value:', 'કુલ સોદા મૂલ્ય:')}</span>
+                      <span style={{ fontSize: '0.75rem', opacity: 0.8, display: 'block' }}>{'Total Lot Deal Value:'}</span>
                       <strong style={{ fontWeight: 900, color: 'var(--green-primary)', fontSize: '1.2rem' }}>
                         ₹{totalDealValue}
                       </strong>
                     </div>
                     <div>
-                      <span style={{ fontSize: '0.75rem', opacity: 0.8, display: 'block' }}>{t('Delivery Mode Offered:', 'ડિલિવરી:')}</span>
+                      <span style={{ fontSize: '0.75rem', opacity: 0.8, display: 'block' }}>{'Delivery Mode Offered:'}</span>
                       <strong>
-                        {quote.deliveryLabel || (quote.delivery === 'pickup' ? '🚜 Ex-Farm Pickup (ખેતરેથી)' : '🚚 Mandi Delivery')}
+                        {quote.deliveryLabel || (quote.delivery === 'pickup' ? '🚜 Ex-Farm Pickup' : '🚚 Mandi Delivery')}
                       </strong>
                     </div>
                     <div>
-                      <span style={{ fontSize: '0.75rem', opacity: 0.8, display: 'block' }}>{t('Payment Terms:', 'ચુકવણી શરત:')}</span>
+                      <span style={{ fontSize: '0.75rem', opacity: 0.8, display: 'block' }}>{'Payment Terms:'}</span>
                       <strong>
                         {quote.payment || req.paymentTerms}
                       </strong>
@@ -771,7 +769,7 @@ export default function MyRequirements() {
                   <div style={{ marginBottom: 20 }}>
                     <h5 style={{ fontFamily: 'var(--font-heading)', margin: '0 0 8px', fontSize: '0.925rem', color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: 6 }}>
                       <FileText size={16} color="var(--green-primary)" />
-                      {t('Farmer’s Statement on This Lot:', 'ખેડૂતની નોંધ:')}
+                      {'Farmer’s Statement on This Lot:'}
                     </h5>
                     <div style={{ background: 'var(--green-light)', borderRadius: 12, padding: '14px 18px', fontSize: '0.925rem', lineHeight: 1.6, borderLeft: '4px solid var(--green-primary)', color: '#1B5E20', fontStyle: 'italic' }}>
                       "{quote.notes}"
@@ -783,47 +781,47 @@ export default function MyRequirements() {
                 <div style={{ marginBottom: 22 }}>
                   <h5 style={{ fontFamily: 'var(--font-heading)', margin: '0 0 10px', fontSize: '0.925rem', color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: 6 }}>
                     <Sparkles size={16} color="var(--green-primary)" />
-                    {t('Guaranteed Quality Standards & Lot Certification:', 'ગુણવત્તા માપદંડ અને ગેરંટી:')}
+                    {'Guaranteed Quality Standards & Lot Certification:'}
                   </h5>
 
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 10 }}>
                     <div style={{ background: '#F8FAFC', padding: '12px 14px', borderRadius: 10, border: '1px solid var(--border)' }}>
-                      <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)', display: 'block' }}>{t('Grade Offered', 'ગ્રેડ')}</span>
+                      <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)', display: 'block' }}>{'Grade Offered'}</span>
                       <strong style={{ fontSize: '0.875rem', color: 'var(--text-primary)' }}>
                         {lotSpecs.grade || req.specs?.grade || 'Grade A Export'}
                       </strong>
                     </div>
 
                     <div style={{ background: '#F8FAFC', padding: '12px 14px', borderRadius: 10, border: '1px solid var(--border)' }}>
-                      <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)', display: 'block' }}>{t('Purity Guarantee', 'શુદ્ધતા')}</span>
+                      <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)', display: 'block' }}>{'Purity Guarantee'}</span>
                       <strong style={{ fontSize: '0.875rem', color: 'var(--green-primary)' }}>
                         {lotSpecs.purity || req.specs?.purity || '99.5% Machine Cleaned'}
                       </strong>
                     </div>
 
                     <div style={{ background: '#F8FAFC', padding: '12px 14px', borderRadius: 10, border: '1px solid var(--border)' }}>
-                      <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)', display: 'block' }}>{t('Moisture Content', 'ભેજ')}</span>
+                      <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)', display: 'block' }}>{'Moisture Content'}</span>
                       <strong style={{ fontSize: '0.875rem', color: '#1E40AF' }}>
                         {lotSpecs.moisture || req.specs?.moisture || 'Below 8%'}
                       </strong>
                     </div>
 
                     <div style={{ background: '#F8FAFC', padding: '12px 14px', borderRadius: 10, border: '1px solid var(--border)' }}>
-                      <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)', display: 'block' }}>{t('Packaging Standard', 'પેકિંગ')}</span>
+                      <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)', display: 'block' }}>{'Packaging Standard'}</span>
                       <strong style={{ fontSize: '0.875rem', color: 'var(--text-primary)' }}>
                         {lotSpecs.packaging || req.specs?.packaging || 'Standard Jute / PP Bags'}
                       </strong>
                     </div>
 
                     <div style={{ background: '#F8FAFC', padding: '12px 14px', borderRadius: 10, border: '1px solid var(--border)' }}>
-                      <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)', display: 'block' }}>{t('Warehouse / Lot Location', 'વેરહાઉસ સ્થળ')}</span>
+                      <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)', display: 'block' }}>{'Warehouse / Lot Location'}</span>
                       <strong style={{ fontSize: '0.875rem', color: 'var(--text-primary)' }}>
                         {lotSpecs.warehouseLocation || `${farmer.village} APMC Yard`}
                       </strong>
                     </div>
 
                     <div style={{ background: '#F8FAFC', padding: '12px 14px', borderRadius: 10, border: '1px solid var(--border)' }}>
-                      <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)', display: 'block' }}>{t('Dispatch Readiness', 'ડિસ્પેચ સમય')}</span>
+                      <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)', display: 'block' }}>{'Dispatch Readiness'}</span>
                       <strong style={{ fontSize: '0.875rem', color: 'var(--text-primary)' }}>
                         {lotSpecs.dispatchReadiness || quote.date || 'Immediate (within 48h)'}
                       </strong>
@@ -861,7 +859,7 @@ export default function MyRequirements() {
                     <div style={{ fontSize: '1.6rem' }}>🔬</div>
                     <div>
                       <span style={{ fontSize: '0.75rem', fontWeight: 700, color: '#6B21A8', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-                        {t('Lab Inspection & Quality Certificate', 'લેબ તપાસ પ્રમાણપત્ર')}
+                        {'Lab Inspection & Quality Certificate'}
                       </span>
                       <div style={{ fontSize: '0.875rem', fontWeight: 600, color: '#4C1D95' }}>
                         {lotSpecs.labCertificate || 'Agmarknet / NABL Accredited APMC Quality Certificate Verified'}
@@ -881,12 +879,12 @@ export default function MyRequirements() {
                       navigate('/farmer/chat');
                     }}
                   >
-                    <MessageCircle size={15} /> {t('Chat with Farmer', 'ખેડૂત સાથે ચેટ કરો')}
+                    <MessageCircle size={15} /> {'Chat with Farmer'}
                   </button>
 
                   {isAccepted ? (
                     <span className="badge badge-green" style={{ padding: '8px 16px', fontSize: '0.875rem' }}>
-                      ✓ {t('Deal Accepted & Confirmed', 'સોદો સ્વીકારી લીધો છે')}
+                      ✓ {'Deal Accepted & Confirmed'}
                     </span>
                   ) : (
                     <button
@@ -896,7 +894,7 @@ export default function MyRequirements() {
                       onClick={() => handleAcceptQuote(quote, req)}
                     >
                       <CheckCircle2 size={16} />
-                      {t('Accept Quote & Confirm Deal', 'ઑફર સ્વીકારો અને સોદો પાકો કરો')}
+                      {'Accept Quote & Confirm Deal'}
                     </button>
                   )}
 
@@ -905,7 +903,7 @@ export default function MyRequirements() {
                     className="btn btn-secondary"
                     onClick={() => setSelectedQuoteModal(null)}
                   >
-                    {t('Close', 'બંધ કરો')}
+                    {'Close'}
                   </button>
                 </div>
 
@@ -939,10 +937,10 @@ export default function MyRequirements() {
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 20, paddingBottom: 14, borderBottom: '1px solid var(--border)' }}>
                 <div>
                   <h3 style={{ margin: '0 0 4px', fontFamily: 'var(--font-heading)' }}>
-                    📊 {t('Compare Received Quotes for', 'પ્રાપ્ત ઑફર્સની સરખામણી:')} {compareModal.req.cropName}
+                    📊 {'Compare Received Quotes for'} {compareModal.req.cropName}
                   </h3>
                   <p style={{ margin: 0, fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
-                    {t('Target Price:', 'લક્ષ્ય ભાવ:')} <strong>₹{compareModal.req.targetPrice}/kg</strong> • {t('Required Qty:', 'જથ્થો:')} <strong>{compareModal.req.qty} {compareModal.req.unit || 'ton'}</strong> • {compareModal.req.destination}
+                    {'Target Price:'} <strong>₹{compareModal.req.targetPrice}/kg</strong> • {'Required Qty:'} <strong>{compareModal.req.qty} {compareModal.req.unit || 'ton'}</strong> • {compareModal.req.destination}
                   </p>
                 </div>
                 <button
@@ -959,8 +957,7 @@ export default function MyRequirements() {
                 {compareModal.quotes.map((q, idx) => {
                   const farmer = FARMERS.find(f => f.id === q.farmerId || f.name === q.farmerName) || {
                     name: q.farmerName || 'Farmer',
-                    gujName: q.farmerGujName || 'ખેડૂત',
-                    village: q.village || 'Unjha',
+                                        village: q.village || 'Unjha',
                     district: q.district || 'Mehsana',
                     rating: 4.8,
                     reviews: 32,
@@ -992,7 +989,7 @@ export default function MyRequirements() {
                     >
                       {isBestPrice && (
                         <div style={{ position: 'absolute', top: -12, right: 16, background: '#166534', color: '#fff', fontSize: '0.72rem', fontWeight: 800, padding: '3px 10px', borderRadius: 12, textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-                          ⭐ {t('Best Price Offer', 'સૌથી સારો ભાવ')}
+                          ⭐ {'Best Price Offer'}
                         </div>
                       )}
 
@@ -1005,7 +1002,7 @@ export default function MyRequirements() {
                           <div>
                             <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
                               <strong style={{ fontSize: '1rem', color: 'var(--text-primary)' }}>
-                                {lang === 'gu' ? (q.farmerGujName || farmer.gujName || q.farmerName) : q.farmerName}
+                                {q.farmerName}
                               </strong>
                               {farmer.verified && <ShieldCheck size={15} color="var(--green-primary)" />}
                             </div>
@@ -1017,13 +1014,13 @@ export default function MyRequirements() {
 
                         {/* Price Hero */}
                         <div style={{ background: isBestPrice ? '#DCFCE7' : '#F8FAFC', borderRadius: 12, padding: '12px 14px', marginBottom: 14, textAlign: 'center' }}>
-                          <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', display: 'block' }}>{t('Quoted Rate', 'ઑફર ભાવ')}</span>
+                          <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', display: 'block' }}>{'Quoted Rate'}</span>
                           <div style={{ fontFamily: 'var(--font-heading)', fontSize: '1.6rem', fontWeight: 900, color: 'var(--green-primary)' }}>
                             ₹{q.price}/kg
                           </div>
                           {targetDiff > 0 ? (
                             <span style={{ fontSize: '0.75rem', fontWeight: 700, color: '#166534' }}>
-                              💚 ₹{targetDiff}/kg {t('cheaper than your target', 'લક્ષ્ય કરતાં સસ્તું')}
+                              💚 ₹{targetDiff}/kg {'cheaper than your target'}
                             </span>
                           ) : (
                             <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
@@ -1035,27 +1032,27 @@ export default function MyRequirements() {
                         {/* Specs Table */}
                         <div style={{ fontSize: '0.825rem', display: 'flex', flexDirection: 'column', gap: 8, marginBottom: 16 }}>
                           <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px dashed var(--border)', paddingBottom: 4 }}>
-                            <span style={{ color: 'var(--text-muted)' }}>{t('Lot Quantity:', 'પુરવઠો:')}</span>
+                            <span style={{ color: 'var(--text-muted)' }}>{'Lot Quantity:'}</span>
                             <strong>{q.qty} {compareModal.req.unit || 'ton'}</strong>
                           </div>
                           <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px dashed var(--border)', paddingBottom: 4 }}>
-                            <span style={{ color: 'var(--text-muted)' }}>{t('Total Deal Value:', 'કુલ મૂલ્ય:')}</span>
+                            <span style={{ color: 'var(--text-muted)' }}>{'Total Deal Value:'}</span>
                             <strong style={{ color: 'var(--green-primary)' }}>₹{dealTotal}</strong>
                           </div>
                           <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px dashed var(--border)', paddingBottom: 4 }}>
-                            <span style={{ color: 'var(--text-muted)' }}>{t('Delivery Mode:', 'ડિલિવરી:')}</span>
+                            <span style={{ color: 'var(--text-muted)' }}>{'Delivery Mode:'}</span>
                             <strong>{q.delivery === 'pickup' ? '🚜 Farm Pickup' : '🚚 Mandi Delivery'}</strong>
                           </div>
                           <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px dashed var(--border)', paddingBottom: 4 }}>
-                            <span style={{ color: 'var(--text-muted)' }}>{t('Purity Guarantee:', 'શુદ્ધતા:')}</span>
+                            <span style={{ color: 'var(--text-muted)' }}>{'Purity Guarantee:'}</span>
                             <strong>{lotSpecs.purity || '99.5% Cleaned'}</strong>
                           </div>
                           <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px dashed var(--border)', paddingBottom: 4 }}>
-                            <span style={{ color: 'var(--text-muted)' }}>{t('Moisture:', 'ભેજ:')}</span>
+                            <span style={{ color: 'var(--text-muted)' }}>{'Moisture:'}</span>
                             <strong>{lotSpecs.moisture || 'Below 8%'}</strong>
                           </div>
                           <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                            <span style={{ color: 'var(--text-muted)' }}>{t('Lab Report:', 'લેબ ટેસ્ટ:')}</span>
+                            <span style={{ color: 'var(--text-muted)' }}>{'Lab Report:'}</span>
                             <strong style={{ color: '#6B21A8' }}>{lotSpecs.labCertificate ? '✓ NABL Certified' : 'Verified APMC'}</strong>
                           </div>
                         </div>
@@ -1078,7 +1075,7 @@ export default function MyRequirements() {
                             setSelectedQuoteModal({ quote: q, req: compareModal.req, farmer });
                           }}
                         >
-                          <FileText size={13} /> {t('Full Details', 'સંપૂર્ણ વિગતો')}
+                          <FileText size={13} /> {'Full Details'}
                         </button>
 
                         {isAccepted ? (
@@ -1095,7 +1092,7 @@ export default function MyRequirements() {
                               setCompareModal(null);
                             }}
                           >
-                            <CheckCircle2 size={13} /> {t('Accept Deal', 'સ્વીકારો')}
+                            <CheckCircle2 size={13} /> {'Accept Deal'}
                           </button>
                         )}
                       </div>
@@ -1110,7 +1107,7 @@ export default function MyRequirements() {
                   className="btn btn-secondary"
                   onClick={() => setCompareModal(null)}
                 >
-                  {t('Close Comparison', 'બંધ કરો')}
+                  {'Close Comparison'}
                 </button>
               </div>
             </motion.div>
@@ -1142,7 +1139,7 @@ export default function MyRequirements() {
                   <span style={{ fontSize: '2rem' }}>{editReq.emoji || '🌾'}</span>
                   <div>
                     <h3 style={{ margin: 0, fontFamily: 'var(--font-heading)' }}>
-                      {t('Edit Buying Requirement', 'ખરીદી માંગણી સુધારો')}
+                      {'Edit Buying Requirement'}
                     </h3>
                     <p style={{ margin: 0, fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
                       {editReq.cropName} • ID: {editReq.id}
@@ -1165,7 +1162,7 @@ export default function MyRequirements() {
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
                     <div className="form-group" style={{ marginBottom: 0 }}>
                       <label className="form-label" style={{ fontWeight: 600 }}>
-                        {t('Target Buying Price (₹/kg)', 'લક્ષ્ય ભાવ (₹/kg)')} *
+                        {'Target Buying Price (₹/kg)'} *
                       </label>
                       <input
                         type="number"
@@ -1178,7 +1175,7 @@ export default function MyRequirements() {
 
                     <div className="form-group" style={{ marginBottom: 0 }}>
                       <label className="form-label" style={{ fontWeight: 600 }}>
-                        {t('Quantity', 'જથ્થો')} *
+                        {'Quantity'} *
                       </label>
                       <div style={{ display: 'flex', gap: 8 }}>
                         <input
@@ -1205,7 +1202,7 @@ export default function MyRequirements() {
                   {/* Required Grade */}
                   <div className="form-group" style={{ marginBottom: 0 }}>
                     <label className="form-label" style={{ fontWeight: 600 }}>
-                      {t('Required Quality Grade', 'જરૂરી ગુણવત્તા ગ્રેડ')}
+                      {'Required Quality Grade'}
                     </label>
                     {editCropAttr.grades && editCropAttr.grades.length > 0 ? (
                       <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
@@ -1217,7 +1214,7 @@ export default function MyRequirements() {
                             className={`chip ${editFormData.grade === g.label ? 'active' : ''}`}
                             style={{ fontSize: '0.8rem', padding: '6px 12px' }}
                           >
-                            {lang === 'gu' ? g.guj : g.label}
+                            {g.label}
                           </button>
                         ))}
                       </div>
@@ -1234,7 +1231,7 @@ export default function MyRequirements() {
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
                     <div className="form-group" style={{ marginBottom: 0 }}>
                       <label className="form-label" style={{ fontWeight: 600 }}>
-                        {t('Export Destination', 'નિકાસ દેશ')}
+                        {'Export Destination'}
                       </label>
                       <select
                         className="form-select"
@@ -1249,7 +1246,7 @@ export default function MyRequirements() {
 
                     <div className="form-group" style={{ marginBottom: 0 }}>
                       <label className="form-label" style={{ fontWeight: 600 }}>
-                        {t('Delivery Mode', 'ડિલિવરી સ્થળ')}
+                        {'Delivery Mode'}
                       </label>
                       <select
                         className="form-select"
@@ -1267,7 +1264,7 @@ export default function MyRequirements() {
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
                     <div className="form-group" style={{ marginBottom: 0 }}>
                       <label className="form-label" style={{ fontWeight: 600 }}>
-                        {t('Packaging Format', 'પેકિંગ')}
+                        {'Packaging Format'}
                       </label>
                       <input
                         className="form-input"
@@ -1278,7 +1275,7 @@ export default function MyRequirements() {
 
                     <div className="form-group" style={{ marginBottom: 0 }}>
                       <label className="form-label" style={{ fontWeight: 600 }}>
-                        {t('Required By Date', 'જરૂરી તારીખ')}
+                        {'Required By Date'}
                       </label>
                       <input
                         type="date"
@@ -1292,7 +1289,7 @@ export default function MyRequirements() {
                   {/* Payment Terms */}
                   <div className="form-group" style={{ marginBottom: 0 }}>
                     <label className="form-label" style={{ fontWeight: 600 }}>
-                      {t('Payment Terms', 'ચુકવણી શરતો')}
+                      {'Payment Terms'}
                     </label>
                     <select
                       className="form-select"
@@ -1314,19 +1311,19 @@ export default function MyRequirements() {
                         onChange={e => setEditFormData(prev => ({ ...prev, urgency: e.target.checked ? 'urgent' : 'active' }))}
                         style={{ accentColor: 'var(--green-primary)', width: 16, height: 16 }}
                       />
-                      🔥 {t('Urgent Requirement', 'તાત્કાલિક જરૂર')}
+                      🔥 {'Urgent Requirement'}
                     </label>
 
                     <label style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer', fontSize: '0.85rem', fontWeight: 600, marginLeft: 'auto' }}>
-                      <span>{t('Status:', 'સ્થિતિ:')}</span>
+                      <span>{'Status:'}</span>
                       <select
                         className="form-select"
                         style={{ padding: '4px 8px', fontSize: '0.85rem', width: 110 }}
                         value={editFormData.status}
                         onChange={e => setEditFormData(prev => ({ ...prev, status: e.target.value }))}
                       >
-                        <option value="active">{t('Active', 'સક્રિય')}</option>
-                        <option value="closed">{t('Closed', 'બંધ')}</option>
+                        <option value="active">{'Active'}</option>
+                        <option value="closed">{'Closed'}</option>
                       </select>
                     </label>
                   </div>
@@ -1334,7 +1331,7 @@ export default function MyRequirements() {
                   {/* Notes for Farmers */}
                   <div className="form-group" style={{ marginBottom: 0 }}>
                     <label className="form-label" style={{ fontWeight: 600 }}>
-                      {t('Notes for Farmers', 'ખેડૂતો માટે નોંધ')}
+                      {'Notes for Farmers'}
                     </label>
                     <textarea
                       rows={2}
@@ -1353,7 +1350,7 @@ export default function MyRequirements() {
                     className="btn btn-secondary btn-full"
                     onClick={() => setEditReq(null)}
                   >
-                    {t('Cancel', 'રદ કરો')}
+                    {'Cancel'}
                   </button>
                   <button
                     type="submit"
@@ -1361,7 +1358,7 @@ export default function MyRequirements() {
                     style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 6 }}
                   >
                     <Save size={16} />
-                    {t('Save Changes', 'ફેરફાર સાચવો')}
+                    {'Save Changes'}
                   </button>
                 </div>
               </form>
@@ -1379,14 +1376,14 @@ export default function MyRequirements() {
                 <div style={{ width: 48, height: 48, borderRadius: '50%', background: '#FFEBEE', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 12px' }}>
                   <Trash2 size={24} color="#E53E3E" />
                 </div>
-                <h3>{t('Delete Requirement?', 'માંગણી હટાવવી છે?')}</h3>
+                <h3>{'Delete Requirement?'}</h3>
                 <p style={{ color: 'var(--text-secondary)', fontSize: '0.875rem' }}>
-                  {t('This requirement will be removed and no longer show to farmers.', 'આ માંગણી હટાવી દેવામાં આવશે અને ખેડૂતોને દેખાશે નહીં.')}
+                  {'This requirement will be removed and no longer show to farmers.'}
                 </p>
               </div>
               <div style={{ display: 'flex', gap: 12 }}>
-                <button className="btn btn-secondary btn-full" onClick={() => setDeleteModal(null)}>{t('Cancel', 'રદ કરો')}</button>
-                <button className="btn btn-danger btn-full" onClick={() => handleDelete(deleteModal)}>{t('Delete', 'હટાવો')}</button>
+                <button className="btn btn-secondary btn-full" onClick={() => setDeleteModal(null)}>{'Cancel'}</button>
+                <button className="btn btn-danger btn-full" onClick={() => handleDelete(deleteModal)}>{'Delete'}</button>
               </div>
             </motion.div>
           </motion.div>
