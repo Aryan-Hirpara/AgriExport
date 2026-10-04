@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Globe, ChevronDown, Check, Sparkles } from 'lucide-react';
 
@@ -7,7 +8,7 @@ const LANGUAGES = [
   { code: 'gu', name: 'Gujarati', native: 'ગુજરાતી', flag: '🇮🇳', group: 'primary' },
   { code: 'hi', name: 'Hindi', native: 'हिन्दी', flag: '🇮🇳', group: 'indian' },
   { code: 'mr', name: 'Marathi', native: 'मરાઠી', flag: '🇮🇳', group: 'indian' },
-  { code: 'pa', name: 'Punjabi', native: 'ਪੰਜਾਬੀ', flag: '🇮🇳', group: 'indian' },
+  { code: 'pa', name: 'Punjabi', native: 'ਪੰਜਾਬી', flag: '🇮🇳', group: 'indian' },
   { code: 'ta', name: 'Tamil', native: 'தமிழ்', flag: '🇮🇳', group: 'indian' },
   { code: 'te', name: 'Telugu', native: 'తెలుగు', flag: '🇮🇳', group: 'indian' },
   { code: 'bn', name: 'Bengali', native: 'বাংলা', flag: '🇮🇳', group: 'indian' },
@@ -19,6 +20,7 @@ const LANGUAGES = [
 
 export default function LanguageSelector({ variant = 'navbar' }) {
   const [isOpen, setIsOpen] = useState(false);
+  const location = useLocation();
   const [activeCode, setActiveCode] = useState(() => {
     const match = document.cookie.match(/googtrans=\/en\/([a-z]{2,5})/);
     return match && match[1] ? match[1] : 'en';
@@ -32,6 +34,20 @@ export default function LanguageSelector({ variant = 'navbar' }) {
       setActiveCode(match[1]);
     }
   }, []);
+
+  // Ensure dynamic route transitions stay translated when active
+  useEffect(() => {
+    if (activeCode && activeCode !== 'en') {
+      const timer = setTimeout(() => {
+        const select = document.querySelector('.goog-te-combo');
+        if (select) {
+          select.value = activeCode;
+          select.dispatchEvent(new Event('change'));
+        }
+      }, 250);
+      return () => clearTimeout(timer);
+    }
+  }, [location.pathname, activeCode]);
 
   // Initialize hidden Google Translate engine in the DOM
   useEffect(() => {
