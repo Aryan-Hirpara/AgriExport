@@ -156,7 +156,6 @@ const PREPARED_REQUIREMENTS = BUYER_REQUIREMENTS.map(req => ({
 }));
 
 export const AppProvider = ({ children }) => {
-  const [lang, setLang] = useState('en'); // 'en' | 'guj'
   const [role, setRole] = useState(null); // 'farmer' | 'enterprise' | 'admin' | null
   const [user, setUser] = useState(null);
   const [toasts, setToasts] = useState([]);
@@ -419,7 +418,6 @@ export const AppProvider = ({ children }) => {
       id: `br_${Date.now()}`,
       enterpriseId: user?.id || 'e1',
       enterpriseName: enterprise.name,
-      gujEnterpriseName: enterprise.gujName,
       buyerType: enterprise.type || 'Export House',
       verified: enterprise.verified !== undefined ? enterprise.verified : true,
       logo: enterprise.logo || '🏢',
@@ -525,8 +523,6 @@ export const AppProvider = ({ children }) => {
     ]);
   };
 
-  const t = (en) => en;
-
   const addToast = (message, type = 'success') => {
     const id = Date.now();
     setToasts(prev => [...prev, { id, message, type }]);
@@ -551,9 +547,6 @@ export const AppProvider = ({ children }) => {
   return (
     <AppContext.Provider
       value={{
-        lang,
-        setLang,
-        t,
         role,
         user,
         loginAs,

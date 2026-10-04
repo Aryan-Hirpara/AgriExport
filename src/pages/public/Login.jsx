@@ -2,11 +2,11 @@ import { useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useApp } from '../../context/AppContext';
-import { Sprout, Eye, EyeOff } from 'lucide-react';
+import { Eye, EyeOff } from 'lucide-react';
 import { FadeUpItem, StaggerGrid, SpinnerBtn } from '../../components/common/AnimatedComponents';
 
 export default function Login() {
-  const { t, lang, setLang, loginAs, addToast } = useApp();
+  const { loginAs, addToast } = useApp();
   const navigate = useNavigate();
   const [params] = useSearchParams();
   const initialRole = params.get('role') === 'admin' ? 'admin' 
@@ -29,10 +29,10 @@ export default function Login() {
       setLoading(false);
       setSuccess(true);
       loginAs(role);
-      const roleLabel = role === 'farmer' ? t('Farmer', 'ખેડૂત')
-        : role === 'enterprise' ? t('Enterprise', 'ઉદ્યોગ')
-        : t('Admin', 'એડમિન');
-      addToast(t(`Welcome back! Logged in as ${roleLabel}`, `સ્વાગત છે! ${roleLabel} તરીકે લૉગ ઇન`), 'success');
+      const roleLabel = role === 'farmer' ? 'Farmer'
+        : role === 'enterprise' ? 'Enterprise'
+        : 'Admin';
+      addToast(`Welcome back! Logged in as ${roleLabel}`, 'success');
       setTimeout(() => {
         if (role === 'farmer') navigate('/farmer/home');
         else if (role === 'enterprise') navigate('/enterprise/home');
@@ -59,7 +59,7 @@ export default function Login() {
           {/* Logo */}
           <FadeUpItem>
             <div style={{ textAlign: 'center', marginBottom: 32 }}>
-              <Link to="/" style={{ display: 'inline-flex', alignItems: 'center', gap: 12, textDecoration: 'none' }}>
+              <Link to="/" className="notranslate" style={{ display: 'inline-flex', alignItems: 'center', gap: 12, textDecoration: 'none' }}>
                 <div style={{ width: 48, height: 48, background: '#fff', border: '1.5px solid var(--border)', borderRadius: 14, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 4, boxShadow: 'var(--shadow-sm)' }}>
                   <img src="/logo.png" alt="AgriExport Connect Logo" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
                 </div>
@@ -73,7 +73,7 @@ export default function Login() {
           {/* Heading */}
           <FadeUpItem>
             <div style={{ marginBottom: 28 }}>
-              <h3 style={{ fontFamily: 'var(--font-heading)', margin: 0 }}>{t('Sign In', 'સાઇન ઇન')}</h3>
+              <h3 style={{ fontFamily: 'var(--font-heading)', margin: 0 }}>Sign In</h3>
             </div>
           </FadeUpItem>
 
@@ -86,8 +86,8 @@ export default function Login() {
                     🛡️
                   </div>
                   <div>
-                    <div style={{ fontWeight: 700, fontSize: '0.9rem', color: '#1e3a8a' }}>{t('Admin Portal Login', 'એડમિન પોર્ટલ લૉગ ઇન')}</div>
-                    <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>admin@agriexport.in</div>
+                    <div style={{ fontWeight: 700, fontSize: '0.9rem', color: '#1e3a8a' }}>Admin Portal Login</div>
+                    <div className="notranslate" style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>admin@agriexport.in</div>
                   </div>
                 </div>
                 <button
@@ -95,16 +95,16 @@ export default function Login() {
                   onClick={() => demoLogin('farmer')}
                   style={{ border: 'none', background: 'none', color: '#2563eb', fontSize: '0.8125rem', fontWeight: 600, cursor: 'pointer' }}
                 >
-                  {t('Switch to User', 'યૂઝર પર સ્વિચ કરો')}
+                  Switch to User
                 </button>
               </div>
             ) : (
               <>
-                <p style={{ fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-secondary)', marginBottom: 12 }}>{t('Login as', 'આ તરીકે લૉગ ઇન')}</p>
+                <p style={{ fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-secondary)', marginBottom: 12 }}>Login as</p>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 24 }}>
                   {[
-                    { key: 'farmer', icon: '🧑‍🌾', label: t('Farmer', 'ખેડૂત') },
-                    { key: 'enterprise', icon: '🏢', label: t('Enterprise', 'ઉદ્યોગ') },
+                    { key: 'farmer', icon: '🧑‍🌾', label: 'Farmer' },
+                    { key: 'enterprise', icon: '🏢', label: 'Enterprise' },
                   ].map(r => (
                     <motion.button
                       key={r.key}
@@ -131,11 +131,11 @@ export default function Login() {
           <FadeUpItem>
             <div className="flex-col gap-16" style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
               <div className="form-group">
-                <label className="form-label">{t('Email or Phone', 'ઈ-મેઇલ અથવા ફોન')}</label>
-                <input className="form-input" type="text" value={email} onChange={e => setEmail(e.target.value)} placeholder={t('ramesh@example.com', 'ramesh@example.com')} />
+                <label className="form-label">Email or Phone</label>
+                <input className="form-input notranslate" type="text" value={email} onChange={e => setEmail(e.target.value)} placeholder="ramesh@example.com" />
               </div>
               <div className="form-group">
-                <label className="form-label">{t('Password', 'પાસવર્ડ')}</label>
+                <label className="form-label">Password</label>
                 <div style={{ position: 'relative' }}>
                   <input className="form-input" type={showPwd ? 'text' : 'password'} value={password} onChange={e => setPassword(e.target.value)} placeholder="••••••••" style={{ paddingRight: 48 }} />
                   <button onClick={() => setShowPwd(!showPwd)} style={{ position: 'absolute', right: 14, top: '50%', transform: 'translateY(-50%)', border: 'none', background: 'none', cursor: 'pointer', color: 'var(--text-muted)' }}>
@@ -143,11 +143,11 @@ export default function Login() {
                   </button>
                 </div>
                 <div style={{ textAlign: 'right', marginTop: 4 }}>
-                  <a href="#" style={{ fontSize: '0.8125rem', color: 'var(--green-primary)', fontWeight: 500 }}>{t('Forgot password?', 'પાસવર્ડ ભૂલ્યા?')}</a>
+                  <a href="#" style={{ fontSize: '0.8125rem', color: 'var(--green-primary)', fontWeight: 500 }}>Forgot password?</a>
                 </div>
               </div>
               <SpinnerBtn loading={loading} success={success} onClick={handleLogin} className="btn btn-primary btn-full" style={{ marginTop: 8 }}>
-                {t('Sign In', 'સાઇન ઇન')}
+                Sign In
               </SpinnerBtn>
             </div>
           </FadeUpItem>
@@ -155,7 +155,7 @@ export default function Login() {
           {/* Demo Accounts */}
           <FadeUpItem>
             <div style={{ marginTop: 28, paddingTop: 24, borderTop: '1px solid var(--border)' }}>
-              <p style={{ fontSize: '0.8125rem', textAlign: 'center', marginBottom: 12, color: 'var(--text-muted)' }}>{t('Try demo accounts', 'ડેમો એકાઉન્ટ અજમાવો')}</p>
+              <p style={{ fontSize: '0.8125rem', textAlign: 'center', marginBottom: 12, color: 'var(--text-muted)' }}>Try demo accounts</p>
               <div style={{ display: 'flex', gap: 8, justifyContent: 'center' }}>
                 {['admin', 'farmer', 'enterprise'].map(r => (
                   <button key={r} onClick={() => demoLogin(r)} className="chip" style={{ fontSize: '0.8125rem' }}>
@@ -169,8 +169,8 @@ export default function Login() {
           {/* Register Link */}
           <FadeUpItem>
             <p style={{ textAlign: 'center', marginTop: 24, fontSize: '0.9rem', color: 'var(--text-secondary)' }}>
-              {t("Don't have an account? ", 'ખાતું નથી? ')}
-              <Link to="/register" style={{ color: 'var(--green-primary)', fontWeight: 600 }}>{t('Register', 'નોંધો')}</Link>
+              Don't have an account?{' '}
+              <Link to="/register" style={{ color: 'var(--green-primary)', fontWeight: 600 }}>Register</Link>
             </p>
           </FadeUpItem>
         </motion.div>

@@ -2,10 +2,9 @@ import { useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useApp } from '../../context/AppContext';
-import { MapPin, ShieldCheck, Star, ChevronLeft, ChevronRight, MessageSquare } from 'lucide-react';
+import { MapPin, ShieldCheck, ChevronLeft, ChevronRight, MessageSquare } from 'lucide-react';
 import { LISTINGS, FARMERS } from '../../data/sampleData';
-import { FadeUpItem, StaggerGrid, StarRating } from '../../components/common/AnimatedComponents';
-import { translateTerm } from '../../utils/translationUtils';
+import { FadeUpItem, StarRating } from '../../components/common/AnimatedComponents';
 
 const REVIEWS = [
   { name: 'Ahmed Spice Exports', rating: 5, comment: 'Excellent quality jeera. Delivered as promised. Will buy again.', date: 'Sep 2026', verified: true },
@@ -15,10 +14,9 @@ const REVIEWS = [
 
 export default function ProduceDetail() {
   const { id } = useParams();
-  const { t, lang, role, addToast, produceListings } = useApp();
+  const { role, produceListings } = useApp();
   const navigate = useNavigate();
   const [photoIdx, setPhotoIdx] = useState(0);
-  const [showOffer, setShowOffer] = useState(false);
 
   // Find listing by id from shared produceListings or fallback
   const listing = (produceListings || []).find(l => l.id === id) || LISTINGS.find(l => l.id === id) || LISTINGS[0];
@@ -60,7 +58,7 @@ export default function ProduceDetail() {
           onMouseEnter={e => (e.currentTarget.style.color = 'var(--green-primary)')}
           onMouseLeave={e => (e.currentTarget.style.color = 'var(--text-secondary)')}
         >
-          <ChevronLeft size={20} /> {t('Back', 'પાછળ')}
+          <ChevronLeft size={20} /> Back
         </button>
 
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 380px', gap: 40, alignItems: 'flex-start' }}>
@@ -99,13 +97,13 @@ export default function ProduceDetail() {
             {/* Description */}
             <FadeUpItem>
               <div className="card card-body" style={{ marginBottom: 24 }}>
-                <h3 style={{ fontFamily: 'var(--font-heading)', marginBottom: 8 }}>{t('About This Produce', 'આ ઉત્પાદ વિશે')}</h3>
-                <p style={{ lineHeight: 1.7 }}>{listing.description || (lang === 'gu' ? listing.gujDesc : listing.description)}</p>
+                <h3 style={{ fontFamily: 'var(--font-heading)', marginBottom: 8 }}>About This Produce</h3>
+                <p style={{ lineHeight: 1.7 }}>{listing.description}</p>
                 <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginTop: 16 }}>
-                  {listing.organic && <span className="badge badge-green">🌱 {t('Organic Certified', 'ઓર્ગેનિક પ્રમાણિત')}</span>}
-                  {listing.exportReady && <span className="badge badge-blue">✈️ {t('Export Ready', 'નિકાસ રેડી')}</span>}
-                  <span className="badge badge-amber">⭐ {translateTerm(listing.grade, lang)}</span>
-                  {listing.expires && <span className="badge badge-gray">📅 {t('Expires', 'સ.')} {listing.expires}</span>}
+                  {listing.organic && <span className="badge badge-green">🌱 Organic Certified</span>}
+                  {listing.exportReady && <span className="badge badge-blue">✈️ Export Ready</span>}
+                  <span className="badge badge-amber notranslate">⭐ {listing.grade}</span>
+                  {listing.expires && <span className="badge badge-gray">📅 Expires <span className="notranslate">{listing.expires}</span></span>}
                 </div>
               </div>
             </FadeUpItem>
@@ -115,7 +113,7 @@ export default function ProduceDetail() {
               <FadeUpItem>
                 <div className="card card-body" style={{ marginBottom: 24 }}>
                   <h4 style={{ fontFamily: 'var(--font-heading)', marginBottom: 16 }}>
-                    🔬 {t('Specifications', 'વ. ​​મ.')}
+                    🔬 Specifications
                   </h4>
                   <div style={{ overflowX: 'auto' }}>
                     <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.875rem' }}>
@@ -125,7 +123,7 @@ export default function ProduceDetail() {
                             <td style={{ padding: '10px 14px', fontWeight: 600, color: 'var(--text-secondary)', textTransform: 'capitalize', width: '38%' }}>
                               {key.replace(/([A-Z])/g, ' $1').trim()}
                             </td>
-                            <td style={{ padding: '10px 14px', color: 'var(--text-primary)', fontWeight: 500 }}>{val}</td>
+                            <td className="notranslate" style={{ padding: '10px 14px', color: 'var(--text-primary)', fontWeight: 500 }}>{val}</td>
                           </tr>
                         ))}
                       </tbody>
@@ -138,7 +136,7 @@ export default function ProduceDetail() {
             {/* Farmer Card */}
             <FadeUpItem>
               <div className="card card-body" style={{ marginBottom: 24 }}>
-                <h4 style={{ fontFamily: 'var(--font-heading)', marginBottom: 16 }}>{t('About the Farmer', 'ખેડૂત વિશે')}</h4>
+                <h4 style={{ fontFamily: 'var(--font-heading)', marginBottom: 16 }}>About the Farmer</h4>
                 <div style={{ display: 'flex', gap: 16, alignItems: 'flex-start' }}>
                   <div className="avatar avatar-xl" style={{ background: 'var(--green-light)', fontSize: '2.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: '50%', width: 72, height: 72, flexShrink: 0 }}>
                     {farmer.avatar}
@@ -159,12 +157,12 @@ export default function ProduceDetail() {
                     </div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                       <StarRating rating={farmer.rating} />
-                      <span style={{ fontWeight: 700, fontSize: '0.9rem' }}>{farmer.rating}</span>
-                      <span style={{ fontSize: '0.8125rem', color: 'var(--text-muted)' }}>({farmer.reviews} reviews)</span>
+                      <span className="notranslate" style={{ fontWeight: 700, fontSize: '0.9rem' }}>{farmer.rating}</span>
+                      <span style={{ fontSize: '0.8125rem', color: 'var(--text-muted)' }}>(<span className="notranslate">{farmer.reviews}</span> reviews)</span>
                     </div>
                     <div style={{ marginTop: 8, display: 'flex', gap: 16 }}>
-                      <span style={{ fontSize: '0.8125rem', color: 'var(--text-secondary)' }}>🌱 Land: {farmer.land}</span>
-                      <span style={{ fontSize: '0.8125rem', color: 'var(--text-secondary)' }}>📅 Since {farmer.since}</span>
+                      <span style={{ fontSize: '0.8125rem', color: 'var(--text-secondary)' }}>🌱 Land: <span className="notranslate">{farmer.land}</span></span>
+                      <span style={{ fontSize: '0.8125rem', color: 'var(--text-secondary)' }}>📅 Since <span className="notranslate">{farmer.since}</span></span>
                     </div>
                   </div>
                 </div>
@@ -174,7 +172,7 @@ export default function ProduceDetail() {
             {/* Reviews */}
             <FadeUpItem>
               <div className="card card-body">
-                <h4 style={{ fontFamily: 'var(--font-heading)', marginBottom: 20 }}>{t('Reviews', 'સમીક્ષા')} ({REVIEWS.length})</h4>
+                <h4 style={{ fontFamily: 'var(--font-heading)', marginBottom: 20 }}>Reviews (<span className="notranslate">{REVIEWS.length}</span>)</h4>
                 {REVIEWS.map((rev, i) => (
                   <div key={i} style={{ paddingBottom: 20, marginBottom: 20, borderBottom: i < REVIEWS.length - 1 ? '1px solid var(--border)' : 'none' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 8 }}>
@@ -187,7 +185,7 @@ export default function ProduceDetail() {
                       </div>
                       <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>{rev.date}</span>
                     </div>
-                    <p style={{ fontSize: '0.875rem', margin: 0 }}>{rev.comment}</p>
+                    <p style={{ fontSize: '0.875rem', margin: 0 }}>"{rev.comment}"</p>
                   </div>
                 ))}
               </div>
@@ -202,33 +200,33 @@ export default function ProduceDetail() {
                   {listing.cropName}
                 </h2>
                 <div style={{ display: 'flex', alignItems: 'baseline', gap: 4, marginBottom: 20 }}>
-                  <span style={{ fontFamily: 'var(--font-heading)', fontWeight: 900, fontSize: '2.5rem', color: 'var(--green-primary)' }}>₹{listing.price}</span>
-                  <span style={{ color: 'var(--text-muted)', fontSize: '1rem' }}>/{t('kg', 'કિલો')}</span>
+                  <span className="notranslate" style={{ fontFamily: 'var(--font-heading)', fontWeight: 900, fontSize: '2.5rem', color: 'var(--green-primary)' }}>₹{listing.price}</span>
+                  <span style={{ color: 'var(--text-muted)', fontSize: '1rem' }}>/kg</span>
                 </div>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 20 }}>
                   {[
-                    { label: t('Quantity', 'જથ્થો'), value: `${listing.qty} ${translateTerm(listing.unit, lang)}` },
-                    { label: t('Grade', 'ગ્રેડ'), value: translateTerm(listing.grade, lang) },
-                    { label: t('Location', 'સ્થળ'), value: `${listing.village}, ${translateTerm(listing.district, lang)}` },
-                    { label: t('Offers Received', 'ઑફર'), value: `${listing.offers} ${t('offers', 'ઑફર્સ')}` },
+                    { label: 'Quantity', value: `${listing.qty} ${listing.unit}`, notranslate: true },
+                    { label: 'Grade', value: listing.grade, notranslate: true },
+                    { label: 'Location', value: `${listing.village}, ${listing.district}`, notranslate: false },
+                    { label: 'Offers Received', value: `${listing.offers} offers`, notranslate: true },
                   ].map(item => (
                     <div key={item.label} style={{ background: 'var(--bg-page)', borderRadius: 10, padding: '12px 14px' }}>
                       <p style={{ fontSize: '0.75rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--text-muted)', margin: '0 0 4px' }}>{item.label}</p>
-                      <p style={{ fontWeight: 700, color: 'var(--text-primary)', margin: 0, fontSize: '0.9375rem' }}>{item.value}</p>
+                      <p className={item.notranslate ? 'notranslate' : ''} style={{ fontWeight: 700, color: 'var(--text-primary)', margin: 0, fontSize: '0.9375rem' }}>{item.value}</p>
                     </div>
                   ))}
                 </div>
                 {role === 'enterprise' ? (
                   <button className="btn btn-primary btn-full btn-lg" onClick={() => navigate(`/enterprise/send-offer/${listing.id}`)}>
-                    <MessageSquare size={18} /> {t('Send Offer', 'ઑફર મોકલો')}
+                    <MessageSquare size={18} /> Send Offer
                   </button>
                 ) : role === 'farmer' ? (
                   <div style={{ background: 'var(--green-light)', borderRadius: 10, padding: 14, textAlign: 'center' }}>
-                    <p style={{ color: 'var(--green-primary)', fontWeight: 600, margin: 0, fontSize: '0.875rem' }}>🌾 {t('This is your listing', 'આ તમારી યાદી છે')}</p>
+                    <p style={{ color: 'var(--green-primary)', fontWeight: 600, margin: 0, fontSize: '0.875rem' }}>🌾 This is your listing</p>
                   </div>
                 ) : (
                   <Link to="/login" className="btn btn-outline btn-full btn-lg">
-                    {t('Login to Send Offer', 'ઑફર માટે લૉગ ઇન')}
+                    Login to Send Offer
                   </Link>
                 )}
               </div>
@@ -237,7 +235,7 @@ export default function ProduceDetail() {
             <FadeUpItem>
               <div style={{ background: 'var(--amber-light)', borderRadius: 16, padding: '16px 20px', border: '1px solid #FCD34D' }}>
                 <p style={{ fontSize: '0.8125rem', color: '#92400E', margin: 0, lineHeight: 1.6 }}>
-                  ⚠️ {t('Platform only connects buyers & sellers. Shipping, customs, and payments are arranged directly between parties.', 'પ્લૅટફોર્મ ફક્ત જોડે છે. શિપિંગ, કસ્ટમ, ચુકવણી સીધી ગોઠવો.')}
+                  ⚠️ Platform only connects buyers & sellers. Shipping, customs, and payments are arranged directly between parties.
                 </p>
               </div>
             </FadeUpItem>

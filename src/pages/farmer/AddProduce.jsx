@@ -54,7 +54,6 @@ export default function AddProduce() {
     const newListing = {
       crop: cropObj.id,
       cropName: cropObj.name,
-      gujCrop: cropObj.guj,
       qty: Number(qty),
       unit,
       price: Number(price),

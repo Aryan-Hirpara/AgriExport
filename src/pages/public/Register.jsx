@@ -2,13 +2,13 @@ import { useState } from 'react';
 import { Link, useSearchParams, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useApp } from '../../context/AppContext';
-import { Upload, CheckCircle, Clock, X, Sprout } from 'lucide-react';
-import { StepProgress, FadeUpItem, SpinnerBtn } from '../../components/common/AnimatedComponents';
+import { Upload, CheckCircle, Clock, X } from 'lucide-react';
+import { StepProgress, SpinnerBtn } from '../../components/common/AnimatedComponents';
 
 const STEPS = ['Basic Info', 'Location / Company', 'Documents', 'Confirm'];
 
 export default function Register() {
-  const { t, lang, setLang, loginAs, addToast } = useApp();
+  const { loginAs, addToast } = useApp();
   const [params] = useSearchParams();
   const navigate = useNavigate();
   const initialRole = params.get('role') || 'farmer';
@@ -65,22 +65,22 @@ export default function Register() {
             ⏳
           </motion.div>
           <h2 style={{ fontFamily: 'var(--font-heading)', marginBottom: 12 }}>
-            {t('Application Submitted!', 'અરજી સબમિટ!')}
+            Application Submitted!
           </h2>
           <div className="verification-banner banner-pending" style={{ marginBottom: 24, justifyContent: 'center', textAlign: 'left' }}>
             <Clock size={20} color="#B45309" />
             <div>
-              <p style={{ color: '#B45309', fontWeight: 600, margin: 0 }}>{t('Verification Pending', 'ચકાસણી બાકી')}</p>
-              <p style={{ fontSize: '0.8125rem', color: '#92400E', margin: 0 }}>{t('We are checking your details. Usually takes 48 hours.', 'અમે તમારી વિગતો ચકાસી રહ્યા છીએ. સામાન્ય રીતે 48 કલાક.')}</p>
+              <p style={{ color: '#B45309', fontWeight: 600, margin: 0 }}>Verification Pending</p>
+              <p style={{ fontSize: '0.8125rem', color: '#92400E', margin: 0 }}>We are checking your details. Usually takes 48 hours.</p>
             </div>
           </div>
           <p style={{ color: 'var(--text-secondary)', marginBottom: 32, lineHeight: 1.7 }}>
-            {t("You'll receive an SMS on your registered phone once verified. Meanwhile, you can browse produce.", 'ચકાસણી પછી SMS મળશે. ત્યાં સુધી ઉત્પાદ જોઈ શકો છો.')}
+            You'll receive an SMS on your registered phone once verified. Meanwhile, you can browse produce.
           </p>
           <div style={{ display: 'flex', gap: 12, justifyContent: 'center' }}>
-            <Link to="/browse" className="btn btn-secondary">{t('Browse Produce', 'ઉત્પાદ જુઓ')}</Link>
+            <Link to="/browse" className="btn btn-secondary">Browse Produce</Link>
             <button onClick={() => { loginAs(role); navigate(role === 'farmer' ? '/farmer/home' : '/enterprise/home'); }} className="btn btn-primary">
-              {t('Continue to Dashboard →', 'ડૅશબોર્ડ →')}
+              Continue to Dashboard →
             </button>
           </div>
         </motion.div>
@@ -97,7 +97,7 @@ export default function Register() {
       >
         {/* Header */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 32 }}>
-          <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none' }}>
+          <Link to="/" className="notranslate" style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none' }}>
             <div style={{ width: 36, height: 36, background: '#fff', border: '1px solid var(--border)', borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 2 }}>
               <img src="/logo.png" alt="AgriExport Connect Logo" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
             </div>
@@ -105,13 +105,13 @@ export default function Register() {
           </Link>
         </div>
 
-        <h3 style={{ fontFamily: 'var(--font-heading)', marginBottom: 8 }}>{t('Create Account', 'ખાતું બનાવો')}</h3>
-        <p style={{ marginBottom: 28, fontSize: '0.875rem' }}>{t(`Step ${step + 1} of ${STEPS.length}: ${STEPS[step]}`, `પગલું ${step + 1}/${STEPS.length}: ${STEPS[step]}`)}</p>
+        <h3 style={{ fontFamily: 'var(--font-heading)', marginBottom: 8 }}>Create Account</h3>
+        <p style={{ marginBottom: 28, fontSize: '0.875rem' }}>Step {step + 1} of {STEPS.length}: {STEPS[step]}</p>
 
         {/* Role Toggle */}
         {step === 0 && (
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 28 }}>
-            {[{ key: 'farmer', icon: '🧑‍🌾', label: t('Farmer', 'ખેડૂત') }, { key: 'enterprise', icon: '🏢', label: t('Enterprise', 'ઉદ્યોગ') }].map(r => (
+            {[{ key: 'farmer', icon: '🧑‍🌾', label: 'Farmer' }, { key: 'enterprise', icon: '🏢', label: 'Enterprise' }].map(r => (
               <motion.button key={r.key} onClick={() => setRole(r.key)} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.97 }}
                 style={{ padding: '14px', border: `2px solid ${role === r.key ? 'var(--green-primary)' : 'var(--border)'}`, borderRadius: 12, background: role === r.key ? 'var(--green-light)' : '#fff', cursor: 'pointer', textAlign: 'center' }}>
                 <div style={{ fontSize: '1.5rem', marginBottom: 4 }}>{r.icon}</div>
@@ -141,19 +141,19 @@ export default function Register() {
             {step === 0 && (
               <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
                 <div className="form-group">
-                  <label className="form-label">{t('Full Name', 'પૂરું નામ')}</label>
+                  <label className="form-label">Full Name</label>
                   <input className="form-input" value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} placeholder={role === 'farmer' ? 'Ramesh Patel' : 'Ahmed Ali'} />
                 </div>
                 <div className="form-group">
-                  <label className="form-label">{t('Mobile Number', 'મોબાઇલ નંબર')}</label>
-                  <input className="form-input" value={form.phone} onChange={e => setForm({ ...form, phone: e.target.value })} placeholder="9876543210" />
+                  <label className="form-label">Mobile Number</label>
+                  <input className="form-input notranslate" value={form.phone} onChange={e => setForm({ ...form, phone: e.target.value })} placeholder="9876543210" />
                 </div>
                 <div className="form-group">
-                  <label className="form-label">{t('Email Address', 'ઈ-મેઇલ સરનામું')}</label>
-                  <input className="form-input" type="email" value={form.email} onChange={e => setForm({ ...form, email: e.target.value })} placeholder="ramesh@gmail.com" />
+                  <label className="form-label">Email Address</label>
+                  <input className="form-input notranslate" type="email" value={form.email} onChange={e => setForm({ ...form, email: e.target.value })} placeholder="ramesh@gmail.com" />
                 </div>
                 <div className="form-group">
-                  <label className="form-label">{t('Password', 'પાસવર્ડ')}</label>
+                  <label className="form-label">Password</label>
                   <input className="form-input" type="password" value={form.password} onChange={e => setForm({ ...form, password: e.target.value })} placeholder="Min. 8 characters" />
                 </div>
               </div>
@@ -163,37 +163,37 @@ export default function Register() {
             {step === 1 && role === 'farmer' && (
               <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
                 <div className="form-group">
-                  <label className="form-label">{t('Village', 'ગામ')}</label>
+                  <label className="form-label">Village</label>
                   <input className="form-input" value={form.village} onChange={e => setForm({ ...form, village: e.target.value })} placeholder="Unjha" />
                 </div>
                 <div className="form-group">
-                  <label className="form-label">{t('District', 'જિલ્લો')}</label>
+                  <label className="form-label">District</label>
                   <select className="form-select" value={form.district} onChange={e => setForm({ ...form, district: e.target.value })}>
                     {districts.map(d => <option key={d}>{d}</option>)}
                   </select>
                 </div>
                 <div className="form-group">
-                  <label className="form-label">{t('Land Size (bigha / acre)', 'જમીન (બીઘા / એકર)')}</label>
-                  <input className="form-input" value={form.land} onChange={e => setForm({ ...form, land: e.target.value })} placeholder="12 bigha" />
+                  <label className="form-label">Land Size (bigha / acre)</label>
+                  <input className="form-input notranslate" value={form.land} onChange={e => setForm({ ...form, land: e.target.value })} placeholder="12 bigha" />
                 </div>
               </div>
             )}
             {step === 1 && role === 'enterprise' && (
               <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
                 <div className="form-group">
-                  <label className="form-label">{t('Company Name', 'કંપની નામ')}</label>
+                  <label className="form-label">Company Name</label>
                   <input className="form-input" value={form.company} onChange={e => setForm({ ...form, company: e.target.value })} placeholder="Ahmed Spice Exports Pvt Ltd" />
                 </div>
                 <div className="form-group">
                   <label className="form-label">GST Number</label>
-                  <input className="form-input" value={form.gst} onChange={e => setForm({ ...form, gst: e.target.value })} placeholder="24AAACA1234B1Z5" />
+                  <input className="form-input notranslate" value={form.gst} onChange={e => setForm({ ...form, gst: e.target.value })} placeholder="24AAACA1234B1Z5" />
                 </div>
                 <div className="form-group">
                   <label className="form-label">IEC Code</label>
-                  <input className="form-input" value={form.iec} onChange={e => setForm({ ...form, iec: e.target.value })} placeholder="AAACA1234B" />
+                  <input className="form-input notranslate" value={form.iec} onChange={e => setForm({ ...form, iec: e.target.value })} placeholder="AAACA1234B" />
                 </div>
                 <div className="form-group">
-                  <label className="form-label">{t('Registered Address', 'નોંધાયેલ સરનામું')}</label>
+                  <label className="form-label">Registered Address</label>
                   <textarea className="form-textarea" rows={2} value={form.address} onChange={e => setForm({ ...form, address: e.target.value })} placeholder="123, GIDC Estate, Ahmedabad" />
                 </div>
               </div>
@@ -203,7 +203,7 @@ export default function Register() {
             {step === 2 && (
               <div>
                 <p style={{ marginBottom: 16, fontSize: '0.875rem' }}>
-                  {t('Upload required documents (PDF, JPG, PNG)', 'જરૂરી દસ્તાવેજ અપલોડ કરો (PDF, JPG, PNG)')}
+                  Upload required documents (PDF, JPG, PNG)
                 </p>
                 <div
                   className={`upload-zone ${dragOver ? 'dragover' : ''}`}
@@ -214,9 +214,9 @@ export default function Register() {
                 >
                   <input id="file-input" type="file" multiple style={{ display: 'none' }} onChange={e => setUploadedFiles(prev => [...prev, ...Array.from(e.target.files).map(f => f.name)])} />
                   <Upload size={36} color="var(--green-primary)" style={{ margin: '0 auto 12px' }} />
-                  <p style={{ fontWeight: 600, color: 'var(--text-primary)', margin: 0 }}>{t('Drag & drop or click to upload', 'ખેંચો & છોડો અથવા ક્લિક કરો')}</p>
+                  <p style={{ fontWeight: 600, color: 'var(--text-primary)', margin: 0 }}>Drag & drop or click to upload</p>
                   <p style={{ fontSize: '0.8125rem', color: 'var(--text-muted)', marginTop: 4 }}>
-                    {role === 'farmer' ? t('Aadhar Card, Land Record (7/12)', 'આધાર કાર્ડ, 7/12 ઉતારો') : t('GST Certificate, IEC Certificate, MOA', 'GST, IEC, MOA')}
+                    {role === 'farmer' ? 'Aadhar Card, Land Record (7/12)' : 'GST Certificate, IEC Certificate, MOA'}
                   </p>
                 </div>
                 {uploadedFiles.length > 0 && (
@@ -239,20 +239,20 @@ export default function Register() {
             {step === 3 && (
               <div style={{ textAlign: 'center' }}>
                 <div style={{ fontSize: '3rem', marginBottom: 16 }}>✅</div>
-                <h4 style={{ marginBottom: 8 }}>{t('Review & Submit', 'તપાસો & સબમિટ')}</h4>
+                <h4 style={{ marginBottom: 8 }}>Review & Submit</h4>
                 <p style={{ fontSize: '0.875rem', marginBottom: 24 }}>
-                  {t('By submitting, you agree to our Terms of Service and Privacy Policy. Our team will verify your documents within 48 hours.', 'સબમિટ કરીને, તમે અમારી શરતો સ્વીકારો છો. 48 કલાકમાં ચકાસણી.')}
+                  By submitting, you agree to our Terms of Service and Privacy Policy. Our team will verify your documents within 48 hours.
                 </p>
                 <div style={{ background: 'var(--green-light)', borderRadius: 12, padding: '16px 20px', textAlign: 'left' }}>
                   <div style={{ display: 'flex', gap: 12, alignItems: 'center', marginBottom: 8 }}>
                     <span style={{ fontSize: '1.5rem' }}>{role === 'farmer' ? '🧑‍🌾' : '🏢'}</span>
                     <div>
                       <p style={{ fontWeight: 600, color: 'var(--text-primary)', margin: 0 }}>{form.name || (role === 'farmer' ? 'Ramesh Patel' : 'Ahmed Spice Exports')}</p>
-                      <p style={{ fontSize: '0.8125rem', margin: 0, color: 'var(--green-primary)', fontWeight: 600 }}>{role === 'farmer' ? t('Farmer', 'ખેડૂત') : t('Enterprise', 'ઉદ્યોગ')} • {form.email || 'ramesh@gmail.com'}</p>
+                      <p style={{ fontSize: '0.8125rem', margin: 0, color: 'var(--green-primary)', fontWeight: 600 }}>{role === 'farmer' ? 'Farmer' : 'Enterprise'} • <span className="notranslate">{form.email || 'ramesh@gmail.com'}</span></p>
                     </div>
                   </div>
                   {role === 'farmer' && <p style={{ fontSize: '0.8125rem', margin: 0 }}>📍 {form.village || 'Unjha'}, {form.district}</p>}
-                  {role === 'enterprise' && <p style={{ fontSize: '0.8125rem', margin: 0 }}>GST: {form.gst || '24AAACA1234B1Z5'}</p>}
+                  {role === 'enterprise' && <p style={{ fontSize: '0.8125rem', margin: 0 }}>GST: <span className="notranslate">{form.gst || '24AAACA1234B1Z5'}</span></p>}
                 </div>
               </div>
             )}
@@ -262,12 +262,12 @@ export default function Register() {
         {/* Navigation */}
         <div style={{ display: 'flex', gap: 12, marginTop: 32, justifyContent: 'space-between' }}>
           {step > 0 ? (
-            <button className="btn btn-ghost" onClick={() => setStep(s => s - 1)}>← {t('Back', 'પાછળ')}</button>
+            <button className="btn btn-ghost" onClick={() => setStep(s => s - 1)}>← Back</button>
           ) : (
-            <Link to="/login" className="btn btn-ghost">{t('Sign In instead', 'સાઇન ઇન')}</Link>
+            <Link to="/login" className="btn btn-ghost">Sign In instead</Link>
           )}
           <SpinnerBtn loading={loading && step === STEPS.length - 1} onClick={handleNext} className="btn btn-primary">
-            {step < STEPS.length - 1 ? t('Continue →', 'ચાલુ રાખો →') : t('Submit Application', 'અરજી સબમિટ')}
+            {step < STEPS.length - 1 ? 'Continue →' : 'Submit Application'}
           </SpinnerBtn>
         </div>
       </motion.div>

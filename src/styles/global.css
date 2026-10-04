@@ -565,26 +565,6 @@ p { font-size: 1rem; color: var(--text-secondary); }
 .empty-state-icon { font-size: 4rem; margin-bottom: 24px; animation: sway 3s ease-in-out infinite; }
 @keyframes sway { 0%, 100% { transform: rotate(-5deg); } 50% { transform: rotate(5deg); } }
 
-/* === LANGUAGE TOGGLE === */
-.lang-toggle {
-  display: flex;
-  background: var(--border);
-  border-radius: var(--radius-full);
-  padding: 3px;
-}
-.lang-btn {
-  padding: 4px 12px;
-  border-radius: var(--radius-full);
-  border: none;
-  background: transparent;
-  font-size: 0.8125rem;
-  font-weight: 600;
-  color: var(--text-secondary);
-  cursor: pointer;
-  transition: all var(--transition);
-}
-.lang-btn.active { background: var(--bg-card); color: var(--green-primary); box-shadow: var(--shadow-sm); }
-
 /* === COUNTER BADGE === */
 .counter-badge {
   min-width: 20px;
