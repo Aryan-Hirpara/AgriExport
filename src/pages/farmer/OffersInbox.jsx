@@ -316,7 +316,7 @@ export default function OffersInbox() {
 
           return (
             <motion.div
-              className="modal-backdrop"
+              className="modal-overlay"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
@@ -325,17 +325,19 @@ export default function OffersInbox() {
             >
               <motion.div
                 className="modal"
-                initial={{ opacity: 0, scale: 0.96, y: 15 }}
-                animate={{ opacity: 1, scale: 1, y: 0 }}
-                exit={{ opacity: 0, scale: 0.96, y: 15 }}
+                initial={{ scale: 0.92, opacity: 0, y: 20 }}
+                animate={{ scale: 1, opacity: 1, y: 0 }}
+                exit={{ scale: 0.92, opacity: 0, y: 20 }}
+                transition={{ type: 'spring', stiffness: 350, damping: 28 }}
                 onClick={e => e.stopPropagation()}
                 style={{
                   maxWidth: 680,
-                  width: '95%',
+                  width: '100%',
                   maxHeight: '90vh',
                   overflowY: 'auto',
                   borderRadius: 20,
-                  padding: '28px'
+                  padding: '28px',
+                  boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)'
                 }}
               >
                 {/* Modal Header: Enterprise Profile */}
@@ -360,9 +362,24 @@ export default function OffersInbox() {
                   <button
                     type="button"
                     onClick={() => setSelectedOfferForDetail(null)}
-                    style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)', padding: 4 }}
+                    style={{
+                      background: '#F3F4F6',
+                      border: 'none',
+                      borderRadius: '50%',
+                      width: 36,
+                      height: 36,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      cursor: 'pointer',
+                      color: 'var(--text-muted)',
+                      transition: 'all 0.2s'
+                    }}
+                    onMouseEnter={e => { e.currentTarget.style.background = '#E5E7EB'; e.currentTarget.style.color = 'var(--text-primary)'; }}
+                    onMouseLeave={e => { e.currentTarget.style.background = '#F3F4F6'; e.currentTarget.style.color = 'var(--text-muted)'; }}
+                    title="Close"
                   >
-                    <X size={22} />
+                    <X size={18} />
                   </button>
                 </div>
 
