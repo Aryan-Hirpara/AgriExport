@@ -5,7 +5,7 @@ import { useApp } from '../../context/AppContext';
 import {
   PlusCircle, Trash2, CheckCircle2, ChevronDown, ChevronUp,
   MapPin, ExternalLink, ShieldCheck, X, Edit, Save, AlertCircle,
-  FileText, MessageCircle, Sparkles, Building2, Calendar, Check
+  FileText, MessageCircle, Sparkles, Building2, Calendar, Check, RefreshCw
 } from 'lucide-react';
 import { FadeUpItem, StaggerGrid } from '../../components/common/AnimatedComponents';
 import { FARMERS } from '../../data/sampleData';
@@ -39,7 +39,7 @@ const PAYMENT_OPTIONS = [
 
 export default function MyRequirements() {
   const { addToast, user,
-    buyerRequirements, deleteBuyerRequirement, updateBuyerRequirement, acceptQuoteOnRequirement
+    buyerRequirements, deleteBuyerRequirement, updateBuyerRequirement, acceptQuoteOnRequirement, counterQuoteOnRequirement
   } = useApp();
   const navigate = useNavigate();
 
@@ -50,6 +50,9 @@ export default function MyRequirements() {
   // Quote detail modal state
   const [selectedQuoteModal, setSelectedQuoteModal] = useState(null);
   const [compareModal, setCompareModal] = useState(null);
+  const [counterQuoteModal, setCounterQuoteModal] = useState(null);
+  const [enterpriseCounterPrice, setEnterpriseCounterPrice] = useState(315);
+  const [enterpriseCounterNote, setEnterpriseCounterNote] = useState('');
 
   // Edit State
   const [editReq, setEditReq] = useState(null);
@@ -156,6 +159,20 @@ export default function MyRequirements() {
         quote: { ...prev.quote, status: 'accepted' },
       }));
     }
+  };
+
+  const handleSendEnterpriseCounter = () => {
+    if (!counterQuoteModal) return;
+    const { quote, req } = counterQuoteModal;
+    counterQuoteOnRequirement(req.id, quote.id, enterpriseCounterPrice, enterpriseCounterNote);
+    addToast(`Counter offer of ₹${enterpriseCounterPrice}/kg sent to ${quote.farmerName}! 🎉`, 'success');
+    if (selectedQuoteModal && selectedQuoteModal.quote.id === quote.id) {
+      setSelectedQuoteModal(prev => ({
+        ...prev,
+        quote: { ...prev.quote, status: 'countered', counterPrice: enterpriseCounterPrice, counterNote: enterpriseCounterNote }
+      }));
+    }
+    setCounterQuoteModal(null);
   };
 
   // Get active crop attributes for the requirement being edited
@@ -868,6 +885,28 @@ export default function MyRequirements() {
                   </div>
                 </div>
 
+                {/* Active Counter Offer Banner if Countered */}
+                {quote.status === 'countered' && quote.counterPrice && (
+                  <div style={{ background: '#EFF6FF', border: '1.5px solid #BFDBFE', borderRadius: 12, padding: '14px 18px', marginBottom: 20 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 8 }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                        <span style={{ fontSize: '1.25rem' }}>🔄</span>
+                        <div>
+                          <strong style={{ color: '#1E40AF', fontSize: '0.95rem' }}>
+                            Counter Offer Sent: ₹{quote.counterPrice}/kg
+                          </strong>
+                          <p style={{ margin: '2px 0 0', fontSize: '0.825rem', color: '#3B82F6' }}>
+                            {quote.counterNote || 'Awaiting farmer response in Offers Inbox.'}
+                          </p>
+                        </div>
+                      </div>
+                      <span className="badge badge-blue" style={{ fontSize: '0.75rem' }}>
+                        Under Negotiation
+                      </span>
+                    </div>
+                  </div>
+                )}
+
                 {/* Modal Footer Actions */}
                 <div style={{ display: 'flex', gap: 10, justifyContent: 'flex-end', paddingTop: 16, borderTop: '1px solid var(--border)', flexWrap: 'wrap' }}>
                   <button
@@ -887,15 +926,30 @@ export default function MyRequirements() {
                       ✓ {'Deal Accepted & Confirmed'}
                     </span>
                   ) : (
-                    <button
-                      type="button"
-                      className="btn btn-primary"
-                      style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}
-                      onClick={() => handleAcceptQuote(quote, req)}
-                    >
-                      <CheckCircle2 size={16} />
-                      {'Accept Quote & Confirm Deal'}
-                    </button>
+                    <>
+                      <button
+                        type="button"
+                        className="btn btn-secondary"
+                        style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}
+                        onClick={() => {
+                          setCounterQuoteModal({ quote, req, farmer });
+                          setEnterpriseCounterPrice(req.targetPrice || quote.price);
+                          setEnterpriseCounterNote('');
+                        }}
+                      >
+                        <RefreshCw size={15} /> {'Send Counter Offer'}
+                      </button>
+
+                      <button
+                        type="button"
+                        className="btn btn-primary"
+                        style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}
+                        onClick={() => handleAcceptQuote(quote, req)}
+                      >
+                        <CheckCircle2 size={16} />
+                        {'Accept Quote & Confirm Deal'}
+                      </button>
+                    </>
                   )}
 
                   <button
@@ -1388,6 +1442,141 @@ export default function MyRequirements() {
             </motion.div>
           </motion.div>
         )}
+      </AnimatePresence>
+
+      {/* Enterprise Counter Quote Modal */}
+      <AnimatePresence>
+        {counterQuoteModal && (() => {
+          const { quote, req } = counterQuoteModal;
+          const diff = Number(enterpriseCounterPrice) - Number(quote.price);
+          const counterTotal = ((Number(quote.qty) || 1) * 1000 * Number(enterpriseCounterPrice)).toLocaleString('en-IN');
+
+          return (
+            <motion.div
+              className="modal-overlay"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setCounterQuoteModal(null)}
+              style={{ zIndex: 1250 }}
+            >
+              <motion.div
+                className="modal"
+                initial={{ scale: 0.9, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0.9, opacity: 0 }}
+                transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+                onClick={e => e.stopPropagation()}
+                style={{ maxWidth: 540, width: '95%', padding: '28px', borderRadius: 20 }}
+              >
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
+                  <div>
+                    <h3 style={{ margin: 0, fontFamily: 'var(--font-heading)', fontSize: '1.25rem' }}>
+                      Send Counter Offer to Farmer
+                    </h3>
+                    <p style={{ margin: '3px 0 0', fontSize: '0.85rem', color: 'var(--text-muted)' }}>
+                      Farmer: <strong>{quote.farmerName}</strong> • {req.cropName} ({quote.qty} Tons)
+                    </p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setCounterQuoteModal(null)}
+                    style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)' }}
+                  >
+                    <X size={20} />
+                  </button>
+                </div>
+
+                {/* Requirement & Quote Summary Box */}
+                <div style={{ background: '#F8FAFC', border: '1px solid #E2E8F0', borderRadius: 12, padding: '12px 16px', marginBottom: 20 }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
+                    <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Farmer Quoted Price:</span>
+                    <strong className="notranslate" style={{ fontSize: '1rem', color: 'var(--text-primary)' }}>₹{quote.price}/kg</strong>
+                  </div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
+                    <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Your Target Requirement Rate:</span>
+                    <strong className="notranslate" style={{ fontSize: '1rem', color: 'var(--green-primary)' }}>₹{req.targetPrice}/kg</strong>
+                  </div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Total Lot Volume:</span>
+                    <span className="notranslate" style={{ fontSize: '0.85rem', fontWeight: 600 }}>{quote.qty} Tons ({quote.qty * 1000} kg)</span>
+                  </div>
+                </div>
+
+                {/* Counter Price Stepper */}
+                <div style={{ marginBottom: 20 }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 8 }}>
+                    <label className="form-label" style={{ margin: 0, fontWeight: 700 }}>
+                      Proposed Counter Price (₹/kg)
+                    </label>
+                    <span style={{ fontSize: '0.8rem', color: diff >= 0 ? 'var(--green-primary)' : 'var(--amber)', fontWeight: 600 }}>
+                      {diff === 0 ? 'Matches farmer ask' : diff > 0 ? `+₹${diff}/kg above farmer ask` : `₹${Math.abs(diff)}/kg below farmer ask`}
+                    </span>
+                  </div>
+
+                  <div className="stepper" style={{ maxWidth: 240, margin: '0 auto 10px' }}>
+                    <button
+                      type="button"
+                      className="stepper-btn"
+                      onClick={() => setEnterpriseCounterPrice(p => Math.max(1, p - 1))}
+                    >
+                      −
+                    </button>
+                    <input
+                      className="stepper-input notranslate"
+                      type="number"
+                      value={enterpriseCounterPrice}
+                      onChange={e => setEnterpriseCounterPrice(Number(e.target.value))}
+                    />
+                    <button
+                      type="button"
+                      className="stepper-btn"
+                      onClick={() => setEnterpriseCounterPrice(p => p + 1)}
+                    >
+                      +
+                    </button>
+                  </div>
+
+                  <div style={{ textAlign: 'center', fontSize: '0.825rem', color: 'var(--text-muted)' }}>
+                    Total Proposed Deal Value: <strong className="notranslate" style={{ color: 'var(--green-primary)' }}>₹{counterTotal}</strong>
+                  </div>
+                </div>
+
+                {/* Counter Note */}
+                <div className="form-group" style={{ marginBottom: 24 }}>
+                  <label className="form-label" style={{ fontWeight: 600 }}>
+                    Note / Terms for Farmer (optional)
+                  </label>
+                  <textarea
+                    className="form-input"
+                    rows={2}
+                    value={enterpriseCounterNote}
+                    onChange={e => setEnterpriseCounterNote(e.target.value)}
+                    placeholder="e.g. We can finalize at ₹312/kg if pickup can be scheduled for Friday morning with lab report."
+                  />
+                </div>
+
+                {/* Actions */}
+                <div style={{ display: 'flex', gap: 12 }}>
+                  <button
+                    type="button"
+                    className="btn btn-secondary btn-full"
+                    onClick={() => setCounterQuoteModal(null)}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="button"
+                    className="btn btn-primary btn-full"
+                    onClick={handleSendEnterpriseCounter}
+                  >
+                    Send Counter Offer to Farmer →
+                  </button>
+                </div>
+              </motion.div>
+            </motion.div>
+          );
+        })()}
       </AnimatePresence>
     </div>
   );

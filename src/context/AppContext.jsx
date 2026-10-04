@@ -155,6 +155,159 @@ const PREPARED_REQUIREMENTS = BUYER_REQUIREMENTS.map(req => ({
   quotesCount: (INITIAL_QUOTES[req.id] || []).length || req.quotesCount || 0,
 }));
 
+const INITIAL_FARMER_OFFERS = [
+  {
+    id: 'o1',
+    listingId: 'l1',
+    requirementId: 'br1',
+    enterpriseId: 'e1',
+    enterpriseName: 'Ahmed Spice Exports',
+    buyerType: 'Export House',
+    city: 'Unjha / Ahmedabad',
+    phone: '+91 98250 11223',
+    rating: 4.7,
+    reviews: 38,
+    crop: 'jeera',
+    cropName: 'Jeera (Cumin)',
+    emoji: '🌿',
+    grade: 'Premium Bold',
+    offeredPrice: 308,
+    expectedPrice: 315,
+    qty: 5,
+    unit: 'ton',
+    deliveryTerms: 'Farm pickup (Unjha warehouse)',
+    paymentTerms: '50% advance, 50% on delivery',
+    validity: '2026-10-10',
+    destination: 'UAE (Dubai)',
+    flag: '🇦🇪',
+    message: 'Interested in Unjha jeera. We export to UAE regularly. Prompt loading guaranteed.',
+    status: 'new',
+    sentAt: '2 hours ago',
+    specs: {
+      purity: '99.5% Machine Cleaned (Singapore Quality)',
+      moisture: 'Below 8%',
+      grade: 'Premium Bold',
+      packaging: '50 kg PP / Jute bags',
+    },
+    requirementTitle: 'Require 15 Tons Premium Unjha Jeera for UAE Shipment',
+    requirementTargetPrice: 322,
+    requirementNotes: 'Urgent shipment for Jebel Ali port. Ready produce preferred. Farmgate inspection available.',
+  },
+  {
+    id: 'o4',
+    listingId: 'l3',
+    requirementId: 'br2',
+    enterpriseId: 'e2',
+    enterpriseName: 'Patel Agro Traders',
+    buyerType: 'Major Trader',
+    city: 'Rajkot / Gondal',
+    phone: '+91 98240 55667',
+    rating: 4.5,
+    reviews: 52,
+    crop: 'groundnut',
+    cropName: 'Groundnut (Mungfali)',
+    emoji: '🥜',
+    grade: 'Bold 40/50',
+    offeredPrice: 63,
+    expectedPrice: 65,
+    qty: 10,
+    unit: 'ton',
+    deliveryTerms: 'Rajkot warehouse delivery',
+    paymentTerms: '48 hrs after lab clearance',
+    validity: '2026-10-20',
+    destination: 'Vietnam & Indonesia',
+    flag: '🇻🇳',
+    message: 'Groundnut for Vietnam export. Aflatoxin test report must be attached.',
+    status: 'new',
+    sentAt: '5 hours ago',
+    specs: {
+      count: '40/50 Kernels/ounce',
+      moisture: 'Max 7.0%',
+      aflatoxin: 'Below 4 ppb (Export Grade)',
+      packaging: '25 kg vacuum bags',
+    },
+    requirementTitle: 'Need 25 Tons Groundnut Bold 40/50 for Vietnam',
+    requirementTargetPrice: 68,
+    requirementNotes: 'SE Asian confectionery buyers. High quality sorting required.',
+  },
+  {
+    id: 'o3',
+    listingId: 'l1',
+    requirementId: 'br6',
+    enterpriseId: 'e11',
+    enterpriseName: 'BioFresh India Pvt Ltd',
+    buyerType: 'EU Organic Exporter',
+    city: 'Ahmedabad / Unjha',
+    phone: '+91 99250 67890',
+    rating: 4.8,
+    reviews: 44,
+    crop: 'jeera',
+    cropName: 'Jeera (Cumin)',
+    emoji: '🌿',
+    grade: 'Export Organic Bold',
+    offeredPrice: 320,
+    expectedPrice: 315,
+    counterPrice: 322,
+    counterNote: 'We can match ₹322/kg if complete NPOP / EU Organic test certificate is provided at loading.',
+    qty: 8,
+    unit: 'ton',
+    deliveryTerms: 'Delivered to Unjha warehouse',
+    paymentTerms: '100% advance',
+    validity: '2026-10-15',
+    destination: 'Germany & EU',
+    flag: '🇩🇪',
+    message: 'Need organic certified jeera for Germany. Can you match our EU specs?',
+    status: 'countered',
+    sentAt: '3 days ago',
+    specs: {
+      purity: '99.5%+ Organic',
+      certification: 'NPOP / EU Organic Accredited',
+      moisture: 'Max 7.0%',
+      packaging: '25 kg food-grade inner poly bags',
+    },
+    requirementTitle: '8 Tons Organic Jeera & Isabgol for Germany Export',
+    requirementTargetPrice: 325,
+    requirementNotes: 'EU MRL residue testing mandatory. Certified lab report required.',
+  },
+  {
+    id: 'o2',
+    listingId: 'l14',
+    requirementId: 'br3',
+    enterpriseId: 'e3',
+    enterpriseName: 'Kesar Mango World Pvt Ltd',
+    buyerType: 'Govt Recognized Exporter',
+    city: 'Junagadh',
+    phone: '+91 97250 88990',
+    rating: 4.6,
+    reviews: 29,
+    crop: 'kesar-mango',
+    cropName: 'Kesar Mango',
+    emoji: '🥭',
+    grade: 'Export Grade A (GI)',
+    offeredPrice: 180,
+    expectedPrice: 185,
+    qty: 2,
+    unit: 'ton',
+    deliveryTerms: 'Pickup from farm gate',
+    paymentTerms: '100% advance on crate loading',
+    validity: '2026-10-08',
+    destination: 'UK & Canada',
+    flag: '🇬🇧',
+    message: 'We have export orders from UAE and UK. Brix 22°+ confirmed?',
+    status: 'accepted',
+    sentAt: '1 day ago',
+    specs: {
+      grade: 'Export A (GI Registered Talala Gir)',
+      brix: 'Min 20°+ Natural Sweetness',
+      weight: '220–300g per fruit',
+      treatment: 'Hot Water Treated (HWT) APEDA Packhouse',
+    },
+    requirementTitle: '5 Tons GI-Tagged Kesar Mango for UK Airfreight',
+    requirementTargetPrice: 188,
+    requirementNotes: 'Crates provided by buyer. Same-day payment guaranteed.',
+  },
+];
+
 export const AppProvider = ({ children }) => {
   const [role, setRole] = useState(null); // 'farmer' | 'enterprise' | 'admin' | null
   const [user, setUser] = useState(null);
@@ -369,6 +522,36 @@ export const AppProvider = ({ children }) => {
     }
   }, [enterpriseOffers]);
 
+  // Shared Farmer Offers State (Farmer's Offers Inbox)
+  const [farmerOffers, setFarmerOffers] = useState(() => {
+    try {
+      const stored = localStorage.getItem('agri_farmer_offers_v3');
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+      }
+    } catch (e) {
+      console.error(e);
+    }
+    return INITIAL_FARMER_OFFERS;
+  });
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('agri_farmer_offers_v3', JSON.stringify(farmerOffers));
+    } catch (e) {
+      console.error(e);
+    }
+  }, [farmerOffers]);
+
+  const updateFarmerOffer = (id, updatedFields) => {
+    setFarmerOffers(prev => prev.map(o => o.id === id ? { ...o, ...updatedFields } : o));
+  };
+
+  const deleteFarmerOffer = (id) => {
+    setFarmerOffers(prev => prev.filter(o => o.id !== id));
+  };
+
   const addEnterpriseOffer = (newOffer) => {
     const item = {
       id: `oe_${Date.now()}`,
@@ -377,6 +560,38 @@ export const AppProvider = ({ children }) => {
       ...newOffer,
     };
     setEnterpriseOffers(prev => [item, ...prev]);
+
+    // Push into farmer's inbox
+    const matchingReq = buyerRequirements.find(r => r.id === newOffer.requirementId) || BUYER_REQUIREMENTS.find(r => r.id === newOffer.requirementId);
+    const farmerOfferItem = {
+      id: `o_${Date.now()}`,
+      listingId: newOffer.listingId,
+      requirementId: newOffer.requirementId || matchingReq?.id,
+      requirementTitle: matchingReq?.title || `Offer for ${newOffer.cropName}`,
+      requirementTargetPrice: matchingReq?.targetPrice || newOffer.offeredPrice,
+      requirementNotes: matchingReq?.notes || newOffer.message,
+      enterpriseId: newOffer.enterpriseId || 'e1',
+      enterpriseName: newOffer.enterpriseName || 'Ahmed Spice Exports',
+      crop: newOffer.crop,
+      cropName: newOffer.cropName,
+      emoji: newOffer.emoji || '🌿',
+      grade: newOffer.grade || 'Standard Grade',
+      offeredPrice: Number(newOffer.offeredPrice),
+      expectedPrice: Number(newOffer.expectedPrice || newOffer.offeredPrice),
+      qty: Number(newOffer.qty),
+      unit: newOffer.unit || 'ton',
+      deliveryTerms: newOffer.deliveryTerms || 'Farm pickup',
+      paymentTerms: newOffer.paymentTerms || '50% advance, 50% on delivery',
+      validity: newOffer.validity || '2026-10-25',
+      destination: newOffer.destination || matchingReq?.destination || 'Export Market',
+      flag: newOffer.flag || matchingReq?.flag || '🌐',
+      message: newOffer.message || '',
+      status: 'new',
+      sentAt: 'Just now',
+      specs: newOffer.specs || matchingReq?.specs || {},
+    };
+    setFarmerOffers(prev => [farmerOfferItem, ...prev]);
+
     return item;
   };
 
@@ -523,6 +738,85 @@ export const AppProvider = ({ children }) => {
     ]);
   };
 
+  const counterQuoteOnRequirement = (reqId, quoteId, counterPrice, counterNote) => {
+    let targetedQuote = null;
+    let targetedReq = null;
+
+    setBuyerRequirements(prev => prev.map(req => {
+      if (req.id === reqId) {
+        targetedReq = req;
+        const updatedQuotes = (req.quotes || []).map(q => {
+          if (q.id === quoteId) {
+            targetedQuote = q;
+            return {
+              ...q,
+              status: 'countered',
+              counterPrice: Number(counterPrice),
+              counterNote: counterNote || '',
+            };
+          }
+          return q;
+        });
+        return {
+          ...req,
+          quotes: updatedQuotes,
+        };
+      }
+      return req;
+    }));
+
+    if (targetedReq && targetedQuote) {
+      const newCounterOffer = {
+        id: `o_cnt_${Date.now()}`,
+        requirementId: targetedReq.id,
+        requirementTitle: targetedReq.title,
+        requirementTargetPrice: targetedReq.targetPrice,
+        requirementNotes: targetedReq.notes,
+        enterpriseId: targetedReq.enterpriseId,
+        enterpriseName: targetedReq.enterpriseName,
+        buyerType: targetedReq.buyerType || 'Export House',
+        city: targetedReq.city || 'Gujarat',
+        phone: targetedReq.phone || '+91 98250 11223',
+        farmerId: targetedQuote.farmerId || 'f1',
+        farmerName: targetedQuote.farmerName,
+        crop: targetedReq.crop,
+        cropName: targetedReq.cropName,
+        emoji: targetedReq.emoji || '🌿',
+        grade: targetedQuote.lotSpecs?.grade || targetedReq.specs?.grade || 'Export Quality',
+        offeredPrice: Number(counterPrice),
+        expectedPrice: Number(targetedQuote.price),
+        counterPrice: Number(counterPrice),
+        counterNote: counterNote || '',
+        qty: Number(targetedQuote.qty || targetedReq.qty),
+        unit: targetedReq.unit || 'ton',
+        deliveryTerms: targetedQuote.deliveryLabel || targetedReq.deliveryTerms || 'Ex-Farm Pickup',
+        paymentTerms: targetedQuote.payment || targetedReq.paymentTerms || '30% Advance, 70% on delivery',
+        validity: '2026-10-25',
+        status: 'new', // new for farmer to review
+        isCounterFromBuyer: true,
+        sentAt: 'Just now',
+        message: counterNote || `Buyer countered your quote of ₹${targetedQuote.price}/kg with counter offer of ₹${counterPrice}/kg for requirement: "${targetedReq.title}".`,
+        specs: targetedReq.specs || {},
+        destination: targetedReq.destination || 'Export Market',
+        flag: targetedReq.flag || '🌐',
+      };
+
+      setFarmerOffers(prev => [newCounterOffer, ...prev]);
+
+      setNotifications(prev => [
+        {
+          id: `notif_${Date.now()}`,
+          type: 'offer',
+          icon: '💼',
+          text: `Counter offer of ₹${counterPrice}/kg sent to ${targetedQuote.farmerName}`,
+          time: 'Just now',
+          read: false,
+        },
+        ...prev,
+      ]);
+    }
+  };
+
   const addToast = (message, type = 'success') => {
     const id = Date.now();
     setToasts(prev => [...prev, { id, message, type }]);
@@ -562,6 +856,7 @@ export const AppProvider = ({ children }) => {
         updateBuyerRequirement,
         submitQuoteToRequirement,
         acceptQuoteOnRequirement,
+        counterQuoteOnRequirement,
         produceListings,
         addProduceListing,
         updateProduceListing,
@@ -571,6 +866,10 @@ export const AppProvider = ({ children }) => {
         addEnterpriseOffer,
         updateEnterpriseOffer,
         withdrawEnterpriseOffer,
+        farmerOffers,
+        setFarmerOffers,
+        updateFarmerOffer,
+        deleteFarmerOffer,
       }}
     >
       {children}
