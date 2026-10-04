@@ -9,7 +9,6 @@ const INITIAL_QUOTES = {
       id: 'q1',
       farmerId: 'f1',
       farmerName: 'Ramesh Patel',
-      farmerGujName: 'રમેશ પટેલ',
       village: 'Unjha',
       district: 'Mehsana',
       phone: '+91 98765 43210',
@@ -23,7 +22,7 @@ const INITIAL_QUOTES = {
       price: 320,
       total: 1600000,
       delivery: 'pickup',
-      deliveryLabel: 'Ex-Farm Pickup (ખેતરેથી પિકઅપ)',
+      deliveryLabel: 'Ex-Farm Pickup',
       date: 'Immediate (Within 48h)',
       payment: '30% Advance, 70% on weight slip',
       notes: 'Unjha Premium Jeera ready in warehouse. Sun-dried and machine-cleaned.',
@@ -44,7 +43,6 @@ const INITIAL_QUOTES = {
       id: 'q2',
       farmerId: 'f2',
       farmerName: 'Bhavna Ben Desai',
-      farmerGujName: 'ભાવના બેન દેસાઈ',
       village: 'Junagadh',
       district: 'Junagadh',
       phone: '+91 97654 32109',
@@ -58,7 +56,7 @@ const INITIAL_QUOTES = {
       price: 322,
       total: 966000,
       delivery: 'delivery',
-      deliveryLabel: 'Mandi Delivery (ઉંઝા વેરહાઉસ ડિલિવરી)',
+      deliveryLabel: 'Mandi Delivery',
       date: 'Within 1 Week',
       payment: 'Payment within 48h of quality approval',
       notes: 'Clean lots with lab report. Premium Gujarat crop.',
@@ -81,7 +79,6 @@ const INITIAL_QUOTES = {
       id: 'q3',
       farmerId: 'f3',
       farmerName: 'Karsan Bhai Solanki',
-      farmerGujName: 'કારસન ભાઈ સોલંકી',
       village: 'Viramgam',
       district: 'Ahmedabad',
       phone: '+91 96543 21098',
@@ -118,7 +115,6 @@ const INITIAL_QUOTES = {
       id: 'q4',
       farmerId: 'f2',
       farmerName: 'Bhavna Ben Desai',
-      farmerGujName: 'ભાવના બેન દેસાઈ',
       village: 'Talala Gir',
       district: 'Junagadh',
       phone: '+91 97654 32109',
@@ -271,12 +267,10 @@ export const AppProvider = ({ children }) => {
         listingId: 'l1',
         farmerId: 'f1',
         farmerName: 'Ramesh Patel',
-        farmerGujName: 'રમેશ પટેલ',
         village: 'Unjha',
         district: 'Mehsana',
         crop: 'jeera',
         cropName: 'Jeera (Cumin)',
-        gujCrop: 'જીરું',
         emoji: '🌿',
         grade: 'Premium Bold',
         offeredPrice: 308,
@@ -297,12 +291,10 @@ export const AppProvider = ({ children }) => {
         listingId: 'l14',
         farmerId: 'f2',
         farmerName: 'Bhavna Ben Desai',
-        farmerGujName: 'ભાવના બેન દેસાઈ',
         village: 'Talala Gir',
         district: 'Junagadh',
         crop: 'kesar-mango',
         cropName: 'Kesar Mango',
-        gujCrop: 'કેસર કેરી',
         emoji: '🥭',
         grade: 'Export Grade A',
         offeredPrice: 180,
@@ -323,12 +315,10 @@ export const AppProvider = ({ children }) => {
         listingId: 'l28',
         farmerId: 'f1',
         farmerName: 'Ramesh Patel',
-        farmerGujName: 'રમેશ પટેલ',
         village: 'Unjha',
         district: 'Mehsana',
         crop: 'jeera',
         cropName: 'Jeera (Cumin)',
-        gujCrop: 'જીરું',
         emoji: '🌿',
         grade: 'Machine Cleaned (99%)',
         offeredPrice: 305,
@@ -350,12 +340,10 @@ export const AppProvider = ({ children }) => {
         listingId: 'l3',
         farmerId: 'f3',
         farmerName: 'Karsan Bhai Solanki',
-        farmerGujName: 'કારસન ભાઈ સોલંકી',
         village: 'Viramgam',
         district: 'Ahmedabad',
         crop: 'groundnut',
         cropName: 'Groundnut',
-        gujCrop: 'મગફળી',
         emoji: '🥜',
         grade: 'Bold 40/50',
         offeredPrice: 62,
@@ -438,7 +426,6 @@ export const AppProvider = ({ children }) => {
       quotesCount: 0,
       quotes: [],
       posted: 'Just now',
-      gujPosted: 'હમણાં જ',
       city: enterprise.city || 'Ahmedabad',
       phone: '+91 98250 11223',
       status: 'active',
@@ -476,7 +463,6 @@ export const AppProvider = ({ children }) => {
       id: `q_${Date.now()}`,
       farmerId: user?.id || 'f1',
       farmerName: user?.name || 'Ramesh Patel',
-      farmerGujName: user?.gujName || 'રમેશ પટેલ',
       village: user?.village || 'Unjha',
       district: 'Mehsana',
       dateSubmitted: 'Just now',
@@ -539,7 +525,7 @@ export const AppProvider = ({ children }) => {
     ]);
   };
 
-  const t = (en, gu) => ((lang === 'gu' || lang === 'guj') && gu ? gu : en);
+  const t = (en) => en;
 
   const addToast = (message, type = 'success') => {
     const id = Date.now();
@@ -555,8 +541,8 @@ export const AppProvider = ({ children }) => {
 
   const loginAs = (roleType) => {
     setRole(roleType);
-    if (roleType === 'farmer') setUser({ id: 'f1', name: 'Ramesh Patel', gujName: 'રમેશ પટેલ', village: 'Unjha', verified: true });
-    if (roleType === 'enterprise') setUser({ id: 'e1', name: 'Ahmed Spice Exports', gujName: 'અહેમદ સ્પાઈસ એક્સ્પોર્ટ', verified: true });
+    if (roleType === 'farmer') setUser({ id: 'f1', name: 'Ramesh Patel', village: 'Unjha', verified: true });
+    if (roleType === 'enterprise') setUser({ id: 'e1', name: 'Ahmed Spice Exports', verified: true });
     if (roleType === 'admin') setUser({ id: 'admin1', name: 'Admin User', verified: true });
   };
 

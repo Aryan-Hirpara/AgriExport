@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Globe, ChevronDown, Check, Sparkles } from 'lucide-react';
-import { useApp } from '../../context/AppContext';
 
 const LANGUAGES = [
   { code: 'en', name: 'English', native: 'English', flag: '🇬🇧', group: 'primary' },
@@ -19,23 +18,18 @@ const LANGUAGES = [
 ];
 
 export default function LanguageSelector({ variant = 'navbar' }) {
-  const { lang, setLang } = useApp();
   const [isOpen, setIsOpen] = useState(false);
-  const [activeCode, setActiveCode] = useState(lang === 'guj' ? 'gu' : 'en');
+  const [activeCode, setActiveCode] = useState(() => {
+    const match = document.cookie.match(/googtrans=\/en\/([a-z]{2,5})/);
+    return match && match[1] ? match[1] : 'en';
+  });
   const dropdownRef = useRef(null);
 
-  // Sync active code when AppContext lang changes
-  useEffect(() => {
-    if (lang === 'guj' && activeCode !== 'gu') setActiveCode('gu');
-    if (lang === 'en' && activeCode === 'gu') setActiveCode('en');
-  }, [lang]);
-
-  // Read existing Google Translate cookie if present
+  // Read existing Google Translate cookie if present on mount
   useEffect(() => {
     const match = document.cookie.match(/googtrans=\/en\/([a-z]{2,5})/);
     if (match && match[1]) {
       setActiveCode(match[1]);
-      if (match[1] === 'gu') setLang('guj');
     }
   }, []);
 
@@ -96,13 +90,6 @@ export default function LanguageSelector({ variant = 'navbar' }) {
     setActiveCode(code);
     setIsOpen(false);
 
-    // Sync with AppContext internal dictionary
-    if (code === 'gu') {
-      setLang('guj');
-    } else {
-      setLang('en');
-    }
-
     // Trigger Google Translate engine
     if (code === 'en') {
       // Clear translation cookies to revert to clean English
@@ -130,7 +117,7 @@ export default function LanguageSelector({ variant = 'navbar' }) {
   const exportLangs = LANGUAGES.filter((l) => l.group === 'export');
 
   return (
-    <div className={`lang-selector-root ${variant}`} ref={dropdownRef}>
+    <div className={`lang-selector-root notranslate ${variant}`} ref={dropdownRef} translate="no">
       {/* Trigger Button */}
       <button
         type="button"

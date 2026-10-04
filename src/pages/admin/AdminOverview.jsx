@@ -1,29 +1,26 @@
 import { motion } from 'framer-motion';
-import { useApp } from '../../context/AppContext';
 import { Users, Package, ShieldCheck, AlertTriangle, TrendingUp, Briefcase, MessageSquare } from 'lucide-react';
 import { CountUp, FadeUpItem, StaggerGrid } from '../../components/common/AnimatedComponents';
 import { ADMIN_STATS, CHART_DATA } from '../../data/sampleData';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, BarChart, Bar, Legend } from 'recharts';
 
 export default function AdminOverview() {
-  const { t } = useApp();
-
   const stats = [
-    { icon: <Users size={22} color="var(--green-primary)" />, value: ADMIN_STATS.farmers, label: t('Farmers', 'ખેડૂતો'), bg: 'var(--green-light)', color: 'var(--green-primary)' },
-    { icon: <Briefcase size={22} color="#1565C0" />, value: ADMIN_STATS.enterprises, label: t('Enterprises', 'ઉદ્યોગો'), bg: 'var(--blue-light)', color: '#1565C0' },
-    { icon: <Package size={22} color="#7C3AED" />, value: ADMIN_STATS.listings, label: t('Listings', 'યાદીઓ'), bg: '#F3E8FF', color: '#7C3AED' },
-    { icon: <MessageSquare size={22} color="#B45309" />, value: ADMIN_STATS.offers, label: t('Offers', 'ઑફર્સ'), bg: 'var(--amber-light)', color: '#B45309' },
-    { icon: <TrendingUp size={22} color="var(--green-primary)" />, value: ADMIN_STATS.deals, label: t('Deals', 'સોદા'), bg: 'var(--green-light)', color: 'var(--green-primary)' },
-    { icon: <ShieldCheck size={22} color="var(--amber)" />, value: ADMIN_STATS.pendingVerifications, label: t('Pending Verif.', 'બાકી ચકાસણી'), bg: 'var(--amber-light)', color: '#B45309', alert: true },
-    { icon: <AlertTriangle size={22} color="var(--red)" />, value: ADMIN_STATS.openComplaints, label: t('Open Complaints', 'ખુલ્લી ફરિયાદો'), bg: 'var(--red-light)', color: 'var(--red)', alert: true },
+    { icon: <Users size={22} color="var(--green-primary)" />, value: ADMIN_STATS.farmers, label: 'Farmers', bg: 'var(--green-light)', color: 'var(--green-primary)' },
+    { icon: <Briefcase size={22} color="#1565C0" />, value: ADMIN_STATS.enterprises, label: 'Enterprises', bg: 'var(--blue-light)', color: '#1565C0' },
+    { icon: <Package size={22} color="#7C3AED" />, value: ADMIN_STATS.listings, label: 'Listings', bg: '#F3E8FF', color: '#7C3AED' },
+    { icon: <MessageSquare size={22} color="#B45309" />, value: ADMIN_STATS.offers, label: 'Offers', bg: 'var(--amber-light)', color: '#B45309' },
+    { icon: <TrendingUp size={22} color="var(--green-primary)" />, value: ADMIN_STATS.deals, label: 'Deals', bg: 'var(--green-light)', color: 'var(--green-primary)' },
+    { icon: <ShieldCheck size={22} color="var(--amber)" />, value: ADMIN_STATS.pendingVerifications, label: 'Pending Verif.', bg: 'var(--amber-light)', color: '#B45309', alert: true },
+    { icon: <AlertTriangle size={22} color="var(--red)" />, value: ADMIN_STATS.openComplaints, label: 'Open Complaints', bg: 'var(--red-light)', color: 'var(--red)', alert: true },
   ];
 
   return (
     <div style={{ padding: '32px 32px 48px' }}>
       <FadeUpItem>
         <div style={{ marginBottom: 32 }}>
-          <h2 style={{ fontFamily: 'var(--font-heading)', marginBottom: 4 }}>{t('Admin Overview', 'એડમિન ઓવરવ્યૂ')}</h2>
-          <p style={{ color: 'var(--text-secondary)' }}>{t('Platform health at a glance', 'પ્લેટફોર્મની સંપૂર્ણ સ્થિતિ એક નજરમાં')}</p>
+          <h2 style={{ fontFamily: 'var(--font-heading)', marginBottom: 4 }}>Admin Overview</h2>
+          <p style={{ color: 'var(--text-secondary)' }}>Platform health at a glance</p>
         </div>
       </FadeUpItem>
 
@@ -48,7 +45,7 @@ export default function AdminOverview() {
         {/* User Growth */}
         <FadeUpItem>
           <div className="card card-body">
-            <h4 style={{ fontFamily: 'var(--font-heading)', marginBottom: 20 }}>{t('User Growth (6 Months)', 'વપરાશકર્તા વૃદ્ધિ (૬ મહિના)')}</h4>
+            <h4 style={{ fontFamily: 'var(--font-heading)', marginBottom: 20 }}>User Growth (6 Months)</h4>
             <div style={{ height: 260 }}>
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart data={CHART_DATA.userGrowth}>
@@ -68,7 +65,7 @@ export default function AdminOverview() {
         {/* Deals by Status */}
         <FadeUpItem>
           <div className="card card-body">
-            <h4 style={{ fontFamily: 'var(--font-heading)', marginBottom: 20 }}>{t('Deals by Status', 'સ્થિતિ મુજબ સોદા')}</h4>
+            <h4 style={{ fontFamily: 'var(--font-heading)', marginBottom: 20 }}>Deals by Status</h4>
             <div style={{ height: 220, display: 'flex', justifyContent: 'center' }}>
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
@@ -97,7 +94,7 @@ export default function AdminOverview() {
       {/* Top Crops */}
       <FadeUpItem>
         <div className="card card-body">
-          <h4 style={{ fontFamily: 'var(--font-heading)', marginBottom: 20 }}>{t('Top Crops by Listing Count', 'સૌથી વધુ લિસ્ટેડ પાકો')}</h4>
+          <h4 style={{ fontFamily: 'var(--font-heading)', marginBottom: 20 }}>Top Crops by Listing Count</h4>
           <div style={{ height: 240 }}>
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={CHART_DATA.topCrops} layout="vertical" margin={{ left: 16 }}>

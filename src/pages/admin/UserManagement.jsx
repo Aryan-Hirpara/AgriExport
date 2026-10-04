@@ -6,7 +6,7 @@ import { FARMERS, ENTERPRISES } from '../../data/sampleData';
 import { FadeUpItem } from '../../components/common/AnimatedComponents';
 
 export default function UserManagement() {
-  const { t, addToast } = useApp();
+  const { addToast } = useApp();
   const [activeTab, setActiveTab] = useState('farmers');
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('All');
@@ -35,15 +35,15 @@ export default function UserManagement() {
   return (
     <div style={{ padding: '32px', height: 'calc(100vh - 64px)', overflowY: 'auto' }}>
       <FadeUpItem>
-        <h2 style={{ fontFamily: 'var(--font-heading)', marginBottom: 8 }}>{t('User Management', '.')}</h2>
-        <p style={{ marginBottom: 24 }}>{t('Manage all farmers and enterprises on the platform', '.')}</p>
+        <h2 style={{ fontFamily: 'var(--font-heading)', marginBottom: 8 }}>User Management</h2>
+        <p style={{ marginBottom: 24 }}>Manage all farmers and enterprises on the platform</p>
       </FadeUpItem>
 
       {/* Tabs */}
       <div style={{ display: 'flex', gap: 0, background: 'var(--bg-page)', borderRadius: 12, padding: '4px', marginBottom: 24, width: 'fit-content' }}>
         {['farmers', 'enterprises'].map(tab => (
           <button key={tab} onClick={() => setActiveTab(tab)} style={{ padding: '8px 20px', border: 'none', cursor: 'pointer', borderRadius: 10, background: activeTab === tab ? '#fff' : 'transparent', color: activeTab === tab ? 'var(--text-primary)' : 'var(--text-muted)', fontWeight: 600, boxShadow: activeTab === tab ? 'var(--shadow-sm)' : 'none', transition: 'all 0.2s', textTransform: 'capitalize' }}>
-            {tab === 'farmers' ? `🧑‍🌾 ${t('Farmers', '.')} (${users.farmers.length})` : `🏢 ${t('Enterprises', '.')} (${users.enterprises.length})`}
+            {tab === 'farmers' ? `🧑‍🌾 Farmers (${users.farmers.length})` : `🏢 Enterprises (${users.enterprises.length})`}
           </button>
         ))}
       </div>
@@ -52,7 +52,7 @@ export default function UserManagement() {
       <div style={{ display: 'flex', gap: 16, marginBottom: 24, flexWrap: 'wrap' }}>
         <div style={{ position: 'relative', flex: 1, maxWidth: 400 }}>
           <Search size={18} color="var(--text-muted)" style={{ position: 'absolute', left: 14, top: '50%', transform: 'translateY(-50%)' }} />
-          <input className="form-input" style={{ paddingLeft: 42 }} placeholder={t('Search by name...', '.')} value={search} onChange={e => setSearch(e.target.value)} />
+          <input className="form-input" style={{ paddingLeft: 42 }} placeholder="Search by name..." value={search} onChange={e => setSearch(e.target.value)} />
         </div>
         <div className="chip-group">
           {['All', 'Verified', 'Pending', 'Suspended'].map(s => (
@@ -122,7 +122,7 @@ export default function UserManagement() {
         {currentUsers.length === 0 && (
           <div className="empty-state" style={{ padding: 48 }}>
             <div className="empty-state-icon">👤</div>
-            <h3>{t('No users found', '.')}</h3>
+            <h3>No users found</h3>
           </div>
         )}
       </div>

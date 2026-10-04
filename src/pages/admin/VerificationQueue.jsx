@@ -6,7 +6,7 @@ import { PENDING_VERIFICATIONS } from '../../data/sampleData';
 import { FadeUpItem } from '../../components/common/AnimatedComponents';
 
 export default function VerificationQueue() {
-  const { t, addToast } = useApp();
+  const { addToast } = useApp();
   const [queue, setQueue] = useState(PENDING_VERIFICATIONS);
   const [selected, setSelected] = useState(null);
   const [rejectReason, setRejectReason] = useState('');
@@ -23,13 +23,13 @@ export default function VerificationQueue() {
   const handleApprove = (id) => {
     setQueue(prev => prev.map(u => u.id === id ? { ...u, status: 'approved' } : u));
     setSelected(null);
-    addToast(t('User verified and approved! ✓', '✓'), 'success');
+    addToast('User verified and approved! ✓', 'success');
   };
 
   const handleReject = (id) => {
     setQueue(prev => prev.map(u => u.id === id ? { ...u, status: 'rejected' } : u));
     setShowRejectModal(null);
-    addToast(t('User rejected with reason.', '.'), 'warning');
+    addToast('User rejected with reason.', 'warning');
   };
 
   const selectedUser = selected ? queue.find(u => u.id === selected) : null;
@@ -40,9 +40,9 @@ export default function VerificationQueue() {
   return (
     <div style={{ padding: '32px', height: 'calc(100vh - 64px)', overflowY: 'auto' }}>
       <FadeUpItem>
-        <h2 style={{ fontFamily: 'var(--font-heading)', marginBottom: 8 }}>{t('Verification Queue', '.')}</h2>
+        <h2 style={{ fontFamily: 'var(--font-heading)', marginBottom: 8 }}>Verification Queue</h2>
         <p style={{ marginBottom: 24 }}>
-          {queue.filter(u => u.status === 'pending').length} {t('users awaiting review', '.')}
+          {queue.filter(u => u.status === 'pending').length} users awaiting review
         </p>
       </FadeUpItem>
 
@@ -50,7 +50,7 @@ export default function VerificationQueue() {
       <div style={{ display: 'flex', gap: 16, marginBottom: 24, flexWrap: 'wrap' }}>
         <div style={{ position: 'relative', flex: 1 }}>
           <Search size={18} color="var(--text-muted)" style={{ position: 'absolute', left: 14, top: '50%', transform: 'translateY(-50%)' }} />
-          <input className="form-input" style={{ paddingLeft: 42 }} placeholder={t('Search by name...', '.')} value={search} onChange={e => setSearch(e.target.value)} />
+          <input className="form-input" style={{ paddingLeft: 42 }} placeholder="Search by name..." value={search} onChange={e => setSearch(e.target.value)} />
         </div>
         <div className="chip-group">
           {['All', 'Farmer', 'Enterprise'].map(f => (
@@ -82,10 +82,10 @@ export default function VerificationQueue() {
                 {user.status === 'pending' && (
                   <>
                     <motion.button className="btn btn-primary btn-sm" whileHover={{ scale: 1.05 }} onClick={e => { e.stopPropagation(); handleApprove(user.id); }}>
-                      <ShieldCheck size={14} /> {t('Approve', '.')}
+                      <ShieldCheck size={14} /> Approve
                     </motion.button>
                     <motion.button className="btn btn-danger btn-sm" whileHover={{ scale: 1.05 }} onClick={e => { e.stopPropagation(); setShowRejectModal(user.id); }}>
-                      <ShieldX size={14} /> {t('Reject', '.')}
+                      <ShieldX size={14} /> Reject
                     </motion.button>
                   </>
                 )}
@@ -129,7 +129,7 @@ export default function VerificationQueue() {
 
               {/* Document Cards */}
               <div style={{ marginBottom: 20 }}>
-                <p style={{ fontWeight: 700, marginBottom: 12 }}>{t('Documents Submitted', '.')}</p>
+                <p style={{ fontWeight: 700, marginBottom: 12 }}>Documents Submitted</p>
                 {selectedUser.docs.map((doc, i) => (
                   <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '10px 12px', background: 'var(--bg-page)', borderRadius: 10, marginBottom: 8 }}>
                     <span style={{ fontSize: '1.25rem' }}>{doc.icon}</span>
@@ -147,10 +147,10 @@ export default function VerificationQueue() {
               {selectedUser.status === 'pending' && (
                 <div style={{ display: 'flex', gap: 12 }}>
                   <button className="btn btn-primary btn-full" onClick={() => handleApprove(selectedUser.id)}>
-                    <ShieldCheck size={16} /> {t('Approve', '.')}
+                    <ShieldCheck size={16} /> Approve
                   </button>
                   <button className="btn btn-danger btn-full" onClick={() => setShowRejectModal(selectedUser.id)}>
-                    <ShieldX size={16} /> {t('Reject', '.')}
+                    <ShieldX size={16} /> Reject
                   </button>
                 </div>
               )}
@@ -166,12 +166,12 @@ export default function VerificationQueue() {
             <motion.div className="modal" initial={{ scale: 0.85 }} animate={{ scale: 1 }} exit={{ scale: 0.85 }} transition={{ type: 'spring', stiffness: 400, damping: 30 }}>
               <div style={{ textAlign: 'center', marginBottom: 20 }}>
                 <ShieldX size={40} color="var(--red)" style={{ margin: '0 auto 12px' }} />
-                <h3 style={{ fontFamily: 'var(--font-heading)' }}>{t('Reject Application', '.')}</h3>
-                <p style={{ fontSize: '0.875rem' }}>{t('Please provide a reason for rejection. This will be sent to the applicant.', '.')}</p>
+                <h3 style={{ fontFamily: 'var(--font-heading)' }}>Reject Application</h3>
+                <p style={{ fontSize: '0.875rem' }}>Please provide a reason for rejection. This will be sent to the applicant.</p>
               </div>
               <div className="form-group" style={{ marginBottom: 20 }}>
-                <label className="form-label">{t('Rejection Reason', '.')}</label>
-                <textarea className="form-textarea" rows={3} value={rejectReason} onChange={e => setRejectReason(e.target.value)} placeholder={t('e.g. Document unclear, please resubmit.', '.')} />
+                <label className="form-label">Rejection Reason</label>
+                <textarea className="form-textarea" rows={3} value={rejectReason} onChange={e => setRejectReason(e.target.value)} placeholder="e.g. Document unclear, please resubmit." />
               </div>
               <div className="chip-group" style={{ marginBottom: 20 }}>
                 {['Invalid document', 'Document unclear', 'Mismatch in details', 'Area not served yet'].map(r => (
@@ -179,8 +179,8 @@ export default function VerificationQueue() {
                 ))}
               </div>
               <div style={{ display: 'flex', gap: 12 }}>
-                <button className="btn btn-ghost btn-full" onClick={() => setShowRejectModal(null)}>{t('Cancel', '.')}</button>
-                <button className="btn btn-danger btn-full" onClick={() => handleReject(showRejectModal)} disabled={!rejectReason}>{t('Reject', '.')}</button>
+                <button className="btn btn-ghost btn-full" onClick={() => setShowRejectModal(null)}>Cancel</button>
+                <button className="btn btn-danger btn-full" onClick={() => handleReject(showRejectModal)} disabled={!rejectReason}>Reject</button>
               </div>
             </motion.div>
           </motion.div>

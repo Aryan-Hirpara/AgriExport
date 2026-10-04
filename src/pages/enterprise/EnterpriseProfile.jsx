@@ -14,7 +14,7 @@ const REVIEWS_GIVEN = [
 ];
 
 export default function EnterpriseProfile() {
-  const { t, lang, setLang, user, buyerRequirements, addToast } = useApp();
+  const { user, buyerRequirements, addToast } = useApp();
   const [editing, setEditing] = useState(null);
   const [reviewTab, setReviewTab] = useState('received');
 
@@ -35,22 +35,22 @@ export default function EnterpriseProfile() {
   });
 
   const profileFields = [
-    { key: 'name', label: t('Company Name', 'કંપનીનું નામ'), value: profileData.name },
-    { key: 'type', label: t('Business Type', 'વેપાર પ્રકાર'), value: profileData.type },
-    { key: 'city', label: t('Location', 'સ્થળ'), value: profileData.city },
-    { key: 'contactPerson', label: t('Contact Person', 'સંપર્ક વ્યક્તિ'), value: profileData.contactPerson },
-    { key: 'phone', label: t('Mobile / Phone', 'મોબ.'), value: profileData.phone },
-    { key: 'email', label: t('Official Email', 'ઈમેલ'), value: profileData.email },
-    { key: 'gst', label: t('GSTIN', 'જીએસટી'), value: profileData.gst },
-    { key: 'iec', label: t('IEC Code', 'આઈઈસી કોડ'), value: profileData.iec },
-    { key: 'crops', label: t('Procurement Crops', 'મુખ્ય પાક'), value: profileData.crops },
-    { key: 'minOrder', label: t('Minimum Order (MOQ)', 'લઘુત્તમ ઓર્ડર'), value: profileData.minOrder },
+    { key: 'name', label: 'Company Name', value: profileData.name },
+    { key: 'type', label: 'Business Type', value: profileData.type },
+    { key: 'city', label: 'Location', value: profileData.city },
+    { key: 'contactPerson', label: 'Contact Person', value: profileData.contactPerson },
+    { key: 'phone', label: 'Mobile / Phone', value: profileData.phone },
+    { key: 'email', label: 'Official Email', value: profileData.email },
+    { key: 'gst', label: 'GSTIN', value: profileData.gst },
+    { key: 'iec', label: 'IEC Code', value: profileData.iec },
+    { key: 'crops', label: 'Procurement Crops', value: profileData.crops },
+    { key: 'minOrder', label: 'Minimum Order (MOQ)', value: profileData.minOrder },
   ];
 
   const handleFieldChange = (key, newVal) => {
     setProfileData(prev => ({ ...prev, [key]: newVal }));
     setEditing(null);
-    addToast(t('Field updated', 'વિગત અપડેટ થઈ'), 'success');
+    addToast('Field updated', 'success');
   };
 
   return (
@@ -59,7 +59,7 @@ export default function EnterpriseProfile() {
       <div style={{ background: 'var(--green-primary)', padding: '32px 0 80px' }}>
         <div className="container">
           <h2 style={{ color: '#fff', fontFamily: 'var(--font-heading)' }}>
-            {t('Enterprise Profile', 'કંપની પ્રોફાઇલ')}
+            Enterprise Profile
           </h2>
         </div>
       </div>
@@ -73,9 +73,9 @@ export default function EnterpriseProfile() {
                 {baseEnt.logo || '🏢'}
               </div>
               <button
-                onClick={() => addToast(t('Logo updated', 'લોગો અપડેટ થયો'), 'info')}
+                onClick={() => addToast('Logo updated', 'info')}
                 style={{ position: 'absolute', bottom: 0, right: 0, width: 30, height: 30, borderRadius: '50%', background: 'var(--green-primary)', border: '2px solid #fff', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}
-                title={t('Change Logo', 'લોગો બદલો')}
+                title="Change Logo"
               >
                 <Camera size={14} color="#fff" />
               </button>
@@ -87,15 +87,15 @@ export default function EnterpriseProfile() {
               <div style={{ display: 'flex', alignItems: 'center', gap: 4, background: 'var(--green-light)', borderRadius: 20, padding: '4px 12px' }}>
                 <ShieldCheck size={14} color="var(--green-primary)" />
                 <span style={{ fontSize: '0.8125rem', fontWeight: 600, color: 'var(--green-primary)' }}>
-                  {t('Verified Enterprise', 'ચકાસાયેલ ઉદ્યોગ')}
+                  Verified Enterprise
                 </span>
               </div>
             </div>
             <div style={{ display: 'flex', gap: 32, justifyContent: 'center' }}>
               {[
-                { value: baseEnt.rating || 4.8, label: t('Rating', 'રેટિંગ') },
-                { value: baseEnt.reviews || 52, label: t('Reviews', 'સમીક્ષાઓ') },
-                { value: myDemandsCount, label: t('Demands', 'માંગણીઓ') },
+                { value: baseEnt.rating || 4.8, label: 'Rating' },
+                { value: baseEnt.reviews || 52, label: 'Reviews' },
+                { value: myDemandsCount, label: 'Demands' },
               ].map((s, i) => (
                 <div key={i} style={{ textAlign: 'center' }}>
                   <div style={{ fontFamily: 'var(--font-heading)', fontWeight: 800, fontSize: '1.5rem', color: 'var(--text-primary)' }}>
@@ -163,7 +163,7 @@ export default function EnterpriseProfile() {
                     flexShrink: 0,
                   }}
                 >
-                  <Edit size={14} /> {t('Edit', 'ફ.')}
+                  <Edit size={14} /> Edit
                 </button>
               </div>
             ))}
@@ -174,12 +174,12 @@ export default function EnterpriseProfile() {
         <FadeUpItem>
           <div className="card" style={{ marginBottom: 24 }}>
             <div style={{ padding: '16px 24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <p style={{ fontWeight: 600, margin: 0 }}>{t('Change Password', 'પાસવર્ડ બદલો')}</p>
+              <p style={{ fontWeight: 600, margin: 0 }}>Change Password</p>
               <button
                 className="btn btn-outline btn-sm"
-                onClick={() => addToast(t('Password reset link sent to your registered email', 'પાસવર્ડ લિંક ઈમેલ પર મોકલી'), 'info')}
+                onClick={() => addToast('Password reset link sent to your registered email', 'info')}
               >
-                {t('Update', 'અપડેટ')}
+                Update
               </button>
             </div>
           </div>
@@ -189,7 +189,7 @@ export default function EnterpriseProfile() {
         <FadeUpItem>
           <div className="card card-body">
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
-              <h4 style={{ fontFamily: 'var(--font-heading)', margin: 0 }}>{t('Farmer Reviews', 'ખેડૂત સમીક્ષાઓ')}</h4>
+              <h4 style={{ fontFamily: 'var(--font-heading)', margin: 0 }}>Farmer Reviews</h4>
               <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
                 <Star size={18} fill="var(--amber)" color="var(--amber)" />
                 <span style={{ fontFamily: 'var(--font-heading)', fontWeight: 800, fontSize: '1.25rem' }}>{baseEnt.rating || 4.8}</span>
@@ -226,7 +226,7 @@ export default function EnterpriseProfile() {
                   className={`tab-item ${reviewTab === tab ? 'active' : ''}`}
                   onClick={() => setReviewTab(tab)}
                 >
-                  {tab === 'received' ? t('Received', 'મળેલ') : t('Given', 'આપેલ')} ({tab === 'received' ? REVIEWS_RECEIVED.length : REVIEWS_GIVEN.length})
+                  {tab === 'received' ? 'Received' : 'Given'} ({tab === 'received' ? REVIEWS_RECEIVED.length : REVIEWS_GIVEN.length})
                 </div>
               ))}
             </div>

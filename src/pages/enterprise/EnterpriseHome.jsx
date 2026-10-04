@@ -12,17 +12,17 @@ const MINI_CHART = [
 ];
 
 export default function EnterpriseHome() {
-  const { t, lang, user, buyerRequirements } = useApp();
+  const { user, buyerRequirements } = useApp();
 
   const currentEntId = user?.id || 'e1';
   const myDemands = (buyerRequirements || []).filter(r => r.enterpriseId === currentEntId);
   const totalQuotesReceived = myDemands.reduce((acc, r) => acc + (r.quotes?.length || r.quotesCount || 0), 0);
 
   const stats = [
-    { icon: <FileText size={22} color="#1565C0" />, value: myDemands.length, label: t('My Demands (RFQs)', 'મારી માંગણીઓ'), bg: 'var(--blue-light)', trend: `${myDemands.length} active`, link: '/enterprise/requirements' },
-    { icon: <MessageSquare size={22} color="var(--green-primary)" />, value: totalQuotesReceived, label: t('Farmer Quotes', 'મળેલી ઑફર્સ'), bg: 'var(--green-light)', trend: `${totalQuotesReceived} received`, link: '/enterprise/requirements' },
-    { icon: <TrendingUp size={22} color="#9333EA" />, value: 142, label: t('Volume Sourced (ton)', 'ખરીદ જથ્થો (ટન)'), bg: '#F3E8FF', trend: '+28t this month' },
-    { icon: <Star size={22} color="#B45309" />, value: 4.8, label: t('Farmer Rating', 'ખેડૂત રેટિંગ'), bg: 'var(--amber-light)', trend: '87 reviews' },
+    { icon: <FileText size={22} color="#1565C0" />, value: myDemands.length, label: 'My Demands (RFQs)', bg: 'var(--blue-light)', trend: `${myDemands.length} active`, link: '/enterprise/requirements' },
+    { icon: <MessageSquare size={22} color="var(--green-primary)" />, value: totalQuotesReceived, label: 'Farmer Quotes', bg: 'var(--green-light)', trend: `${totalQuotesReceived} received`, link: '/enterprise/requirements' },
+    { icon: <TrendingUp size={22} color="#9333EA" />, value: 142, label: 'Volume Sourced (ton)', bg: '#F3E8FF', trend: '+28t this month' },
+    { icon: <Star size={22} color="#B45309" />, value: 4.8, label: 'Farmer Rating', bg: 'var(--amber-light)', trend: '87 reviews' },
   ];
 
   const newMatches = LISTINGS.filter(l => l.status === 'active').slice(0, 3);
@@ -41,7 +41,7 @@ export default function EnterpriseHome() {
               </h2>
             </div>
             <Link to="/enterprise/profile" className="btn btn-secondary btn-sm" style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-              <Building2 size={16} /> {t('Company Profile', 'કંપની પ્રોફાઇલ')}
+              <Building2 size={16} /> Company Profile
             </Link>
           </div>
         </FadeUpItem>
@@ -51,9 +51,9 @@ export default function EnterpriseHome() {
           <div className="verification-banner banner-verified" style={{ marginBottom: 28 }}>
             <ShieldCheck size={22} color="var(--green-primary)" />
             <div style={{ flex: 1 }}>
-              <p style={{ fontWeight: 700, color: 'var(--green-primary)', margin: 0 }}>{t('Enterprise Verified ✓', 'ઉદ્યોગ ચકાસાયેલ ✓')}</p>
+              <p style={{ fontWeight: 700, color: 'var(--green-primary)', margin: 0 }}>Enterprise Verified ✓</p>
               <p style={{ fontSize: '0.8125rem', margin: 0, color: 'var(--text-secondary)' }}>
-                {t('You can post buying requirements and receive direct quotes from Gujarat farmers.', 'તમે ખરીદી માંગણીઓ મૂકી શકો છો અને ખેડૂતો પાસેથી સીધા ભાવ મેળવી શકો છો.')}
+                You can post buying requirements and receive direct quotes from Gujarat farmers.
               </p>
             </div>
           </div>
@@ -96,10 +96,10 @@ export default function EnterpriseHome() {
               </div>
               <div style={{ flex: 1 }}>
                 <h4 style={{ color: '#fff', fontFamily: 'var(--font-heading)', margin: '0 0 4px', fontSize: '1.25rem' }}>
-                  {t('+ Post Buying Requirement / RFQ', '+ ખરીદી માંગણી ઉમેરો (RFQ)')}
+                  + Post Buying Requirement / RFQ
                 </h4>
                 <p style={{ color: 'rgba(255,255,255,0.85)', margin: 0, fontSize: '0.875rem' }}>
-                  {t('Post crops, volume, and target prices to receive quotes from farmers across Gujarat', 'જરૂરી પાક અને લક્ષ્ય ભાવ જણાવો જેથી ખેડૂતો તમને સીધા ભાવ મોકલી શકે')}
+                  Post crops, volume, and target prices to receive quotes from farmers across Gujarat
                 </p>
               </div>
               <span style={{ color: 'rgba(255,255,255,0.7)', fontSize: '1.6rem' }}>→</span>
@@ -113,14 +113,14 @@ export default function EnterpriseHome() {
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
               <div>
                 <h3 style={{ fontFamily: 'var(--font-heading)', margin: '0 0 2px' }}>
-                  {t('My Posted Buying Requirements', 'મારી ખરીદી માંગણીઓ')}
+                  My Posted Buying Requirements
                 </h3>
                 <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>
-                  {t('Active requirements visible in Farmer panel', 'ખેડૂત પેનલમાં લાઈવ માંગણીઓ')}
+                  Active requirements visible in Farmer panel
                 </span>
               </div>
               <Link to="/enterprise/requirements" style={{ color: '#1565C0', fontWeight: 700, fontSize: '0.875rem' }}>
-                {t('Manage all requirements →', 'બધી માંગણીઓ મેનેજ કરો →')}
+                Manage all requirements →
               </Link>
             </div>
 
@@ -147,7 +147,7 @@ export default function EnterpriseHome() {
                           <span style={{ fontSize: '1.5rem' }}>{req.emoji}</span>
                           <div>
                             <strong style={{ fontSize: '0.95rem' }}>{req.cropName}</strong>
-                            <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>{req.qty} {t('Tons Needed', 'ટન')}</div>
+                            <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>{req.qty} Tons Needed</div>
                           </div>
                         </div>
                         <span style={{ background: '#E3F2FD', color: '#1565C0', padding: '3px 8px', borderRadius: 10, fontSize: '0.7rem', fontWeight: 700 }}>
@@ -157,11 +157,11 @@ export default function EnterpriseHome() {
 
                       <div style={{ background: 'var(--sand-light)', borderRadius: 10, padding: '8px 12px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', margin: '10px 0 12px' }}>
                         <div>
-                          <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', display: 'block' }}>{t('Target Price', 'લક્ષ્ય ભાવ')}</span>
-                          <strong style={{ color: 'var(--green-primary)', fontSize: '1.05rem', fontFamily: 'var(--font-heading)' }}>₹{req.targetPrice}/kg</strong>
+                          <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', display: 'block' }}>Target Price</span>
+                          <strong className="notranslate" translate="no" style={{ color: 'var(--green-primary)', fontSize: '1.05rem', fontFamily: 'var(--font-heading)' }}>₹{req.targetPrice}/kg</strong>
                         </div>
                         <div style={{ textAlign: 'right' }}>
-                          <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', display: 'block' }}>{t('Quotes Received', 'મળેલી ઑફર્સ')}</span>
+                          <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', display: 'block' }}>Quotes Received</span>
                           <strong style={{ color: '#1565C0', fontSize: '0.95rem' }}>💬 {quotesList.length || req.quotesCount || 0}</strong>
                         </div>
                       </div>
@@ -169,7 +169,7 @@ export default function EnterpriseHome() {
 
                     <Link to="/enterprise/requirements" style={{ textDecoration: 'none' }}>
                       <button className="btn btn-outline btn-sm btn-full" style={{ fontSize: '0.78rem' }}>
-                        {t('View Received Farmer Quotes', 'ખેડૂતોની ઑફર્સ જુઓ')}
+                        View Received Farmer Quotes
                       </button>
                     </Link>
                   </motion.div>
@@ -182,7 +182,7 @@ export default function EnterpriseHome() {
         {/* Mini Volume Chart */}
         <FadeUpItem>
           <div className="card card-body" style={{ marginBottom: 32 }}>
-            <h4 style={{ fontFamily: 'var(--font-heading)', marginBottom: 20 }}>{t('Volume Traded (Tons)', 'વ્યાપાર જથ્થો (ટન)')}</h4>
+            <h4 style={{ fontFamily: 'var(--font-heading)', marginBottom: 20 }}>Volume Traded (Tons)</h4>
             <div style={{ height: 180 }}>
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart data={MINI_CHART}>
@@ -199,8 +199,8 @@ export default function EnterpriseHome() {
         {/* New Matching Produce */}
         <FadeUpItem>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
-            <h3 style={{ fontFamily: 'var(--font-heading)', margin: 0 }}>{t('New Matching Produce from Farmers', 'ખેડૂતો તરફથી નવું ઉત્પાદ')}</h3>
-            <Link to="/browse" style={{ color: 'var(--green-primary)', fontWeight: 600, fontSize: '0.875rem' }}>{t('Browse All Produce →', 'બધું ઉત્પાદ જુઓ →')}</Link>
+            <h3 style={{ fontFamily: 'var(--font-heading)', margin: 0 }}>New Matching Produce from Farmers</h3>
+            <Link to="/browse" style={{ color: 'var(--green-primary)', fontWeight: 600, fontSize: '0.875rem' }}>Browse All Produce →</Link>
           </div>
           <div style={{ display: 'flex', gap: 16, overflowX: 'auto', paddingBottom: 8 }}>
             {newMatches.map((listing, i) => (
@@ -212,8 +212,8 @@ export default function EnterpriseHome() {
                   <h5 style={{ fontFamily: 'var(--font-heading)', marginBottom: 4, fontSize: '0.9rem' }}>{listing.cropName}</h5>
                   <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', margin: '0 0 8px' }}>📍 {listing.village} • {listing.qty} {listing.unit}</p>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <span style={{ fontFamily: 'var(--font-heading)', fontWeight: 800, color: 'var(--green-primary)', fontSize: '1.1rem' }}>₹{listing.price}/kg</span>
-                    <Link to={`/enterprise/send-offer/${listing.id}`} className="btn btn-primary btn-sm">{t('Send Offer', 'ઑફર મોકલો')}</Link>
+                    <span className="notranslate" translate="no" style={{ fontFamily: 'var(--font-heading)', fontWeight: 800, color: 'var(--green-primary)', fontSize: '1.1rem' }}>₹{listing.price}/kg</span>
+                    <Link to={`/enterprise/send-offer/${listing.id}`} className="btn btn-primary btn-sm">Send Offer</Link>
                   </div>
                 </div>
               </motion.div>

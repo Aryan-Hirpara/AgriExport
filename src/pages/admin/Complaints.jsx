@@ -14,7 +14,7 @@ const STATUS_BADGE = { open: 'badge-red', investigating: 'badge-amber', resolved
 const SEV_BADGE = { high: 'badge-red', medium: 'badge-amber', low: 'badge-blue' };
 
 export default function Complaints() {
-  const { t, addToast } = useApp();
+  const { addToast } = useApp();
   const [complaints, setComplaints] = useState(COMPLAINTS);
   const [selected, setSelected] = useState(null);
   const [adminNote, setAdminNote] = useState('');
@@ -26,15 +26,15 @@ export default function Complaints() {
   const handleAction = (id, action) => {
     setComplaints(prev => prev.map(c => c.id === id ? { ...c, status: action } : c));
     setSelected(null);
-    addToast(action === 'resolved' ? t('Complaint resolved!', '.') : t('Status updated', '.'), 'success');
+    addToast(action === 'resolved' ? 'Complaint resolved!' : 'Status updated', 'success');
   };
 
   return (
     <div style={{ padding: '32px', height: 'calc(100vh - 64px)', overflowY: 'auto' }}>
       <FadeUpItem>
-        <h2 style={{ fontFamily: 'var(--font-heading)', marginBottom: 8 }}>{t('Complaint Management', '.')}</h2>
+        <h2 style={{ fontFamily: 'var(--font-heading)', marginBottom: 8 }}>Complaint Management</h2>
         <div style={{ display: 'flex', gap: 16, alignItems: 'center', marginBottom: 24, flexWrap: 'wrap' }}>
-          <p style={{ margin: 0 }}>{complaints.filter(c => c.status === 'open').length} {t('open complaints', '.')}</p>
+          <p style={{ margin: 0 }}>{complaints.filter(c => c.status === 'open').length} open complaints</p>
           <div className="chip-group">
             {['All', 'Open', 'Investigating', 'Resolved'].map(s => (
               <button key={s} className={`chip ${statusFilter === s ? 'active' : ''}`} onClick={() => setStatusFilter(s)}>{s} ({complaints.filter(c => s === 'All' || c.status === s.toLowerCase()).length})</button>
@@ -99,22 +99,22 @@ export default function Complaints() {
                 <p style={{ fontSize: '0.875rem', lineHeight: 1.7, background: 'var(--bg-page)', padding: '14px', borderRadius: 10 }}>{selectedComplaint.desc}</p>
               </div>
               <div className="form-group" style={{ marginBottom: 20 }}>
-                <label className="form-label">{t('Admin Note / Resolution', '.')}</label>
-                <textarea className="form-textarea" rows={3} value={adminNote} onChange={e => setAdminNote(e.target.value)} placeholder={t('Add notes or resolution details...', '.')} />
+                <label className="form-label">Admin Note / Resolution</label>
+                <textarea className="form-textarea" rows={3} value={adminNote} onChange={e => setAdminNote(e.target.value)} placeholder="Add notes or resolution details..." />
               </div>
               {selectedComplaint.status !== 'resolved' && (
                 <div style={{ display: 'flex', gap: 10 }}>
                   <button className="btn btn-secondary btn-full" onClick={() => handleAction(selectedComplaint.id, 'investigating')}>
-                    🔍 {t('Investigating', '.')}
+                    🔍 Investigating
                   </button>
                   <button className="btn btn-primary btn-full" onClick={() => handleAction(selectedComplaint.id, 'resolved')}>
-                    <ShieldCheck size={16} /> {t('Resolve', '.')}
+                    <ShieldCheck size={16} /> Resolve
                   </button>
                 </div>
               )}
               {selectedComplaint.status === 'resolved' && (
                 <div style={{ background: 'var(--green-light)', borderRadius: 12, padding: 14, textAlign: 'center' }}>
-                  <p style={{ fontWeight: 700, color: 'var(--green-primary)', margin: 0 }}>✅ {t('Complaint Resolved', '.')}</p>
+                  <p style={{ fontWeight: 700, color: 'var(--green-primary)', margin: 0 }}>✅ Complaint Resolved</p>
                 </div>
               )}
             </div>

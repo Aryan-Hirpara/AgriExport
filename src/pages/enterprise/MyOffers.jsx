@@ -21,18 +21,9 @@ const TAB_LABELS = {
   expired: 'Expired',
 };
 
-const TAB_GUJ = {
-  pending: 'બાકી',
-  countered: 'કાઉન્ટર',
-  accepted: 'સ્વીકારેલ',
-  rejected: 'અસ્વીકાર',
-  withdrawn: 'પાછી ખેંચેલ',
-  expired: 'સમાપ્ત',
-};
-
 export default function MyOffers() {
   const {
-    t, lang, addToast,
+    addToast,
     enterpriseOffers, updateEnterpriseOffer, withdrawEnterpriseOffer,
     produceListings
   } = useApp();
@@ -146,14 +137,14 @@ export default function MyOffers() {
     if (withdrawEnterpriseOffer) {
       withdrawEnterpriseOffer(id);
     }
-    addToast(t('Offer withdrawn successfully', 'ઑફર સફળતાપૂર્વક પાછી ખેંચાઈ'), 'warning');
+    addToast('Offer withdrawn successfully', 'warning');
   };
 
   const handleAcceptCounter = (id) => {
     if (updateEnterpriseOffer) {
       updateEnterpriseOffer(id, { status: 'accepted' });
     }
-    addToast(t('Counter-offer accepted! Deal created 🎉', 'કાઉન્ટર ઑફર સ્વીકારાઈ! સોદો સફળ 🎉'), 'success');
+    addToast('Counter-offer accepted! Deal created 🎉', 'success');
     if (selectedOfferForDetail?.id === id) {
       setSelectedOfferForDetail(prev => ({ ...prev, status: 'accepted' }));
     }
@@ -206,14 +197,14 @@ export default function MyOffers() {
         <div className="container">
           <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8 }}>
             <span style={{ background: 'rgba(255,255,255,0.2)', padding: '4px 10px', borderRadius: 20, color: '#fff', fontSize: '0.8rem', fontWeight: 600 }}>
-              💼 {t('Outgoing Offers Tracker', 'મોકલેલી ઑફર્સ')}
+              💼 Outgoing Offers Tracker
             </span>
           </div>
           <h2 style={{ color: '#fff', fontFamily: 'var(--font-heading)', margin: 0 }}>
-            {t('My Offers', 'મારી ઑફર્સ')}
+            My Offers
           </h2>
           <p style={{ color: 'rgba(255,255,255,0.85)', margin: '4px 0 0' }}>
-            {offersList.length} {t('total offers placed on farmer listings', 'કુલ મોકલેલી ઑફર્સ')}
+            {offersList.length} total offers placed on farmer listings
           </p>
         </div>
       </div>
@@ -252,7 +243,7 @@ export default function MyOffers() {
                   gap: 6,
                 }}
               >
-                <span>{lang === 'gu' ? TAB_GUJ[tab] : TAB_LABELS[tab]}</span>
+                <span>{TAB_LABELS[tab]}</span>
                 <span
                   style={{
                     background: isActive ? 'rgba(255,255,255,0.25)' : 'var(--border)',
@@ -275,13 +266,13 @@ export default function MyOffers() {
             <div className="empty-state" style={{ background: '#fff', borderRadius: 20, padding: '48px 24px', textAlign: 'center', boxShadow: 'var(--shadow-sm)' }}>
               <div className="empty-state-icon" style={{ fontSize: '3rem', marginBottom: 12 }}>📋</div>
               <h3 style={{ fontFamily: 'var(--font-heading)', margin: '0 0 8px' }}>
-                {t(`No ${TAB_LABELS[activeTab]} offers`, `કોઈ ${TAB_GUJ[activeTab]} ઑફર નથી`)}
+                No {TAB_LABELS[activeTab]} offers
               </h3>
               <p style={{ color: 'var(--text-secondary)', fontSize: '0.875rem', marginBottom: 20 }}>
-                {t('Browse verified produce listings from Gujarat farmers and send direct price offers.', 'ગુજરાતના ખેડૂતોના લિસ્ટિંગ જુઓ અને સીધી ઑફર મોકલો.')}
+                Browse verified produce listings from Gujarat farmers and send direct price offers.
               </p>
               <Link to="/browse" className="btn btn-primary">
-                🌾 {t('Browse Produce Listings', 'પાક લિસ્ટિંગ જુઓ')}
+                🌾 Browse Produce Listings
               </Link>
             </div>
           ) : filtered.map((offer, i) => {
@@ -324,13 +315,13 @@ export default function MyOffers() {
                     <div style={{ flex: 1, minWidth: 0 }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap', marginBottom: 4 }}>
                         <h4 style={{ fontFamily: 'var(--font-heading)', margin: 0, fontSize: '1.15rem' }}>
-                          {lang === 'gu' ? cropObj.guj : listing.cropName || offer.cropName}
+                          {listing.cropName || offer.cropName}
                         </h4>
                         <span className={`badge ${STATUS_BADGE[offer.status]}`} style={{ fontSize: '0.75rem', textTransform: 'capitalize', fontWeight: 700 }}>
-                          {lang === 'gu' ? TAB_GUJ[offer.status] : offer.status}
+                          {offer.status}
                         </span>
                         {(offer.grade || listing.grade) && (
-                          <span className="badge badge-green" style={{ fontSize: '0.75rem' }}>
+                          <span className="badge badge-green notranslate" translate="no" style={{ fontSize: '0.75rem' }}>
                             🏷️ {offer.grade || listing.grade}
                           </span>
                         )}
@@ -352,7 +343,7 @@ export default function MyOffers() {
                       {listing.specs && (
                         <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginTop: 4 }}>
                           {Object.entries(listing.specs).filter(([, v]) => v).slice(0, 3).map(([k, v]) => (
-                            <span key={k} className="badge" style={{ fontSize: '0.75rem', background: '#F8FAFC', border: '1px solid #E2E8F0', color: '#334155' }}>
+                            <span key={k} className="badge notranslate" translate="no" style={{ fontSize: '0.75rem', background: '#F8FAFC', border: '1px solid #E2E8F0', color: '#334155' }}>
                               {String(v)}
                             </span>
                           ))}
@@ -362,18 +353,18 @@ export default function MyOffers() {
 
                     {/* Right: Pricing Box */}
                     <div style={{ textAlign: 'right', flexShrink: 0 }}>
-                      <div style={{ fontFamily: 'var(--font-heading)', fontWeight: 900, fontSize: '1.4rem', color: 'var(--green-primary)' }}>
+                      <div className="notranslate" translate="no" style={{ fontFamily: 'var(--font-heading)', fontWeight: 900, fontSize: '1.4rem', color: 'var(--green-primary)' }}>
                         ₹{offer.offeredPrice}/kg
                       </div>
                       <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginTop: 2 }}>
-                        {t('Farmer ask:', 'ખેડૂત ભાવ:')} <strong>₹{askPrice}/kg</strong>
+                        Farmer ask: <strong className="notranslate" translate="no">₹{askPrice}/kg</strong>
                       </div>
                       <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', fontWeight: 600, marginTop: 4, background: 'var(--green-light)', padding: '2px 8px', borderRadius: 8 }}>
-                        {t('Total:', 'કુલ:')} ₹{dealTotal}
+                        Total: <span className="notranslate" translate="no">₹{dealTotal}</span>
                       </div>
 
                       {offer.status === 'countered' && offer.counterPrice && (
-                        <div style={{ fontSize: '0.825rem', color: 'var(--blue)', fontWeight: 700, marginTop: 6, background: '#E3F2FD', padding: '4px 8px', borderRadius: 8 }}>
+                        <div className="notranslate" translate="no" style={{ fontSize: '0.825rem', color: 'var(--blue)', fontWeight: 700, marginTop: 6, background: '#E3F2FD', padding: '4px 8px', borderRadius: 8 }}>
                           🔄 Counter: ₹{offer.counterPrice}/kg
                         </div>
                       )}
@@ -386,7 +377,7 @@ export default function MyOffers() {
                       <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                         <span style={{ fontSize: '1.2rem' }}>💬</span>
                         <span style={{ fontSize: '0.85rem', color: '#1E40AF', fontWeight: 600 }}>
-                          {offer.counterMessage || t(`Farmer countered your offer at ₹${offer.counterPrice}/kg. Accept to finalize deal.`, `ખેડૂતે ₹${offer.counterPrice}/kg નો કાઉન્ટર આપ્યો છે.`)}
+                          {offer.counterMessage || `Farmer countered your offer at ₹${offer.counterPrice}/kg. Accept to finalize deal.`}
                         </span>
                       </div>
                       <button
@@ -396,7 +387,7 @@ export default function MyOffers() {
                           handleAcceptCounter(offer.id);
                         }}
                       >
-                        ✓ {t('Accept Counter', 'કાઉન્ટર સ્વીકારો')}
+                        ✓ Accept Counter
                       </button>
                     </div>
                   )}
@@ -428,7 +419,7 @@ export default function MyOffers() {
                       }}
                     >
                       <FileText size={14} />
-                      {t('View Farmer Item Description & Specs', 'ખેડૂત માલ વિગત અને ગુણવત્તા')}
+                      View Farmer Item Description & Specs
                     </button>
 
                     {offer.status === 'countered' && (
@@ -439,7 +430,7 @@ export default function MyOffers() {
                           handleAcceptCounter(offer.id);
                         }}
                       >
-                        ✓ {t('Accept Counter', 'સ્વીકારો')}
+                        ✓ Accept Counter
                       </button>
                     )}
 
@@ -452,7 +443,7 @@ export default function MyOffers() {
                           handleWithdraw(offer.id);
                         }}
                       >
-                        <X size={14} /> {t('Withdraw', 'પાછી ખેંચો')}
+                        <X size={14} /> Withdraw
                       </button>
                     )}
 
@@ -463,7 +454,7 @@ export default function MyOffers() {
                         navigate('/farmer/chat');
                       }}
                     >
-                      <MessageCircle size={14} /> {t('Chat', 'ચેટ')}
+                      <MessageCircle size={14} /> Chat
                     </button>
                   </div>
                 </motion.div>
@@ -515,13 +506,13 @@ export default function MyOffers() {
                   </div>
                   <div>
                     <h3 style={{ margin: '0 0 4px', fontFamily: 'var(--font-heading)' }}>
-                      {lang === 'gu' ? selectedOfferForDetail.cropObj.guj : selectedOfferForDetail.listing.cropName}
+                      {selectedOfferForDetail.listing.cropName}
                     </h3>
                     <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', alignItems: 'center' }}>
                       <span className={`badge ${STATUS_BADGE[selectedOfferForDetail.offer.status]}`} style={{ textTransform: 'capitalize' }}>
                         {selectedOfferForDetail.offer.status}
                       </span>
-                      <span className="badge badge-green">
+                      <span className="badge badge-green notranslate" translate="no">
                         {selectedOfferForDetail.listing.grade || selectedOfferForDetail.offer.grade}
                       </span>
                       {selectedOfferForDetail.listing.exportReady && (
@@ -562,7 +553,7 @@ export default function MyOffers() {
                     navigate('/farmer/chat');
                   }}
                 >
-                  <MessageCircle size={14} /> {t('Message Farmer', 'સંદેશ મોકલો')}
+                  <MessageCircle size={14} /> Message Farmer
                 </button>
               </div>
 
@@ -570,7 +561,7 @@ export default function MyOffers() {
               <div style={{ marginBottom: 20 }}>
                 <h5 style={{ fontFamily: 'var(--font-heading)', margin: '0 0 8px', fontSize: '0.95rem', color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: 6 }}>
                   <FileText size={16} color="var(--green-primary)" />
-                  {t('Farmer Produce Description & Harvest Notes', 'ખેડૂત માલ વિગત અને હાર્વેસ્ટ નોંધ')}
+                  Farmer Produce Description & Harvest Notes
                 </h5>
                 <div
                   style={{
@@ -584,13 +575,8 @@ export default function MyOffers() {
                   }}
                 >
                   <p style={{ margin: 0 }}>
-                    "{selectedOfferForDetail.listing.description || t('Sun-dried, machine cleaned export-quality produce. Laboratory tested lot available for immediate dispatch.', 'સૂકવેલો, મશીન ક્લીન કરેલ નિકાસ ગુણવત્તાવાળો પાક.')}"
+                    "{selectedOfferForDetail.listing.description || 'Sun-dried, machine cleaned export-quality produce. Laboratory tested lot available for immediate dispatch.'}"
                   </p>
-                  {selectedOfferForDetail.listing.gujDesc && lang === 'gu' && (
-                    <p style={{ margin: '8px 0 0', fontStyle: 'italic', color: 'var(--text-secondary)' }}>
-                      "{selectedOfferForDetail.listing.gujDesc}"
-                    </p>
-                  )}
                 </div>
               </div>
 
@@ -598,16 +584,16 @@ export default function MyOffers() {
               <div style={{ marginBottom: 20 }}>
                 <h5 style={{ fontFamily: 'var(--font-heading)', margin: '0 0 10px', fontSize: '0.95rem', color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: 6 }}>
                   <Sparkles size={16} color="var(--green-primary)" />
-                  {t('Technical Specifications & Quality Parameters', 'ટેકનિકલ ગુણવત્તા વિશિષ્ટતાઓ')}
+                  Technical Specifications & Quality Parameters
                 </h5>
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 10 }}>
                   <div style={{ background: '#F8FAFC', padding: '10px 14px', borderRadius: 10, border: '1px solid var(--border)' }}>
-                    <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', display: 'block' }}>{t('Produce Grade', 'ગ્રેડ')}</span>
-                    <strong style={{ fontSize: '0.85rem' }}>{selectedOfferForDetail.listing.grade || 'Grade A'}</strong>
+                    <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', display: 'block' }}>Produce Grade</span>
+                    <strong className="notranslate" translate="no" style={{ fontSize: '0.85rem' }}>{selectedOfferForDetail.listing.grade || 'Grade A'}</strong>
                   </div>
                   <div style={{ background: '#F8FAFC', padding: '10px 14px', borderRadius: 10, border: '1px solid var(--border)' }}>
-                    <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', display: 'block' }}>{t('Total Lot Available', 'કુલ ઉપલબ્ધ જથ્થો')}</span>
-                    <strong style={{ fontSize: '0.85rem' }}>{selectedOfferForDetail.listing.qty} {selectedOfferForDetail.listing.unit}</strong>
+                    <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', display: 'block' }}>Total Lot Available</span>
+                    <strong className="notranslate" translate="no" style={{ fontSize: '0.85rem' }}>{selectedOfferForDetail.listing.qty} {selectedOfferForDetail.listing.unit}</strong>
                   </div>
 
                   {selectedOfferForDetail.listing.specs && Object.entries(selectedOfferForDetail.listing.specs).map(([key, val]) => (
@@ -615,7 +601,7 @@ export default function MyOffers() {
                       <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', textTransform: 'capitalize', display: 'block' }}>
                         {key.replace(/([A-Z])/g, ' $1')}
                       </span>
-                      <strong style={{ fontSize: '0.85rem', color: 'var(--text-primary)' }}>{String(val)}</strong>
+                      <strong className="notranslate" translate="no" style={{ fontSize: '0.85rem', color: 'var(--text-primary)' }}>{String(val)}</strong>
                     </div>
                   ))}
                 </div>
@@ -624,28 +610,28 @@ export default function MyOffers() {
               {/* Offer Comparison Box */}
               <div style={{ background: '#FFFBEB', border: '1px solid #FDE68A', borderRadius: 14, padding: '16px 18px', marginBottom: 20 }}>
                 <h5 style={{ fontFamily: 'var(--font-heading)', margin: '0 0 12px', fontSize: '0.925rem', color: '#92400E', display: 'flex', alignItems: 'center', gap: 6 }}>
-                  💰 {t('Your Offer Details vs Asking Price', 'તમારી ઑફર અને ખેડૂત ભાવ')}
+                  💰 Your Offer Details vs Asking Price
                 </h5>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 12 }}>
                   <div>
-                    <span style={{ fontSize: '0.75rem', color: '#92400E' }}>{t('Farmer Asking Price:', 'ખેડૂત માંગ:')}</span>
-                    <div style={{ fontWeight: 800, fontSize: '1.2rem', color: '#78350F' }}>
+                    <span style={{ fontSize: '0.75rem', color: '#92400E' }}>Farmer Asking Price:</span>
+                    <div className="notranslate" translate="no" style={{ fontWeight: 800, fontSize: '1.2rem', color: '#78350F' }}>
                       ₹{selectedOfferForDetail.listing.price || selectedOfferForDetail.offer.expectedPrice}/kg
                     </div>
                   </div>
                   <div>
-                    <span style={{ fontSize: '0.75rem', color: '#92400E' }}>{t('Your Offered Price:', 'તમારી ઑફર:')}</span>
-                    <div style={{ fontWeight: 900, fontSize: '1.3rem', color: 'var(--green-primary)' }}>
+                    <span style={{ fontSize: '0.75rem', color: '#92400E' }}>Your Offered Price:</span>
+                    <div className="notranslate" translate="no" style={{ fontWeight: 900, fontSize: '1.3rem', color: 'var(--green-primary)' }}>
                       ₹{selectedOfferForDetail.offer.offeredPrice}/kg
                     </div>
                   </div>
                 </div>
 
                 <div style={{ fontSize: '0.825rem', color: '#78350F', display: 'flex', flexDirection: 'column', gap: 4, borderTop: '1px dashed #FDE68A', paddingTop: 10 }}>
-                  <div>📦 <strong>{t('Offered Quantity:', 'ઓફર કરેલ જથ્થો:')}</strong> {selectedOfferForDetail.offer.qty} {selectedOfferForDetail.offer.unit}</div>
-                  <div>💵 <strong>{t('Total Deal Value:', 'કુલ સોદા મૂલ્ય:')}</strong> ₹{selectedOfferForDetail.dealTotal}</div>
-                  <div>🚚 <strong>{t('Delivery Mode:', 'ડિલિવરી:')}</strong> {selectedOfferForDetail.offer.deliveryTerms}</div>
-                  <div>💳 <strong>{t('Payment Terms:', 'ચુકવણી શરતો:')}</strong> {selectedOfferForDetail.offer.paymentTerms}</div>
+                  <div>📦 <strong>Offered Quantity:</strong> <span className="notranslate" translate="no">{selectedOfferForDetail.offer.qty} {selectedOfferForDetail.offer.unit}</span></div>
+                  <div>💵 <strong>Total Deal Value:</strong> <span className="notranslate" translate="no">₹{selectedOfferForDetail.dealTotal}</span></div>
+                  <div>🚚 <strong>Delivery Mode:</strong> {selectedOfferForDetail.offer.deliveryTerms}</div>
+                  <div>💳 <strong>Payment Terms:</strong> {selectedOfferForDetail.offer.paymentTerms}</div>
                   {selectedOfferForDetail.offer.message && (
                     <div style={{ marginTop: 4, fontStyle: 'italic', color: '#92400E' }}>
                       💬 "{selectedOfferForDetail.offer.message}"
@@ -659,20 +645,20 @@ export default function MyOffers() {
                 <div style={{ background: '#EFF6FF', border: '1px solid #BFDBFE', borderRadius: 14, padding: '14px 18px', marginBottom: 20 }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
                     <span style={{ fontWeight: 700, color: '#1E40AF', fontSize: '0.9rem' }}>
-                      🔄 {t('Farmer Counter-Offer:', 'ખેડૂતનો કાઉન્ટર ભાવ:')}
+                      🔄 Farmer Counter-Offer:
                     </span>
-                    <strong style={{ fontSize: '1.2rem', color: '#1E40AF' }}>
+                    <strong className="notranslate" translate="no" style={{ fontSize: '1.2rem', color: '#1E40AF' }}>
                       ₹{selectedOfferForDetail.offer.counterPrice}/kg
                     </strong>
                   </div>
                   <p style={{ margin: '0 0 10px', fontSize: '0.8rem', color: '#3B82F6' }}>
-                    {t('Accepting this counter will confirm the deal and connect you directly for fulfillment.', 'આ કાઉન્ટર સ્વીકારવાથી સોદો નક્કી થશે.')}
+                    Accepting this counter will confirm the deal and connect you directly for fulfillment.
                   </p>
                   <button
                     className="btn btn-primary btn-full"
                     onClick={() => handleAcceptCounter(selectedOfferForDetail.offer.id)}
                   >
-                    ✓ {t('Accept Counter-Offer Now', 'હમણાં કાઉન્ટર સ્વીકારો')}
+                    ✓ Accept Counter-Offer Now
                   </button>
                 </div>
               )}
@@ -684,7 +670,7 @@ export default function MyOffers() {
                   className="btn btn-primary"
                   onClick={() => setSelectedOfferForDetail(null)}
                 >
-                  {t('Close', 'બંધ કરો')}
+                  Close
                 </button>
               </div>
 

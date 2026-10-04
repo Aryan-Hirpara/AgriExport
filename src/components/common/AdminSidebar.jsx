@@ -20,7 +20,7 @@ const sidebarItems = [
 ];
 
 export default function AdminSidebar() {
-  const { t, lang, logout } = useApp();
+  const { logout } = useApp();
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -31,7 +31,7 @@ export default function AdminSidebar() {
           <div style={{ width: 34, height: 34, background: '#fff', borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 2, flexShrink: 0 }}>
             <img src="/logo.png" alt="AgriExport Logo" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
           </div>
-          <span style={{ color: '#fff', fontFamily: 'var(--font-heading)', fontWeight: 800, fontSize: '1.1rem' }}>
+          <span className="notranslate" translate="no" style={{ color: '#fff', fontFamily: 'var(--font-heading)', fontWeight: 800, fontSize: '1.1rem' }}>
             Agri<span style={{ color: 'var(--amber)' }}>Export</span>
           </span>
         </div>
@@ -48,10 +48,10 @@ export default function AdminSidebar() {
               background: 'rgba(255,255,255,0.08)', borderRadius: 6,
               transition: 'background 0.2s'
             }}
-            title={t('Return to public website', 'મુખ્ય વેબસાઇટ પર જાઓ')}
+            title="Return to public website"
           >
             <ArrowLeft size={12} />
-            <span>{t('Live Site', 'મુખ્ય સાઇટ')}</span>
+            <span>Live Site</span>
           </Link>
         </div>
       </div>
@@ -90,7 +90,7 @@ export default function AdminSidebar() {
           style={{ width: '100%', border: 'none', cursor: 'pointer', color: 'rgba(255,100,100,0.85)' }}
         >
           <LogOut size={18} />
-          <span>{t('Logout', 'લૉગ આઉટ')}</span>
+          <span>Logout</span>
         </button>
       </div>
     </aside>
