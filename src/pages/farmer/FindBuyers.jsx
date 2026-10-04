@@ -9,11 +9,10 @@ import {
 } from 'lucide-react';
 import { BUYER_REQUIREMENTS, ENTERPRISES, LISTINGS, CROPS } from '../../data/sampleData';
 import { FadeUpItem, StaggerGrid } from '../../components/common/AnimatedComponents';
-import { translateTerm } from '../../utils/translationUtils';
 
 export default function FindBuyers() {
   const navigate = useNavigate();
-  const { t, lang, addToast, buyerRequirements, submitQuoteToRequirement } = useApp();
+  const { addToast, buyerRequirements, submitQuoteToRequirement } = useApp();
   const [activeTab, setActiveTab] = useState('demands'); // 'demands' | 'directory'
   const [selectedCrop, setSelectedCrop] = useState('All');
   const [search, setSearch] = useState('');
@@ -65,7 +64,7 @@ export default function FindBuyers() {
   const handleSendQuote = (e) => {
     e.preventDefault();
     if (!quoteQty || !quotePrice) {
-      addToast(t('Please enter quantity and price', 'કૃપા કરીને જથ્થો અને ભાવ દાખલ કરો'), 'warning');
+      addToast('Please enter quantity and price', 'warning');
       return;
     }
 
@@ -90,8 +89,8 @@ export default function FindBuyers() {
   };
 
   const cropChips = [
-    { id: 'All', name: 'All Crops', guj: 'તમામ પાક', emoji: '🌾' },
-    ...CROPS.map(c => ({ id: c.id, name: c.name, guj: c.guj, emoji: c.emoji }))
+    { id: 'All', name: 'All Crops', emoji: '🌾' },
+    ...CROPS.map(c => ({ id: c.id, name: c.name, emoji: c.emoji }))
   ];
 
   return (
@@ -101,13 +100,13 @@ export default function FindBuyers() {
         <div className="container">
           <FadeUpItem>
             <div className="section-label" style={{ background: 'rgba(255,255,255,0.15)', color: '#fff' }}>
-              {t('Buyer Demands & Orders', 'ખરીદદાર માંગણીઓ')}
+              {'Buyer Demands & Orders'}
             </div>
             <h2 style={{ color: '#fff', marginBottom: 6 }}>
-              {t('Browse Buyer Demands & Orders', 'ખરીદદારોની માંગણીઓ અને જરૂરિયાતો')}
+              {'Browse Buyer Demands & Orders'}
             </h2>
             <p style={{ color: 'rgba(255,255,255,0.85)', margin: '0 0 20px', fontSize: '0.95rem' }}>
-              {t('See what verified enterprises are demanding and send direct quotes for your produce.', 'નિકાસકારો અને વેપારીઓની માંગ જુઓ અને તમારા પાક માટે સીધા ભાવ મોકલો.')}
+              {'See what verified enterprises are demanding and send direct quotes for your produce.'}
             </p>
 
             {/* Search Bar */}
@@ -116,7 +115,7 @@ export default function FindBuyers() {
               <input
                 className="form-input"
                 style={{ paddingLeft: 48, fontSize: '1rem', height: 50 }}
-                placeholder={t('Search crop, enterprise, destination (e.g. Jeera, Dubai)...', 'પાક, કંપની કે નિકાસ દેશ શોધો...')}
+                placeholder="Search crop, enterprise, destination (e.g. Jeera, Dubai)..."
                 value={search}
                 onChange={e => setSearch(e.target.value)}
               />
@@ -156,7 +155,7 @@ export default function FindBuyers() {
               gap: 8,
             }}
           >
-            <span>📋 {t('All Demands', 'બધી માંગણીઓ')}</span>
+            <span>📋 {'All Demands'}</span>
             <span style={{ background: activeTab === 'demands' ? 'rgba(255,255,255,0.25)' : 'var(--green-light)', color: activeTab === 'demands' ? '#fff' : 'var(--green-primary)', padding: '2px 8px', borderRadius: 10, fontSize: '0.75rem', fontWeight: 700 }}>
               {demandsSource.length}
             </span>
@@ -179,7 +178,7 @@ export default function FindBuyers() {
             }}
           >
             <Building2 size={15} />
-            <span>{t('Buyers Directory', 'ખરીદદારો')}</span>
+            <span>{'Buyers Directory'}</span>
             <span style={{ background: activeTab === 'directory' ? 'rgba(255,255,255,0.25)' : 'var(--border)', color: activeTab === 'directory' ? '#fff' : 'var(--text-secondary)', padding: '2px 8px', borderRadius: 10, fontSize: '0.75rem', fontWeight: 700 }}>
               {ENTERPRISES.length}
             </span>
@@ -196,7 +195,7 @@ export default function FindBuyers() {
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12, flexWrap: 'wrap', gap: 10 }}>
               <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
                 <SlidersHorizontal size={16} color="var(--text-secondary)" />
-                <span style={{ fontWeight: 600, fontSize: '0.875rem' }}>{t('Filter by Crop', 'પાક ફિલ્ટર')}</span>
+                <span style={{ fontWeight: 600, fontSize: '0.875rem' }}>{'Filter by Crop'}</span>
               </div>
               <div>
                 <label style={{ display: 'flex', alignItems: 'center', gap: 6, cursor: 'pointer', fontSize: '0.85rem', fontWeight: 600, color: urgentOnly ? '#E53E3E' : 'var(--text-secondary)' }}>
@@ -206,7 +205,7 @@ export default function FindBuyers() {
                     onChange={e => setUrgentOnly(e.target.checked)}
                     style={{ accentColor: '#E53E3E', width: 16, height: 16 }}
                   />
-                  🔥 {t('Urgent Demands Only', 'માત્ર તાત્કાલિક માંગ')}
+                  🔥 {'Urgent Demands Only'}
                 </label>
               </div>
             </div>
@@ -220,7 +219,7 @@ export default function FindBuyers() {
                   style={{ fontSize: '0.825rem', padding: '6px 12px' }}
                 >
                   <span style={{ marginRight: 4 }}>{c.emoji}</span>
-                  {lang === 'gu' ? c.guj : c.name}
+                  {c.name}
                 </button>
               ))}
             </div>
@@ -234,17 +233,17 @@ export default function FindBuyers() {
           <div>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 18 }}>
               <p style={{ fontWeight: 500, color: 'var(--text-primary)', margin: 0 }}>
-                <span style={{ color: 'var(--green-primary)', fontWeight: 700 }}>{filteredDemands.length}</span> {t('buyer requirements found', 'ખરીદદાર માંગણીઓ મળી')}
+                <span style={{ color: 'var(--green-primary)', fontWeight: 700 }}>{filteredDemands.length}</span> {'buyer requirements found'}
               </p>
             </div>
 
             {filteredDemands.length === 0 ? (
               <div className="empty-state" style={{ background: '#fff', borderRadius: 20, padding: 48, boxShadow: 'var(--shadow-sm)' }}>
                 <div className="empty-state-icon">🌾</div>
-                <h3>{t('No buyer requirements found', 'કોઈ માંગણી મળી નથી')}</h3>
-                <p style={{ color: 'var(--text-muted)' }}>{t('Try adjusting your crop filter or search query', 'ફિલ્ટર અથવા સર્ચ બદલો')}</p>
+                <h3>{'No buyer requirements found'}</h3>
+                <p style={{ color: 'var(--text-muted)' }}>{'Try adjusting your crop filter or search query'}</p>
                 <button className="btn btn-secondary btn-sm" style={{ marginTop: 12 }} onClick={() => { setSelectedCrop('All'); setUrgentOnly(false); setSearch(''); }}>
-                  {t('Reset Filters', 'રીસેટ')}
+                  {'Reset Filters'}
                 </button>
               </div>
             ) : (
@@ -279,11 +278,11 @@ export default function FindBuyers() {
                             {/* Bottom-Left Badges */}
                             <div style={{ position: 'absolute', bottom: 12, left: 12, display: 'flex', gap: 6, flexWrap: 'wrap' }}>
                               <span className="badge badge-blue" style={{ fontSize: '0.72rem', padding: '3px 8px' }}>
-                                {req.qty} {req.unit || 'ton'} {t('Needed', 'જરૂર')}
+                                {req.qty} {req.unit || 'ton'} {'Needed'}
                               </span>
                               {req.urgency === 'urgent' && (
                                 <span className="badge badge-red" style={{ fontSize: '0.72rem', padding: '3px 8px' }}>
-                                  🔥 {t('Urgent', 'તાત્કાલિક')}
+                                  🔥 {'Urgent'}
                                 </span>
                               )}
                               {req.flag && (
@@ -314,7 +313,7 @@ export default function FindBuyers() {
                                   ₹{req.targetPrice}
                                 </div>
                                 <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', whiteSpace: 'nowrap', marginTop: 2 }}>
-                                  {t('target price / kg', 'લક્ષ્ય ભાવ / kg')}
+                                  {'target price / kg'}
                                 </div>
                               </div>
                             </div>
@@ -322,7 +321,7 @@ export default function FindBuyers() {
                             {/* Tags Row */}
                             <div style={{ display: 'flex', gap: 6, alignItems: 'center', minHeight: 26, marginBottom: 8, flexWrap: 'wrap' }}>
                               <span className="badge badge-gray" style={{ fontSize: '0.72rem', whiteSpace: 'nowrap' }}>
-                                {req.qty} {translateTerm(req.unit || 'ton', lang)}
+                                <span className="notranslate">{req.qty} {req.unit || 'ton'}</span>
                               </span>
                               <span className="badge badge-amber" style={{ fontSize: '0.72rem', whiteSpace: 'nowrap', maxWidth: 140, overflow: 'hidden', textOverflow: 'ellipsis' }} title={req.destination}>
                                 {req.destination || 'Export'}
@@ -370,7 +369,7 @@ export default function FindBuyers() {
                                     navigate(`/farmer/requirement/${req.id}`);
                                   }}
                                 >
-                                  ✓ {t('Quoted', 'મોકલાઈ')}
+                                  ✓ {'Quoted'}
                                 </button>
                               ) : (
                                 <button
@@ -382,7 +381,7 @@ export default function FindBuyers() {
                                     navigate(`/farmer/requirement/${req.id}`);
                                   }}
                                 >
-                                  {t('Send Quote', 'ઑફર મોકલો')}
+                                  {'Send Quote'}
                                 </button>
                               )}
                             </div>
@@ -403,7 +402,7 @@ export default function FindBuyers() {
         {activeTab === 'directory' && (
           <div>
             <div style={{ marginBottom: 18, fontSize: '0.9rem', color: 'var(--text-secondary)', fontWeight: 600 }}>
-              {t('Showing', 'દર્શાવે છે')} <strong>{filteredEnterprises.length}</strong> {t('registered buyers', 'નોંધાયેલ ખરીદદારો')}
+              {'Showing'} <strong>{filteredEnterprises.length}</strong> {'registered buyers'}
             </div>
 
             <StaggerGrid className="grid-auto" style={{ marginBottom: 60, alignItems: 'stretch' }}>
@@ -429,7 +428,7 @@ export default function FindBuyers() {
                           📍 {ent.city} • Min: {ent.minOrder}
                         </p>
                         <div style={{ display: 'flex', gap: 4, alignItems: 'center', marginBottom: 14 }}>
-                          <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginRight: 4 }}>{t('Exports:', 'નિકાસ:')}</span>
+                          <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginRight: 4 }}>{'Exports:'}</span>
                           {ent.flags.map((f, j) => <span key={j} style={{ fontSize: '1.1rem' }}>{f}</span>)}
                         </div>
 
@@ -441,15 +440,15 @@ export default function FindBuyers() {
                               setSearch(ent.name);
                             }}
                           >
-                            {t('View Demands', 'માંગ જુઓ')}
+                            {'View Demands'}
                           </button>
                           <button
                             className="btn btn-secondary btn-sm"
                             style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}
                             onClick={() => navigate('/farmer/chat')}
-                            title={t('Chat with Buyer', 'ખરીદદાર સાથે ચેટ કરો')}
+                            title="Chat with Buyer"
                           >
-                            <MessageSquare size={14} /> {t('Chat', 'ચેટ')}
+                            <MessageSquare size={14} /> {'Chat'}
                           </button>
                         </div>
                       </div>
@@ -486,10 +485,10 @@ export default function FindBuyers() {
               <h4 style={{ fontFamily: 'var(--font-heading)', margin: '0 0 4px' }}>{contactModalReq.enterpriseName}</h4>
               <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', margin: '0 0 16px' }}>📍 {contactModalReq.city || 'Gujarat'}</p>
               <div style={{ background: 'var(--green-light)', padding: 12, borderRadius: 12, marginBottom: 20, color: 'var(--green-primary)', fontWeight: 600 }}>
-                💬 {t('Platform Chat Enabled for Fast Deals', 'ઝડપી સોદા માટે પ્લેટફોર્મ ચેટ')}
+                💬 {'Platform Chat Enabled for Fast Deals'}
               </div>
               <div style={{ display: 'flex', gap: 10 }}>
-                <button className="btn btn-secondary btn-full" onClick={() => setContactModalReq(null)}>{t('Close', 'બંધ')}</button>
+                <button className="btn btn-secondary btn-full" onClick={() => setContactModalReq(null)}>{'Close'}</button>
                 <button
                   className="btn btn-primary btn-full"
                   onClick={() => {
@@ -497,7 +496,7 @@ export default function FindBuyers() {
                     navigate('/farmer/chat');
                   }}
                 >
-                  <MessageSquare size={15} /> {t('Start Chat', 'ચેટ શરૂ કરો')}
+                  <MessageSquare size={15} /> {'Start Chat'}
                 </button>
               </div>
             </motion.div>

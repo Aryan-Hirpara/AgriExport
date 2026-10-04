@@ -10,7 +10,7 @@ import cropAttributes from '../../data/crop_attributes.json';
 const STEPS = ['Crop', 'Specs', 'Qty & Price', 'Photos', 'Location', 'Preview'];
 
 export default function AddProduce() {
-  const { t, lang, addToast, addProduceListing } = useApp();
+  const { addToast, addProduceListing } = useApp();
   const navigate = useNavigate();
   const [step, setStep] = useState(0);
   const [loading, setLoading] = useState(false);
@@ -67,12 +67,11 @@ export default function AddProduce() {
       status: 'active',
       photos: photos.length > 0 ? photos : [cropObj.emoji || '🌿', '📦'],
       description: `${cropObj.name} – ${selectedGradeLabel || 'Grade A'}. From ${location.village}, ${location.district}. ${organic ? 'Organic certified. ' : ''}${exportPrefs.otherCountries ? 'Export quality lot.' : 'Fresh harvest.'}`,
-      gujDesc: `${cropObj.guj} – ${location.village}, ${location.district}. ${organic ? 'ઓ. સ.' : ''}`,
       specs: { grade: selectedGradeLabel, packaging, ...specValues },
     };
     setTimeout(() => {
       addProduceListing(newListing);
-      addToast(t('Produce listed successfully! 🎉', 'ઉત્પાદ સ.ય. 🎉'), 'success');
+      addToast('Produce listed successfully! 🎉', 'success');
       navigate('/farmer/listings');
     }, 1000);
   };
@@ -86,8 +85,8 @@ export default function AddProduce() {
       {/* Header */}
       <div style={{ background: 'var(--green-primary)', padding: '32px 0 48px' }}>
         <div className="container">
-          <h2 style={{ color: '#fff', fontFamily: 'var(--font-heading)', marginBottom: 8 }}>{t('Add Produce Listing', 'ઉત્પાદ ઉ.')}</h2>
-          <p style={{ color: 'rgba(255,255,255,0.8)', margin: 0 }}>{t(`Step ${step + 1} of ${STEPS.length}: ${STEPS[step]}`, `પ. ${step + 1}/${STEPS.length}`)}</p>
+          <h2 style={{ color: '#fff', fontFamily: 'var(--font-heading)', marginBottom: 8 }}>{'Add Produce Listing'}</h2>
+          <p style={{ color: 'rgba(255,255,255,0.8)', margin: 0 }}>{`Step ${step + 1} of ${STEPS.length}: ${STEPS[step]}`}</p>
         </div>
       </div>
 
@@ -106,7 +105,7 @@ export default function AddProduce() {
               {/* Step 0: Crop Selection */}
               {step === 0 && (
                 <div>
-                  <h4 style={{ fontFamily: 'var(--font-heading)', marginBottom: 20 }}>{t('What are you selling?', 'શું વ. છો?')}</h4>
+                  <h4 style={{ fontFamily: 'var(--font-heading)', marginBottom: 20 }}>{'What are you selling?'}</h4>
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(130px, 1fr))', gap: 12 }}>
                     {CROPS.map(crop => (
                       <motion.div key={crop.id}
@@ -114,20 +113,20 @@ export default function AddProduce() {
                         onClick={() => handleCropChange(crop.id)}
                         whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}>
                         <span className="crop-emoji">{crop.emoji}</span>
-                        <span className="crop-name">{lang === 'gu' ? crop.guj : crop.name}</span>
+                        <span className="crop-name">{crop.name}</span>
                         {selectedCrop === crop.id && <Check size={16} color="var(--green-primary)" />}
                       </motion.div>
                     ))}
                   </div>
                   <label style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer', fontSize: '0.9rem', fontWeight: 500, marginTop: 20 }}>
                     <input type="checkbox" checked={organic} onChange={e => setOrganic(e.target.checked)} style={{ accentColor: 'var(--green-primary)', width: 18, height: 18 }} />
-                    🌱 {t('Organically grown (no synthetic pesticides)', 'ઓ. (ર.વ.)')}
+                    🌱 {'Organically grown (no synthetic pesticides)'}
                   </label>
                   {/* Price hint for selected crop */}
                   {cropAttr.priceHint && (
                     <div style={{ marginTop: 16, background: 'var(--green-light)', borderRadius: 12, padding: '12px 16px', fontSize: '0.875rem', color: 'var(--green-primary)', display: 'flex', gap: 8, alignItems: 'center' }}>
                       <Info size={15} />
-                      {lang === 'gu' ? cropAttr.priceHintGuj : cropAttr.priceHint}
+                      {cropAttr.priceHint}
                     </div>
                   )}
                 </div>
@@ -136,21 +135,21 @@ export default function AddProduce() {
               {/* Step 1: Crop-specific specs */}
               {step === 1 && (
                 <div>
-                  <h4 style={{ fontFamily: 'var(--font-heading)', marginBottom: 4 }}>{t('Crop Specifications', 'ઉ. વ.')}</h4>
+                  <h4 style={{ fontFamily: 'var(--font-heading)', marginBottom: 4 }}>{'Crop Specifications'}</h4>
                   <p style={{ color: 'var(--text-secondary)', fontSize: '0.875rem', marginBottom: 24 }}>
-                    {cropObj.emoji} <strong>{lang === 'gu' ? cropObj.guj : cropObj.name}</strong>
-                    {' — '}{t('Fill in quality details to attract better buyers.', 'ગ. ભ. ઉ. ક.')}
+                    {cropObj.emoji} <strong>{cropObj.name}</strong>
+                    {' — '}{'Fill in quality details to attract better buyers.'}
                   </p>
 
                   {/* Grade Selector */}
                   {cropAttr.grades && cropAttr.grades.length > 0 && (
                     <div className="form-group" style={{ marginBottom: 20 }}>
-                      <label className="form-label">{t('Grade / Quality', 'ગ. / ગ.')}</label>
+                      <label className="form-label">{'Grade / Quality'}</label>
                       <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
                         {cropAttr.grades.map(g => (
                           <button key={g.value} onClick={() => setGrade(g.value)}
                             className={`chip ${grade === g.value ? 'active' : ''}`}>
-                            {lang === 'gu' ? g.guj : g.label}
+                            {g.label}
                           </button>
                         ))}
                       </div>
@@ -162,13 +161,13 @@ export default function AddProduce() {
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 20 }}>
                       {cropAttr.specs.map(spec => (
                         <div key={spec.key} className="form-group">
-                          <label className="form-label">{lang === 'gu' ? spec.guj : spec.label}</label>
+                          <label className="form-label">{spec.label}</label>
                           {spec.type === 'select' ? (
                             <div style={{ position: 'relative' }}>
                               <select className="form-select"
                                 value={specValues[spec.key] || ''}
                                 onChange={e => setSpecValues(prev => ({ ...prev, [spec.key]: e.target.value }))}>
-                                <option value="">{t('Select...', 'પ..')}</option>
+                                <option value="">{'Select...'}</option>
                                 {spec.options.map(o => <option key={o} value={o}>{o}</option>)}
                               </select>
                               <ChevronDown size={14} style={{ position: 'absolute', right: 10, top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none', color: 'var(--text-muted)' }} />
@@ -186,7 +185,7 @@ export default function AddProduce() {
                   {/* Packaging */}
                   {cropAttr.packaging && cropAttr.packaging.length > 0 && (
                     <div className="form-group" style={{ marginBottom: 20 }}>
-                      <label className="form-label">{t('Packaging', 'પ.')}</label>
+                      <label className="form-label">{'Packaging'}</label>
                       <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
                         {cropAttr.packaging.map(p => (
                           <button key={p} onClick={() => setPackaging(p)}
@@ -200,7 +199,7 @@ export default function AddProduce() {
                   {/* MOQ hint */}
                   {cropAttr.moq && (
                     <div style={{ background: '#FFF8E1', borderRadius: 12, padding: '10px 14px', fontSize: '0.8125rem', color: '#78350F', display: 'flex', gap: 6, alignItems: 'center' }}>
-                      <Info size={13} /> {t('Minimum Order Quantity:', 'MOQ:')} <strong>{cropAttr.moq}</strong>
+                      <Info size={13} /> {'Minimum Order Quantity:'} <strong>{cropAttr.moq}</strong>
                     </div>
                   )}
                 </div>
@@ -209,10 +208,10 @@ export default function AddProduce() {
               {/* Step 2: Qty & Price */}
               {step === 2 && (
                 <div>
-                  <h4 style={{ fontFamily: 'var(--font-heading)', marginBottom: 24 }}>{t('Quantity & Price', 'જ. & ભ.')}</h4>
+                  <h4 style={{ fontFamily: 'var(--font-heading)', marginBottom: 24 }}>{'Quantity & Price'}</h4>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
                     <div>
-                      <label className="form-label" style={{ marginBottom: 10 }}>{t('Quantity', 'જ.')}</label>
+                      <label className="form-label" style={{ marginBottom: 10 }}>{'Quantity'}</label>
                       <div style={{ display: 'flex', gap: 16, alignItems: 'center' }}>
                         <div className="stepper" style={{ flex: 1 }}>
                           <button className="stepper-btn" onClick={() => setQty(q => Math.max(1, q - 1))}>−</button>
@@ -228,10 +227,10 @@ export default function AddProduce() {
                     </div>
                     <div>
                       <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 10 }}>
-                        <label className="form-label">{t('Price per kg (₹)', 'ભ. /kg (₹)')}</label>
+                        <label className="form-label">{'Price per kg (₹)'}</label>
                         {mandiData && (
                           <span style={{ fontSize: '0.8125rem', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: 4 }}>
-                            {t('Mandi today:', 'મ. આ:')}
+                            {'Mandi today:'}
                             <button onClick={() => setPrice(mandiData.today)}
                               style={{ border: 'none', background: 'var(--green-light)', color: 'var(--green-primary)', fontWeight: 700, borderRadius: 6, padding: '2px 8px', cursor: 'pointer', fontSize: '0.8125rem' }}>
                               ₹{mandiData.today} ↙
@@ -247,12 +246,12 @@ export default function AddProduce() {
                       {cropAttr.priceHint && (
                         <p style={{ fontSize: '0.8125rem', color: 'var(--text-muted)', marginTop: 8, display: 'flex', gap: 5 }}>
                           <Info size={13} style={{ marginTop: 2 }} />
-                          {lang === 'gu' ? cropAttr.priceHintGuj : cropAttr.priceHint}
+                          {cropAttr.priceHint}
                         </p>
                       )}
                     </div>
                     <div style={{ background: 'var(--green-light)', borderRadius: 14, padding: '16px 20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                      <span style={{ fontWeight: 500, color: 'var(--text-secondary)' }}>{t('Estimated Total Value', 'અ. ક. મ.')}</span>
+                      <span style={{ fontWeight: 500, color: 'var(--text-secondary)' }}>{'Estimated Total Value'}</span>
                       <span style={{ fontFamily: 'var(--font-heading)', fontWeight: 900, fontSize: '1.5rem', color: 'var(--green-primary)' }}>₹{totalValue}</span>
                     </div>
                   </div>
@@ -262,11 +261,11 @@ export default function AddProduce() {
               {/* Step 3: Photos */}
               {step === 3 && (
                 <div>
-                  <h4 style={{ fontFamily: 'var(--font-heading)', marginBottom: 8 }}>{t('Add Photos', 'ફ. ઉ.')}</h4>
-                  <p style={{ marginBottom: 20, fontSize: '0.875rem' }}>{t('Clear photos get 3× more offers.', 'ફ. ઉ. 3× ઓ.')}</p>
+                  <h4 style={{ fontFamily: 'var(--font-heading)', marginBottom: 8 }}>{'Add Photos'}</h4>
+                  <p style={{ marginBottom: 20, fontSize: '0.875rem' }}>{'Clear photos get 3× more offers.'}</p>
                   <div className="upload-zone" onClick={() => setPhotos(prev => [...prev, cropObj.emoji || '🌿'].slice(0, 5))}>
                     <Upload size={32} color="var(--green-primary)" style={{ margin: '0 auto 12px' }} />
-                    <p style={{ fontWeight: 600, color: 'var(--text-primary)', margin: 0 }}>{t('Click to upload or drag photos', 'ફ. ખ./ખ.')}</p>
+                    <p style={{ fontWeight: 600, color: 'var(--text-primary)', margin: 0 }}>{'Click to upload or drag photos'}</p>
                     <p style={{ fontSize: '0.8125rem', color: 'var(--text-muted)', marginTop: 4 }}>JPG, PNG • Max 5 photos</p>
                   </div>
                   {photos.length > 0 && (
@@ -286,9 +285,9 @@ export default function AddProduce() {
               {/* Step 4: Location */}
               {step === 4 && (
                 <div>
-                  <h4 style={{ fontFamily: 'var(--font-heading)', marginBottom: 20 }}>{t('Produce Location', 'ઉ. સ.')}</h4>
+                  <h4 style={{ fontFamily: 'var(--font-heading)', marginBottom: 20 }}>{'Produce Location'}</h4>
                   <button className="btn btn-secondary btn-full" style={{ marginBottom: 20 }} onClick={detectLocation}>
-                    <MapPin size={18} /> {t('Use my current location', 'મ. વ. સ.')}
+                    <MapPin size={18} /> {'Use my current location'}
                   </button>
                   {location.detected && (
                     <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }}
@@ -300,24 +299,24 @@ export default function AddProduce() {
                   )}
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
                     <div className="form-group">
-                      <label className="form-label">{t('Village / Town', 'ગ.')}</label>
+                      <label className="form-label">{'Village / Town'}</label>
                       <input className="form-input" value={location.village} onChange={e => setLocation(l => ({ ...l, village: e.target.value }))} />
                     </div>
                     <div className="form-group">
-                      <label className="form-label">{t('District', 'જ.')}</label>
+                      <label className="form-label">{'District'}</label>
                       <input className="form-input" value={location.district} onChange={e => setLocation(l => ({ ...l, district: e.target.value }))} />
                     </div>
                     <div className="form-group">
-                      <label className="form-label">{t('State', 'ર.')}</label>
+                      <label className="form-label">{'State'}</label>
                       <input className="form-input" value={location.state} onChange={e => setLocation(l => ({ ...l, state: e.target.value }))} />
                     </div>
                   </div>
                   {/* Export prefs */}
-                  <h5 style={{ fontFamily: 'var(--font-heading)', marginTop: 24, marginBottom: 12 }}>{t('Who should see your listing?', 'ક. જ?')}</h5>
+                  <h5 style={{ fontFamily: 'var(--font-heading)', marginTop: 24, marginBottom: 12 }}>{'Who should see your listing?'}</h5>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
                     {[
-                      { key: 'otherStates', icon: <Truck size={22} color="var(--green-primary)" />, title: t('Sell to Other States', 'ભ. ર.'), desc: t('Enterprises across India', 'ભ.ભ. ઉ.') },
-                      { key: 'otherCountries', icon: <Globe size={22} color="#1565C0" />, title: t('Export Internationally', 'આ.'), desc: t('UAE, UK, Japan, Saudi Arabia etc.', 'UAE, UK, Japan…') },
+                      { key: 'otherStates', icon: <Truck size={22} color="var(--green-primary)" />, title: 'Sell to Other States', desc: 'Enterprises across India' },
+                      { key: 'otherCountries', icon: <Globe size={22} color="#1565C0" />, title: 'Export Internationally', desc: 'UAE, UK, Japan, Saudi Arabia etc.' },
                     ].map(pref => (
                       <motion.div key={pref.key} onClick={() => setExportPrefs(prev => ({ ...prev, [pref.key]: !prev[pref.key] }))} whileHover={{ scale: 1.01 }}
                         style={{ display: 'flex', gap: 16, alignItems: 'center', padding: '16px 18px', borderRadius: 16, cursor: 'pointer', border: `2px solid ${exportPrefs[pref.key] ? 'var(--green-primary)' : 'var(--border)'}`, background: exportPrefs[pref.key] ? 'var(--green-light)' : '#fff' }}>
@@ -338,14 +337,14 @@ export default function AddProduce() {
               {/* Step 5: Preview */}
               {step === 5 && (
                 <div>
-                  <h4 style={{ fontFamily: 'var(--font-heading)', marginBottom: 20 }}>{t('Listing Preview', 'ય. પ.')}</h4>
+                  <h4 style={{ fontFamily: 'var(--font-heading)', marginBottom: 20 }}>{'Listing Preview'}</h4>
                   {/* Buyer preview card */}
                   <div style={{ border: '2px solid var(--green-primary)', borderRadius: 18, padding: '20px', marginBottom: 24, background: 'var(--green-light)' }}>
                     <div style={{ display: 'flex', gap: 14, alignItems: 'center', marginBottom: 16 }}>
                       <div style={{ width: 56, height: 56, borderRadius: 14, background: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '2rem' }}>{cropObj.emoji}</div>
                       <div>
                         <h5 style={{ fontFamily: 'var(--font-heading)', margin: '0 0 4px' }}>
-                          {lang === 'gu' ? cropObj.guj : cropObj.name} — {cropAttr.grades?.find(g => g.value === grade)?.label || 'Grade'}
+                          {cropObj.name} — {cropAttr.grades?.find(g => g.value === grade)?.label || 'Grade'}
                         </h5>
                         <p style={{ margin: 0, fontSize: '0.875rem', color: 'var(--text-secondary)' }}>📍 {location.village}, {location.district}</p>
                       </div>
@@ -367,7 +366,7 @@ export default function AddProduce() {
                   {/* Summary table */}
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, fontSize: '0.875rem' }}>
                     {[
-                      ['Crop', lang === 'gu' ? cropObj.guj : cropObj.name],
+                      ['Crop', cropObj.name],
                       ['Grade', cropAttr.grades?.find(g => g.value === grade)?.label || '—'],
                       ['Quantity', `${qty} ${unit}`],
                       ['Price', `₹${price}/kg`],
@@ -390,11 +389,11 @@ export default function AddProduce() {
           {/* Navigation */}
           <div style={{ display: 'flex', gap: 12, marginTop: 32, justifyContent: 'space-between' }}>
             {step > 0 ? (
-              <button className="btn btn-ghost" onClick={() => setStep(s => s - 1)}>← {t('Back', 'પ.')}</button>
+              <button className="btn btn-ghost" onClick={() => setStep(s => s - 1)}>← {'Back'}</button>
             ) : <div />}
             <SpinnerBtn loading={loading && step === STEPS.length - 1} onClick={step < STEPS.length - 1 ? () => setStep(s => s + 1) : handlePublish}
               className={`btn ${step === STEPS.length - 1 ? 'btn-primary' : 'btn-secondary'}`}>
-              {step < STEPS.length - 1 ? t('Continue →', 'ચ. →') : `🚀 ${t('Publish Listing', 'ઉ. પ.')}`}
+              {step < STEPS.length - 1 ? 'Continue →' : `🚀 ${'Publish Listing'}`}
             </SpinnerBtn>
           </div>
         </motion.div>

@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { useApp } from '../../context/AppContext';
 import { Edit, ShieldCheck, Camera, Star } from 'lucide-react';
 import { FadeUpItem } from '../../components/common/AnimatedComponents';
 
@@ -13,23 +12,22 @@ const REVIEWS_GIVEN = [
 ];
 
 export default function FarmerProfile() {
-  const { t } = useApp();
   const [editing, setEditing] = useState(null);
   const [reviewTab, setReviewTab] = useState('received');
 
   const [profileFields, setProfileFields] = useState([
-    { key: 'name', label: t('Full Name', 'પૂ. નામ'), value: 'Ramesh Patel' },
-    { key: 'phone', label: t('Mobile', 'મોબ.'), value: '9876543210' },
-    { key: 'village', label: t('Village', 'ગામ'), value: 'Unjha, Mehsana' },
-    { key: 'land', label: t('Land Size', 'જમીન'), value: '12 bigha' },
-    { key: 'crops', label: t('Main Crops', 'મુખ્ય પાક'), value: 'Jeera, Fennel, Coriander' },
+    { key: 'name', label: 'Full Name', value: 'Ramesh Patel' },
+    { key: 'phone', label: 'Mobile', value: '9876543210' },
+    { key: 'village', label: 'Village', value: 'Unjha, Mehsana' },
+    { key: 'land', label: 'Land Size', value: '12 bigha' },
+    { key: 'crops', label: 'Main Crops', value: 'Jeera, Fennel, Coriander' },
   ]);
 
   return (
     <div style={{ paddingBottom: 100 }}>
       <div style={{ background: 'var(--green-primary)', padding: '32px 0 80px' }}>
         <div className="container">
-          <h2 style={{ color: '#fff', fontFamily: 'var(--font-heading)' }}>{t('My Profile', 'મારી પ્રોફાઈલ')}</h2>
+          <h2 style={{ color: '#fff', fontFamily: 'var(--font-heading)' }}>My Profile</h2>
         </div>
       </div>
 
@@ -51,17 +49,17 @@ export default function FarmerProfile() {
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, marginBottom: 12 }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 4, background: 'var(--green-light)', borderRadius: 20, padding: '4px 12px' }}>
                 <ShieldCheck size={14} color="var(--green-primary)" />
-                <span style={{ fontSize: '0.8125rem', fontWeight: 600, color: 'var(--green-primary)' }}>{t('Verified Farmer', 'ચ. ખેડૂત')}</span>
+                <span style={{ fontSize: '0.8125rem', fontWeight: 600, color: 'var(--green-primary)' }}>Verified Farmer</span>
               </div>
             </div>
             <div style={{ display: 'flex', gap: 32, justifyContent: 'center' }}>
               {[
-                { value: 4.8, label: t('Rating', 'રેટ') },
-                { value: 34, label: t('Reviews', 'સ.') },
-                { value: 3, label: t('Listings', 'ય.') },
+                { value: 4.8, label: 'Rating' },
+                { value: 34, label: 'Reviews' },
+                { value: 3, label: 'Listings' },
               ].map((s, i) => (
                 <div key={i} style={{ textAlign: 'center' }}>
-                  <div style={{ fontFamily: 'var(--font-heading)', fontWeight: 800, fontSize: '1.5rem', color: 'var(--text-primary)' }}>{s.value}</div>
+                  <div className="notranslate" style={{ fontFamily: 'var(--font-heading)', fontWeight: 800, fontSize: '1.5rem', color: 'var(--text-primary)' }}>{s.value}</div>
                   <div style={{ fontSize: '0.8125rem', color: 'var(--text-muted)' }}>{s.label}</div>
                 </div>
               ))}
@@ -86,7 +84,7 @@ export default function FarmerProfile() {
                   )}
                 </div>
                 <button onClick={() => setEditing(editing === field.key ? null : field.key)} style={{ border: 'none', background: 'var(--green-light)', borderRadius: 8, padding: '6px 12px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6, color: 'var(--green-primary)', fontWeight: 600, fontSize: '0.8125rem' }}>
-                  <Edit size={14} /> {t('Edit', 'ફ.')}
+                  <Edit size={14} /> Edit
                 </button>
               </div>
             ))}
@@ -97,8 +95,8 @@ export default function FarmerProfile() {
         <FadeUpItem>
           <div className="card" style={{ marginBottom: 24 }}>
             <div style={{ padding: '16px 24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <p style={{ fontWeight: 600, margin: 0 }}>{t('Change Password', 'પ. બ.')}</p>
-              <button className="btn btn-outline btn-sm">{t('Update', 'અ.')}</button>
+              <p style={{ fontWeight: 600, margin: 0 }}>Change Password</p>
+              <button className="btn btn-outline btn-sm">Update</button>
             </div>
           </div>
         </FadeUpItem>
@@ -107,10 +105,10 @@ export default function FarmerProfile() {
         <FadeUpItem>
           <div className="card card-body">
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
-              <h4 style={{ fontFamily: 'var(--font-heading)', margin: 0 }}>{t('My Reviews', 'સ. સ.')}</h4>
+              <h4 style={{ fontFamily: 'var(--font-heading)', margin: 0 }}>My Reviews</h4>
               <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
                 <Star size={18} fill="var(--amber)" color="var(--amber)" />
-                <span style={{ fontFamily: 'var(--font-heading)', fontWeight: 800, fontSize: '1.25rem' }}>4.8</span>
+                <span className="notranslate" style={{ fontFamily: 'var(--font-heading)', fontWeight: 800, fontSize: '1.25rem' }}>4.8</span>
                 <span style={{ fontSize: '0.8125rem', color: 'var(--text-muted)' }}>avg.</span>
               </div>
             </div>
@@ -118,12 +116,12 @@ export default function FarmerProfile() {
             <div style={{ marginBottom: 20 }}>
               {[5, 4, 3, 2, 1].map(s => (
                 <div key={s} style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 6 }}>
-                  <span style={{ fontSize: '0.8rem', fontWeight: 600, width: 12 }}>{s}</span>
+                  <span className="notranslate" style={{ fontSize: '0.8rem', fontWeight: 600, width: 12 }}>{s}</span>
                   <span style={{ color: 'var(--amber)' }}>★</span>
                   <div className="progress-bar" style={{ flex: 1 }}>
                     <motion.div className="progress-fill" initial={{ width: 0 }} animate={{ width: s === 5 ? '80%' : s === 4 ? '15%' : '5%' }} transition={{ duration: 0.8, delay: 0.2 }} />
                   </div>
-                  <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)', width: 20 }}>{s === 5 ? 27 : s === 4 ? 5 : 2}</span>
+                  <span className="notranslate" style={{ fontSize: '0.8rem', color: 'var(--text-muted)', width: 20 }}>{s === 5 ? 27 : s === 4 ? 5 : 2}</span>
                 </div>
               ))}
             </div>
@@ -131,7 +129,7 @@ export default function FarmerProfile() {
             <div className="tab-bar">
               {['received', 'given'].map(tab => (
                 <div key={tab} className={`tab-item ${reviewTab === tab ? 'active' : ''}`} onClick={() => setReviewTab(tab)}>
-                  {tab === 'received' ? t('Received', 'મ.') : t('Given', 'આ.')} ({tab === 'received' ? REVIEWS_RECEIVED.length : REVIEWS_GIVEN.length})
+                  {tab === 'received' ? 'Received' : 'Given'} (<span className="notranslate">{tab === 'received' ? REVIEWS_RECEIVED.length : REVIEWS_GIVEN.length}</span>)
                 </div>
               ))}
             </div>

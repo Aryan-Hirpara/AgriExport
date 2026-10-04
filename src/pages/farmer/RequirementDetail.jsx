@@ -9,7 +9,6 @@ import {
 } from 'lucide-react';
 import { BUYER_REQUIREMENTS, ENTERPRISES } from '../../data/sampleData';
 import { FadeUpItem, StarRating } from '../../components/common/AnimatedComponents';
-import { translateTerm } from '../../utils/translationUtils';
 
 const FARMER_REVIEWS = [
   { name: 'Ramesh Patel', rating: 5, comment: 'Prompt payment and direct pickup from our Unjha farm. Transparent grading and honest weighing.', date: 'Sep 2026', verified: true, village: 'Unjha' },
@@ -19,7 +18,7 @@ const FARMER_REVIEWS = [
 
 export default function RequirementDetail() {
   const { id } = useParams();
-  const { t, lang, role, buyerRequirements } = useApp();
+  const { role, buyerRequirements } = useApp();
   const navigate = useNavigate();
   const [photoIdx, setPhotoIdx] = useState(0);
 
@@ -53,7 +52,7 @@ export default function RequirementDetail() {
             textDecoration: 'none',
           }}
         >
-          <ChevronLeft size={20} /> {t('Back to Buyer Demands', 'પાછળ ખરીદદાર માંગણીઓ')}
+          <ChevronLeft size={20} /> {'Back to Buyer Demands'}
         </Link>
 
         {/* 2-Column Layout identical to ProduceDetail */}
@@ -160,10 +159,10 @@ export default function RequirementDetail() {
               <div className="card card-body" style={{ marginBottom: 24 }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
                   <h3 style={{ fontFamily: 'var(--font-heading)', margin: 0 }}>
-                    {t('About This Requirement', 'આ માંગણી વિશે')}
+                    {'About This Requirement'}
                   </h3>
                   <span style={{ fontSize: '0.8125rem', color: 'var(--text-muted)' }}>
-                    {t('Posted', 'મુકાયેલ')}: {req.posted}
+                    {'Posted'}: {req.posted}
                   </span>
                 </div>
 
@@ -174,15 +173,15 @@ export default function RequirementDetail() {
                 {/* Key Highlight Badges */}
                 <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 20 }}>
                   <span className="badge badge-blue">
-                    📦 {req.qty} {translateTerm(req.unit || 'ton', lang)} {t('Needed', 'જરૂર')}
+                    📦 {req.qty} {req.unit || 'ton'} {'Needed'}
                   </span>
                   {req.urgency === 'urgent' ? (
                     <span className="badge badge-red">
-                      🔥 {t('Urgent Requirement', 'તાત્કાલિક જરૂરિયાત')}
+                      🔥 {'Urgent Requirement'}
                     </span>
                   ) : (
                     <span className="badge badge-green">
-                      📋 {t('Verified Order', 'ચકાસાયેલ ઓર્ડર')}
+                      📋 {'Verified Order'}
                     </span>
                   )}
                   {req.destination && (
@@ -192,7 +191,7 @@ export default function RequirementDetail() {
                   )}
                   {req.deadline && (
                     <span className="badge badge-gray">
-                      📅 {t('Required By', 'જરૂર તારીખ')}: {req.deadline}
+                      📅 {'Required By'}: {req.deadline}
                     </span>
                   )}
                 </div>
@@ -200,7 +199,7 @@ export default function RequirementDetail() {
                 {/* Technical Specifications & Terms */}
                 <div style={{ background: 'var(--bg-page)', borderRadius: 14, padding: '16px 20px', marginTop: 12 }}>
                   <h5 style={{ fontFamily: 'var(--font-heading)', marginBottom: 12, fontSize: '0.9rem', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                    {t('Quality Specifications & Terms', 'ગુણવત્તા અને શરતો')}
+                    {'Quality Specifications & Terms'}
                   </h5>
 
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 14 }}>
@@ -216,7 +215,7 @@ export default function RequirementDetail() {
                     ))}
                     <div>
                       <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', display: 'block' }}>
-                        {t('Delivery Terms', 'ડિલિવરી સ્થળ')}:
+                        {'Delivery Terms'}:
                       </span>
                       <strong style={{ fontSize: '0.875rem', color: 'var(--text-primary)' }}>
                         {req.deliveryTerms}
@@ -224,7 +223,7 @@ export default function RequirementDetail() {
                     </div>
                     <div>
                       <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', display: 'block' }}>
-                        {t('Payment Terms', 'ચુકવણી શરતો')}:
+                        {'Payment Terms'}:
                       </span>
                       <strong style={{ fontSize: '0.875rem', color: 'var(--text-primary)' }}>
                         {req.paymentTerms || '30% Advance, 70% immediate on weight slip'}
@@ -233,7 +232,7 @@ export default function RequirementDetail() {
                     {req.minLot && (
                       <div>
                         <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', display: 'block' }}>
-                          {t('Minimum Lot Size', 'ઓછામાં ઓછો જથ્થો')}:
+                          {'Minimum Lot Size'}:
                         </span>
                         <strong style={{ fontSize: '0.875rem', color: 'var(--text-primary)' }}>
                           {req.minLot}
@@ -249,7 +248,7 @@ export default function RequirementDetail() {
             <FadeUpItem>
               <div className="card card-body" style={{ marginBottom: 24 }}>
                 <h4 style={{ fontFamily: 'var(--font-heading)', marginBottom: 16 }}>
-                  {t('About the Buyer', 'ખરીદદાર વિશે')}
+                  {'About the Buyer'}
                 </h4>
                 <div style={{ display: 'flex', gap: 16, alignItems: 'flex-start' }}>
                   <div
@@ -277,7 +276,7 @@ export default function RequirementDetail() {
                         <div style={{ display: 'flex', alignItems: 'center', gap: 4, background: 'var(--green-light)', borderRadius: 20, padding: '2px 8px' }}>
                           <ShieldCheck size={12} color="var(--green-primary)" />
                           <span style={{ fontSize: '0.75rem', color: 'var(--green-primary)', fontWeight: 600 }}>
-                            {t('Verified Buyer', 'ચકાસાયેલ ખરીદદાર')}
+                            {'Verified Buyer'}
                           </span>
                         </div>
                       )}
@@ -292,18 +291,18 @@ export default function RequirementDetail() {
                       <StarRating rating={enterprise.rating || 4.8} />
                       <span style={{ fontWeight: 700, fontSize: '0.9rem' }}>{enterprise.rating || 4.8}</span>
                       <span style={{ fontSize: '0.8125rem', color: 'var(--text-muted)' }}>
-                        ({enterprise.reviews || 42} {t('farmer reviews', 'ખેડૂત સમીક્ષાઓ')})
+                        ({enterprise.reviews || 42} {'farmer reviews'})
                       </span>
                     </div>
                     <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap', paddingTop: 8, borderTop: '1px solid var(--border)' }}>
                       <span style={{ fontSize: '0.8125rem', color: 'var(--text-secondary)' }}>
-                        🏢 {t('Type', 'પ્રકાર')}: {enterprise.type || req.buyerType || 'Export House'}
+                        🏢 {'Type'}: {enterprise.type || req.buyerType || 'Export House'}
                       </span>
                       <span style={{ fontSize: '0.8125rem', color: 'var(--text-secondary)' }}>
-                        🌍 {t('Exports to', 'નિકાસ દેશો')}: {enterprise.countries ? enterprise.countries.join(', ') : req.destination}
+                        🌍 {'Exports to'}: {enterprise.countries ? enterprise.countries.join(', ') : req.destination}
                       </span>
                       <span style={{ fontSize: '0.8125rem', color: 'var(--text-secondary)' }}>
-                        📅 {t('Member Since', 'જોડાયા')}: {enterprise.since || '2019'}
+                        📅 {'Member Since'}: {enterprise.since || '2019'}
                       </span>
                       {enterprise.gst && (
                         <span style={{ fontSize: '0.8125rem', color: 'var(--text-secondary)' }}>
@@ -320,7 +319,7 @@ export default function RequirementDetail() {
             <FadeUpItem>
               <div className="card card-body">
                 <h4 style={{ fontFamily: 'var(--font-heading)', marginBottom: 20 }}>
-                  {t('Farmer Reviews for this Buyer', 'આ ખરીદદાર માટે ખેડૂત સમીક્ષાઓ')} ({FARMER_REVIEWS.length})
+                  {'Farmer Reviews for this Buyer'} ({FARMER_REVIEWS.length})
                 </h4>
                 {FARMER_REVIEWS.map((rev, i) => (
                   <div
@@ -369,30 +368,30 @@ export default function RequirementDetail() {
                   <span style={{ fontFamily: 'var(--font-heading)', fontWeight: 900, fontSize: '2.5rem', color: 'var(--green-primary)' }}>
                     ₹{req.targetPrice}
                   </span>
-                  <span style={{ color: 'var(--text-muted)', fontSize: '1rem' }}>/{t('kg', 'કિલો')}</span>
+                  <span style={{ color: 'var(--text-muted)', fontSize: '1rem' }}>/{'kg'}</span>
                 </div>
                 <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', margin: '0 0 20px' }}>
-                  {t('Target buying price by enterprise', 'કંપની દ્વારા લક્ષ્ય ખરીદ ભાવ')}
+                  {'Target buying price by enterprise'}
                 </p>
 
                 {/* 2x2 Grid Summary (Identical layout to ProduceDetail) */}
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 20 }}>
                   {[
                     {
-                      label: t('Quantity Needed', 'જરૂરી જથ્થો'),
-                      value: `${req.qty} ${translateTerm(req.unit || 'ton', lang)}`,
+                      label: 'Quantity Needed',
+                      value: `${req.qty} ${req.unit || 'ton'}`,
                     },
                     {
-                      label: t('Urgency', 'પ્રાથમિકતા'),
-                      value: req.urgency === 'urgent' ? `🔥 ${t('Urgent', 'તાત્કાલિક')}` : t('Regular', 'સામાન્ય'),
+                      label: 'Urgency',
+                      value: req.urgency === 'urgent' ? `🔥 ${'Urgent'}` : 'Regular',
                     },
                     {
-                      label: t('Destination', 'ગંતવ્ય'),
+                      label: 'Destination',
                       value: req.destination || 'Export',
                     },
                     {
-                      label: t('Quotes Received', 'ઑફર્સ મળી'),
-                      value: `${req.quotesCount || req.quotes?.length || 0} ${t('quotes', 'ઑફર્સ')}`,
+                      label: 'Quotes Received',
+                      value: `${req.quotesCount || req.quotes?.length || 0} ${'quotes'}`,
                     },
                   ].map(item => (
                     <div key={item.label} style={{ background: 'var(--bg-page)', borderRadius: 10, padding: '12px 14px' }}>
@@ -413,17 +412,17 @@ export default function RequirementDetail() {
                     style={{ fontSize: '1.05rem', fontWeight: 700 }}
                     onClick={() => navigate(`/farmer/send-quote/${req.id}`)}
                   >
-                    <Send size={18} /> {t('Send Quote', 'ઑફર મોકલો')}
+                    <Send size={18} /> {'Send Quote'}
                   </button>
                 ) : role === 'enterprise' ? (
                   <div style={{ background: 'var(--green-light)', borderRadius: 10, padding: 14, textAlign: 'center' }}>
                     <p style={{ color: 'var(--green-primary)', fontWeight: 600, margin: 0, fontSize: '0.875rem' }}>
-                      🏢 {t('Viewing as Enterprise', 'કંપની તરીકે જોઈ રહ્યાં છો')}
+                      🏢 {'Viewing as Enterprise'}
                     </p>
                   </div>
                 ) : (
                   <Link to="/login" className="btn btn-outline btn-full btn-lg">
-                    {t('Login to Send Quote', 'ઑફર માટે લૉગ ઇન')}
+                    {'Login to Send Quote'}
                   </Link>
                 )}
               </div>
@@ -433,7 +432,7 @@ export default function RequirementDetail() {
             <FadeUpItem>
               <div style={{ background: 'var(--amber-light)', borderRadius: 16, padding: '16px 20px', border: '1px solid #FCD34D' }}>
                 <p style={{ fontSize: '0.8125rem', color: '#92400E', margin: 0, lineHeight: 1.6 }}>
-                  ⚠️ {t('Platform only connects buyers & sellers. Shipping, customs, and payments are arranged directly between parties.', 'પ્લૅટફોર્મ ફક્ત જોડે છે. શિપિંગ, કસ્ટમ, ચુકવણી સીધી ગોઠવો.')}
+                  ⚠️ {'Platform only connects buyers & sellers. Shipping, customs, and payments are arranged directly between parties.'}
                 </p>
               </div>
             </FadeUpItem>

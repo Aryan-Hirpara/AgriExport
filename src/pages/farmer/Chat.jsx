@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { useApp } from '../../context/AppContext';
 import { Send, Paperclip, Check, CheckCheck } from 'lucide-react';
 
 const MESSAGES = [
@@ -12,7 +11,6 @@ const MESSAGES = [
 ];
 
 export default function Chat() {
-  const { t, lang } = useApp();
   const [messages, setMessages] = useState(MESSAGES);
   const [input, setInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
@@ -36,7 +34,7 @@ export default function Chat() {
         <div style={{ width: 48, height: 48, background: 'rgba(255,255,255,0.15)', borderRadius: 14, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.75rem', flexShrink: 0 }}>🌶️</div>
         <div>
           <h4 style={{ color: '#fff', fontFamily: 'var(--font-heading)', margin: 0 }}>Ahmed Spice Exports</h4>
-          <div style={{ display: 'flex', align: 'center', gap: 6 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
             <div style={{ width: 8, height: 8, background: '#4ADE80', borderRadius: '50%' }} />
             <span style={{ color: 'rgba(255,255,255,0.8)', fontSize: '0.8125rem' }}>Online</span>
           </div>
@@ -47,9 +45,9 @@ export default function Chat() {
       <div style={{ background: 'var(--green-light)', padding: '12px 24px', borderBottom: '1px solid var(--border)', display: 'flex', alignItems: 'center', gap: 12 }}>
         <span style={{ fontSize: '1.25rem' }}>📌</span>
         <div style={{ flex: 1, display: 'flex', gap: 16, alignItems: 'center', flexWrap: 'wrap' }}>
-          <span style={{ fontSize: '0.8125rem', fontWeight: 600, color: 'var(--text-primary)' }}>Jeera • 5 ton</span>
-          <span style={{ fontSize: '0.8125rem', fontWeight: 800, color: 'var(--green-primary)' }}>₹312/kg</span>
-          <span className="badge badge-green" style={{ fontSize: '0.7rem' }}>✅ {t('Deal Agreed', 'સોદો')}</span>
+          <span style={{ fontSize: '0.8125rem', fontWeight: 600, color: 'var(--text-primary)' }}>Jeera • <span className="notranslate">5 ton</span></span>
+          <span className="notranslate" style={{ fontSize: '0.8125rem', fontWeight: 800, color: 'var(--green-primary)' }}>₹312/kg</span>
+          <span className="badge badge-green" style={{ fontSize: '0.7rem' }}>✅ Deal Agreed</span>
         </div>
       </div>
 
@@ -100,7 +98,7 @@ export default function Chat() {
         <input
           className="form-input"
           style={{ flex: 1 }}
-          placeholder={t('Type a message...', 'સંદેશ...')}
+          placeholder="Type a message..."
           value={input}
           onChange={e => setInput(e.target.value)}
           onKeyDown={e => e.key === 'Enter' && handleSend()}

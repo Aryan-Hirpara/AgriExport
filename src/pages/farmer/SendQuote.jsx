@@ -5,11 +5,10 @@ import { useApp } from '../../context/AppContext';
 import { Send, ShieldCheck, ChevronLeft, Building2, MapPin, CheckCircle2 } from 'lucide-react';
 import { BUYER_REQUIREMENTS, ENTERPRISES } from '../../data/sampleData';
 import { FadeUpItem, SpinnerBtn } from '../../components/common/AnimatedComponents';
-import { translateTerm } from '../../utils/translationUtils';
 
 export default function SendQuote() {
   const { id } = useParams();
-  const { t, lang, addToast, buyerRequirements, submitQuoteToRequirement } = useApp();
+  const { addToast, buyerRequirements, submitQuoteToRequirement } = useApp();
   const navigate = useNavigate();
 
   const reqList = buyerRequirements && buyerRequirements.length > 0 ? buyerRequirements : BUYER_REQUIREMENTS;
@@ -29,7 +28,7 @@ export default function SendQuote() {
 
   const handleSend = () => {
     if (!price || !qty) {
-      addToast(t('Please provide both quantity and price', 'કૃપા કરીને જથ્થો અને ભાવ આપો'), 'warning');
+      addToast('Please provide both quantity and price', 'warning');
       return;
     }
 
@@ -72,12 +71,10 @@ export default function SendQuote() {
             🌾
           </motion.div>
           <h3 style={{ fontFamily: 'var(--font-heading)', marginBottom: 8, color: 'var(--green-primary)' }}>
-            {t('Quote Submitted!', 'ઑફર સફળતાપૂર્વક મોકલાઈ!')}
+            {'Quote Submitted!'}
           </h3>
           <p style={{ marginBottom: 24, color: 'var(--text-secondary)' }}>
-            {t(
-              `Your quote of ₹${price}/kg for ${qty} ton has been sent to ${req.enterpriseName}. They will review and contact you directly.`
-            )}
+            {`Your quote of ₹${price}/kg for ${qty} ton has been sent to ${req.enterpriseName}. They will review and contact you directly.`}
           </p>
           <div style={{ background: 'var(--green-light)', borderRadius: 12, padding: 16, textAlign: 'left' }}>
             <p style={{ margin: 0, fontWeight: 600, color: 'var(--green-primary)' }}>
@@ -101,13 +98,13 @@ export default function SendQuote() {
             to={`/farmer/requirement/${req.id}`}
             style={{ display: 'inline-flex', alignItems: 'center', gap: 6, color: 'rgba(255,255,255,0.85)', fontWeight: 500, marginBottom: 14, textDecoration: 'none' }}
           >
-            <ChevronLeft size={18} /> {t('Back to Requirement', 'પાછળ જરૂરિયાત')}
+            <ChevronLeft size={18} /> {'Back to Requirement'}
           </Link>
           <h2 style={{ color: '#fff', fontFamily: 'var(--font-heading)', margin: '0 0 6px' }}>
-            {t('Send Quote for Produce', 'પાક માટે ઑફર મોકલો')}
+            {'Send Quote for Produce'}
           </h2>
           <p style={{ color: 'rgba(255,255,255,0.85)', margin: 0 }}>
-            {t('to', 'ને')} {req.enterpriseName} • {req.cropName}
+            {'to'} {req.enterpriseName} • {req.cropName}
           </p>
         </div>
       </div>
@@ -127,7 +124,7 @@ export default function SendQuote() {
                   </h4>
                   <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
                     <span className="badge badge-blue">
-                      📦 {req.qty} {req.unit || 'ton'} {t('Demanded', 'માંગ')}
+                      📦 {req.qty} {req.unit || 'ton'} {'Demanded'}
                     </span>
                     {req.destination && (
                       <span className="badge badge-amber">
@@ -136,12 +133,12 @@ export default function SendQuote() {
                     )}
                     {req.urgency === 'urgent' && (
                       <span className="badge badge-red">
-                        🔥 {t('Urgent', 'તાત્કાલિક')}
+                        🔥 {'Urgent'}
                       </span>
                     )}
                   </div>
                   <p style={{ margin: '8px 0 0', fontSize: '0.875rem', color: 'var(--text-secondary)' }}>
-                    📍 {req.deliveryTerms} • {t('Buyer Target Price:', 'ખરીદદારનો ભાવ:')} <strong>₹{req.targetPrice}/kg</strong>
+                    📍 {req.deliveryTerms} • {'Buyer Target Price:'} <strong>₹{req.targetPrice}/kg</strong>
                   </p>
                 </div>
               </div>
@@ -167,7 +164,7 @@ export default function SendQuote() {
                 <div style={{ background: '#F8FAFC', borderRadius: 14, padding: '14px 18px', marginBottom: 24, border: '1px solid var(--border)' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
                     <h5 style={{ fontFamily: 'var(--font-heading)', margin: 0, fontSize: '0.875rem', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-                      📋 {t('Required Quality Specifications', 'જરૂરી ગુણવત્તા વિશિષ્ટતાઓ')}
+                      📋 {'Required Quality Specifications'}
                     </h5>
                     <span className="badge badge-blue" style={{ fontSize: '0.7rem' }}>Buyer Demand</span>
                   </div>
@@ -187,10 +184,10 @@ export default function SendQuote() {
                 <div>
                   <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 10 }}>
                     <label className="form-label">
-                      {t('Your Quoted Price (₹/kg)', 'તમારો ભાવ (₹/કિલો)')} *
+                      {'Your Quoted Price (₹/kg)'} *
                     </label>
                     <span style={{ fontSize: '0.8125rem', color: 'var(--text-muted)' }}>
-                      {t('Buyer Target:', 'ખરીદદાર ભાવ:')} <strong>₹{req.targetPrice}</strong>
+                      {'Buyer Target:'} <strong>₹{req.targetPrice}</strong>
                     </span>
                   </div>
                   <div className="stepper">
@@ -213,7 +210,7 @@ export default function SendQuote() {
                 {/* Offered Quantity */}
                 <div>
                   <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 10 }}>
-                    <label className="form-label">{t('Quantity You Can Supply (Tons)', 'જથ્થો (ટન)')} *</label>
+                    <label className="form-label">{'Quantity You Can Supply (Tons)'} *</label>
                     <span style={{ fontSize: '0.8125rem', color: 'var(--text-muted)' }}>
                       Total needed: <strong>{req.qty} ton</strong>
                     </span>
@@ -224,13 +221,13 @@ export default function SendQuote() {
                     <button className="stepper-btn" onClick={() => setQty(q => q + 0.5)}>+</button>
                   </div>
                   <p style={{ fontSize: '0.8125rem', color: 'var(--text-muted)', marginTop: 4 }}>
-                    {t('You can supply partial or full required lot', 'તમે સંપૂર્ણ અથવા આંશિક જથ્થો ઓફર કરી શકો છો')}
+                    {'You can supply partial or full required lot'}
                   </p>
                 </div>
 
                 {/* Delivery Terms */}
                 <div className="form-group">
-                  <label className="form-label">{t('Delivery Mode', 'ડિલિવરી સ્થળ')}</label>
+                  <label className="form-label">{'Delivery Mode'}</label>
                   <div style={{ display: 'flex', gap: 10 }}>
                     {['Ex-Farm Pickup', 'Farmer Delivery to APMC/Yard'].map(d => (
                       <button
@@ -241,7 +238,7 @@ export default function SendQuote() {
                         style={{ flex: 1, justifyContent: 'center' }}
                       >
                         {d === 'Ex-Farm Pickup' ? '🚜 ' : '🚚 '}
-                        {translateTerm(d, lang)}
+                        {d}
                       </button>
                     ))}
                   </div>
@@ -249,7 +246,7 @@ export default function SendQuote() {
 
                 {/* Payment Terms */}
                 <div className="form-group">
-                  <label className="form-label">{t('Payment Preference', 'ચુકવણી શરતો')}</label>
+                  <label className="form-label">{'Payment Preference'}</label>
                   <select className="form-select" value={payment} onChange={e => setPayment(e.target.value)}>
                     {[
                       '30% Advance, 70% on weight slip',
@@ -262,7 +259,7 @@ export default function SendQuote() {
 
                 {/* Quote Validity */}
                 <div className="form-group">
-                  <label className="form-label">{t('Quote Valid For', 'ઑફર માન્ય સમય')}</label>
+                  <label className="form-label">{'Quote Valid For'}</label>
                   <div style={{ display: 'flex', gap: 8 }}>
                     {[3, 7, 14].map(d => (
                       <button
@@ -272,7 +269,7 @@ export default function SendQuote() {
                         onClick={() => setValidDays(d)}
                         style={{ flex: 1, justifyContent: 'center' }}
                       >
-                        {d} {t('days', 'દિવસ')}
+                        {d} {'days'}
                       </button>
                     ))}
                   </div>
@@ -280,13 +277,13 @@ export default function SendQuote() {
 
                 {/* Notes */}
                 <div className="form-group">
-                  <label className="form-label">{t('Short Note (Optional)', 'નોંધ (વૈકલ્પિક)')}</label>
+                  <label className="form-label">{'Short Note (Optional)'}</label>
                   <textarea
                     className="form-textarea"
                     rows={3}
                     value={notes}
                     onChange={e => setNotes(e.target.value)}
-                    placeholder={t('e.g. Ready stock in Unjha warehouse. Sun-dried, machine cleaned, 50kg bag packing ready.', 'દા.ત. તૈયાર માલ છે, સાફ કરેલો અને પેકિંગ તૈયાર.')}
+                    placeholder={'e.g. Ready stock in Unjha warehouse. Sun-dried, machine cleaned, 50kg bag packing ready.'}
                   />
                 </div>
               </div>
@@ -298,14 +295,14 @@ export default function SendQuote() {
             <FadeUpItem>
               <div className="card card-body">
                 <h4 style={{ fontFamily: 'var(--font-heading)', marginBottom: 20 }}>
-                  {t('Quote Summary', 'ઑફર વિગતો')}
+                  {'Quote Summary'}
                 </h4>
                 {[
-                  { label: t('Offered Price', 'ભાવ'), value: `₹${price}/kg` },
-                  { label: t('Quantity', 'જથ્થો'), value: `${qty} ton` },
-                  { label: t('Delivery', 'ડિલિવરી'), value: delivery },
-                  { label: t('Payment', 'ચુકવણી'), value: payment },
-                  { label: t('Validity', 'સમય'), value: `${validDays} days` },
+                  { label: 'Offered Price', value: `₹${price}/kg` },
+                  { label: 'Quantity', value: `${qty} ton` },
+                  { label: 'Delivery', value: delivery },
+                  { label: 'Payment', value: payment },
+                  { label: 'Validity', value: `${validDays} days` },
                 ].map(item => (
                   <div key={item.label} style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 12, paddingBottom: 12, borderBottom: '1px solid var(--border)' }}>
                     <span style={{ color: 'var(--text-muted)', fontSize: '0.875rem' }}>{item.label}</span>
@@ -315,7 +312,7 @@ export default function SendQuote() {
 
                 {/* Total Value */}
                 <div style={{ background: 'var(--green-light)', borderRadius: 12, padding: '14px 16px', marginBottom: 20 }}>
-                  <p style={{ margin: 0, fontSize: '0.8rem', color: 'var(--text-muted)' }}>{t('Estimated Total Deal Value', 'કુલ સોદા મૂલ્ય')}</p>
+                  <p style={{ margin: 0, fontSize: '0.8rem', color: 'var(--text-muted)' }}>{'Estimated Total Deal Value'}</p>
                   <p style={{ margin: 0, fontFamily: 'var(--font-heading)', fontWeight: 900, fontSize: '1.5rem', color: 'var(--green-primary)' }}>₹{total}</p>
                 </div>
 
@@ -325,11 +322,11 @@ export default function SendQuote() {
                   onClick={handleSend}
                   className="btn btn-primary btn-full btn-lg"
                 >
-                  <Send size={18} /> {t('Submit Quote Now', 'હમણાં ઑફર મોકલો')}
+                  <Send size={18} /> {'Submit Quote Now'}
                 </SpinnerBtn>
 
                 <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', textAlign: 'center', marginTop: 12 }}>
-                  {t('Enterprise will receive your quote and contact you directly.', 'કંપની તમારી ઑફર જોશે અને સીધો સંપર્ક કરશે.')}
+                  {'Enterprise will receive your quote and contact you directly.'}
                 </p>
               </div>
             </FadeUpItem>
