@@ -338,11 +338,11 @@ export default function Home() {
                   <Link to={`/enterprises`} style={{ textDecoration: 'none' }}>
                     <motion.div className="card card-body" whileHover={{ y: -6, boxShadow: 'var(--shadow-card-hover)' }}>
                       <div style={{ display: 'flex', gap: 16, alignItems: 'flex-start', marginBottom: 16 }}>
-                        <div className="enterprise-logo" style={{ fontSize: '2rem', width: 48, height: 48, borderRadius: '50%', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                          {typeof ent.avatar === 'string' && (ent.avatar.startsWith('data:') || ent.avatar.startsWith('http') || ent.avatar.startsWith('/')) ? (
-                            <img src={ent.avatar} alt={ent.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                        <div className="enterprise-logo" style={{ fontSize: '2rem', width: 48, height: 48, borderRadius: '50%', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, background: 'var(--green-light)' }}>
+                          {typeof (ent.avatar || ent.logo) === 'string' && ((ent.avatar || ent.logo).startsWith('data:') || (ent.avatar || ent.logo).startsWith('http') || (ent.avatar || ent.logo).startsWith('/')) ? (
+                            <img src={ent.avatar || ent.logo} alt={ent.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                           ) : (
-                            ent.avatar || '🏢'
+                            ent.avatar || ent.logo || '🏢'
                           )}
                         </div>
                         <div>

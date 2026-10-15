@@ -407,6 +407,7 @@ router.get('/enterprises', async (req, res, next) => {
         reviews: Number(e.reviews_count || 0),
         verified: Boolean(e.is_verified),
         logo: e.avatar || '🏢',
+        avatar: e.avatar || '🏢',
         since: '2024',
       };
     });

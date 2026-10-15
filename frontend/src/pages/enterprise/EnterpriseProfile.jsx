@@ -98,8 +98,12 @@ export default function EnterpriseProfile() {
         <FadeUpItem>
           <div className="card card-body" style={{ textAlign: 'center', marginBottom: 24 }}>
             <div style={{ position: 'relative', width: 96, height: 96, margin: '0 auto 16px' }}>
-              <div style={{ width: 96, height: 96, background: 'var(--green-light)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '3rem', border: '4px solid #fff', boxShadow: 'var(--shadow-md)' }}>
-                🏢
+              <div style={{ width: 96, height: 96, background: 'var(--green-light)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '3rem', border: '4px solid #fff', boxShadow: 'var(--shadow-md)', overflow: 'hidden' }}>
+                {typeof user?.avatar === 'string' && (user.avatar.startsWith('data:') || user.avatar.startsWith('http') || user.avatar.startsWith('/')) ? (
+                  <img src={user.avatar} alt={profileData.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                ) : (
+                  user?.avatar || '🏢'
+                )}
               </div>
               <button
                 onClick={() => addToast('Logo update requested', 'info')}

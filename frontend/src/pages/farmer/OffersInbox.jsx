@@ -664,8 +664,13 @@ export default function OffersInbox() {
                 {/* Modal Header: Enterprise Profile */}
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 20, paddingBottom: 16, borderBottom: '1px solid var(--border)' }}>
                   <div style={{ display: 'flex', gap: 14, alignItems: 'center' }}>
-                    <div style={{ width: 52, height: 52, background: 'var(--green-light)', borderRadius: 14, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.6rem' }}>
-                      {enterprise.logo || '🏢'}
+                    <div style={{ width: 52, height: 52, background: 'var(--green-light)', borderRadius: 14, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.6rem', overflow: 'hidden', flexShrink: 0 }}>
+                      {typeof (enterprise.logo || enterprise.avatar) === 'string' &&
+                      ((enterprise.logo || enterprise.avatar).startsWith('data:') || (enterprise.logo || enterprise.avatar).startsWith('http') || (enterprise.logo || enterprise.avatar).startsWith('/')) ? (
+                        <img src={enterprise.logo || enterprise.avatar} alt={enterprise.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                      ) : (
+                        enterprise.logo || enterprise.avatar || '🏢'
+                      )}
                     </div>
                     <div>
                       <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>

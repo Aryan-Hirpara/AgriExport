@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ShieldCheck, Star, Search, MessageSquare } from 'lucide-react';
 import { FadeUpItem, StaggerGrid, StarRating } from '../../components/common/AnimatedComponents';
+import Avatar from '../../components/common/Avatar';
 import api from '../../services/api';
 
 const TYPE_FILTERS = ['All', 'Exporter', 'Importer', 'Trader', 'Processor'];
@@ -106,9 +107,7 @@ export default function Enterprises() {
                       style={{ cursor: 'pointer', border: selected === ent.id ? '2px solid var(--green-primary)' : '1px solid var(--border)' }}
                     >
                       <div style={{ display: 'flex', gap: 14, marginBottom: 16 }}>
-                        <div className="enterprise-logo" style={{ fontSize: '1.8rem', width: 48, height: 48, display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: 12, background: 'var(--green-light)' }}>
-                          {ent.logo || '🏢'}
-                        </div>
+                        <Avatar src={ent.logo || ent.avatar} alt={ent.name} size={48} borderRadius={12} fallback="🏢" />
                         <div style={{ flex: 1 }}>
                           <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 4 }}>
                             <h5 style={{ fontFamily: 'var(--font-heading)', margin: 0, fontSize: '0.95rem' }}>{ent.name}</h5>
@@ -147,9 +146,7 @@ export default function Enterprises() {
               >
                 <div className="card card-body">
                   <div style={{ display: 'flex', gap: 16, alignItems: 'flex-start', marginBottom: 24 }}>
-                    <div className="enterprise-logo" style={{ width: 72, height: 72, fontSize: '2.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: 16, background: 'var(--green-light)' }}>
-                      {selectedEnt.logo || '🏢'}
-                    </div>
+                    <Avatar src={selectedEnt.logo || selectedEnt.avatar} alt={selectedEnt.name} size={72} borderRadius={16} fallback="🏢" />
                     <div>
                       <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
                         <h3 style={{ fontFamily: 'var(--font-heading)', margin: 0 }}>{selectedEnt.name}</h3>

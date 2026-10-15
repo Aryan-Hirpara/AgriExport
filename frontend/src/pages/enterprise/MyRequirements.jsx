@@ -475,8 +475,12 @@ export default function MyRequirements() {
                                 }}
                               >
                                 <div style={{ display: 'flex', gap: 14, alignItems: 'flex-start', flex: 1, minWidth: 280 }}>
-                                  <div style={{ fontSize: '2.2rem', width: 48, height: 48, borderRadius: '50%', background: '#F1F8E9', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: 'var(--shadow-xs)', flexShrink: 0 }}>
-                                    {farmer.avatar || '🧑‍🌾'}
+                                  <div style={{ fontSize: '2.2rem', width: 48, height: 48, borderRadius: '50%', background: '#F1F8E9', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: 'var(--shadow-xs)', flexShrink: 0, overflow: 'hidden' }}>
+                                    {typeof farmer.avatar === 'string' && (farmer.avatar.startsWith('data:') || farmer.avatar.startsWith('http') || farmer.avatar.startsWith('/')) ? (
+                                      <img src={farmer.avatar} alt={q.farmerName} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                    ) : (
+                                      farmer.avatar || '🧑‍🌾'
+                                    )}
                                   </div>
 
                                   <div style={{ flex: 1 }}>
@@ -727,8 +731,12 @@ export default function MyRequirements() {
                 {/* Farmer Profile Card */}
                 <div style={{ background: '#F8FAFC', borderRadius: 14, padding: '16px 18px', marginBottom: 20, border: '1px solid var(--border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12 }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
-                    <div style={{ fontSize: '2.8rem', width: 56, height: 56, borderRadius: '50%', background: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: 'var(--shadow-xs)', flexShrink: 0 }}>
-                      {farmer.avatar || '🧑‍🌾'}
+                    <div style={{ fontSize: '2.8rem', width: 56, height: 56, borderRadius: '50%', background: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: 'var(--shadow-xs)', flexShrink: 0, overflow: 'hidden' }}>
+                      {typeof farmer.avatar === 'string' && (farmer.avatar.startsWith('data:') || farmer.avatar.startsWith('http') || farmer.avatar.startsWith('/')) ? (
+                        <img src={farmer.avatar} alt={quote.farmerName} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                      ) : (
+                        farmer.avatar || '🧑‍🌾'
+                      )}
                     </div>
                     <div>
                       <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
@@ -1100,8 +1108,12 @@ export default function MyRequirements() {
                       <div>
                         {/* Farmer Info */}
                         <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 14 }}>
-                          <div style={{ fontSize: '2.4rem', width: 48, height: 48, borderRadius: '50%', background: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: 'var(--shadow-xs)', flexShrink: 0 }}>
-                            {farmer.avatar || '🧑‍🌾'}
+                          <div style={{ fontSize: '2.4rem', width: 48, height: 48, borderRadius: '50%', background: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: 'var(--shadow-xs)', flexShrink: 0, overflow: 'hidden' }}>
+                            {typeof farmer.avatar === 'string' && (farmer.avatar.startsWith('data:') || farmer.avatar.startsWith('http') || farmer.avatar.startsWith('/')) ? (
+                              <img src={farmer.avatar} alt={q.farmerName} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                            ) : (
+                              farmer.avatar || '🧑‍🌾'
+                            )}
                           </div>
                           <div>
                             <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
