@@ -51,12 +51,14 @@ export default function VerificationQueue() {
     if (socket) {
       socket.on('new_user_registered', fetchQueue);
       socket.on('user_status_changed', fetchQueue);
+      socket.on('user_deleted', fetchQueue);
     }
 
     return () => {
       if (socket) {
         socket.off('new_user_registered', fetchQueue);
         socket.off('user_status_changed', fetchQueue);
+        socket.off('user_deleted', fetchQueue);
       }
     };
   }, [fetchQueue]);

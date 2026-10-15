@@ -11,43 +11,20 @@ export async function cleanDatabase() {
   try {
     await connection.beginTransaction();
 
-    await connection.query('SET FOREIGN_KEY_CHECKS = 0');
+    console.log('🧹 Cleaning MySQL database: removing all dummy users & entries via foreign key CASCADE...');
 
-    // Wipe transaction/user data tables
-    const tablesToWipe = [
-      'activity_logs',
-      'announcements',
-      'complaints',
-      'saved_searches',
-      'saved_items',
-      'notifications',
-      'reviews',
-      'messages',
-      'deal_documents',
-      'deal_status_history',
-      'deals',
-      'offers',
-      'buyer_requirements',
-      'listing_images',
-      'produce_listings',
-      'verification_documents',
-      'enterprise_profiles',
-      'farmer_profiles',
-    ];
+    // Delete all dummy users - MySQL foreign key CASCADE automatically deletes
+    // all their produce listings, buyer requirements, offers, deals, messages, reviews, etc.
+    const [delUsers] = await connection.query(
+      `DELETE FROM users WHERE email NOT IN ('admin@agriexport.in', 'aryanhirpara650@gmail.com')`
+    );
+    console.log(`  ✓ Removed ${delUsers.affectedRows} dummy users and cascaded all their items, requirements & deals.`);
 
-    for (const t of tablesToWipe) {
-      await connection.query(`TRUNCATE TABLE ${t}`);
-      console.log(`  ✓ Truncated table: ${t}`);
-    }
-
-    // Remove all users except admin
-    await connection.query("DELETE FROM users WHERE role != 'admin'");
-    console.log('  ✓ Removed non-admin dummy users');
-
-    await connection.query('SET FOREIGN_KEY_CHECKS = 1');
+    // Also clean up any unlinked orphan announcements or logs if needed
+    await connection.query("DELETE FROM announcements WHERE target_role != 'admin' AND starts_at < NOW()");
 
     await connection.commit();
-    console.log('✨ Database cleaned successfully! Master Crops and Admin preserved.');
+    console.log('✨ Database cleaned successfully via CASCADE! Admin & Aryan Hirpara preserved.');
   } catch (error) {
     await connection.rollback();
     console.error('❌ Clean database failed:', error);

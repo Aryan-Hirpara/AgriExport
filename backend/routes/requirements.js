@@ -419,4 +419,33 @@ router.post('/', verifyToken, async (req, res, next) => {
   }
 });
 
+// DELETE /api/requirements/:id
+// Enterprise or admin can delete a requirement; cascades deletion to related offers and bookmarks
+router.delete('/:id', verifyToken, async (req, res, next) => {
+  try {
+    const cleanId = String(req.params.id).replace('br', '');
+    const [existing] = await pool.query('SELECT enterprise_id FROM buyer_requirements WHERE id = ?', [cleanId]);
+    if (existing.length === 0) {
+      return res.status(404).json({ success: false, message: 'Requirement not found.' });
+    }
+
+    if (existing[0].enterprise_id !== req.user.id && req.user.role !== 'admin') {
+      return res.status(403).json({ success: false, message: 'Unauthorized to delete this requirement.' });
+    }
+
+    await pool.query('DELETE FROM buyer_requirements WHERE id = ?', [cleanId]);
+
+    const io = req.app.get('io');
+    if (io) {
+      io.emit('requirement_deleted', { requirementId: `br${cleanId}` });
+      io.emit('stats_updated');
+    }
+
+    res.json({ success: true, message: 'Requirement and all associated quotes deleted successfully.' });
+  } catch (err) {
+    next(err);
+  }
+});
+
 export default router;
+

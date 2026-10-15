@@ -98,6 +98,7 @@ export const api = {
     getMy: () => request('/requirements/my'),
     getById: (id) => request(`/requirements/${id}`),
     create: (reqData) => request('/requirements', { method: 'POST', body: JSON.stringify(reqData) }),
+    delete: (id) => request(`/requirements/${id}`, { method: 'DELETE' }),
   },
 
   // Offers & Quotes
@@ -180,6 +181,7 @@ export const api = {
     resolveComplaint: (id, resolution) => request(`/admin/complaints/${id}/resolve`, { method: 'POST', body: JSON.stringify(resolution) }),
     getUsers: (role) => request(`/admin/users${role ? `?role=${role}` : ''}`),
     updateUserStatus: (id, data) => request(`/admin/users/${id}/status`, { method: 'PUT', body: JSON.stringify(data) }),
+    deleteUser: (id) => request(`/admin/users/${id}`, { method: 'DELETE' }),
     impersonate: (userId) => request(`/admin/impersonate/${userId}`, { method: 'POST' }),
   },
 

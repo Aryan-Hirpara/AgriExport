@@ -291,8 +291,8 @@ CREATE TABLE offers (
     countered_by ENUM('enterprise', 'farmer') DEFAULT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (listing_id) REFERENCES produce_listings (id) ON DELETE SET NULL,
-    FOREIGN KEY (requirement_id) REFERENCES buyer_requirements (id) ON DELETE SET NULL,
+    FOREIGN KEY (listing_id) REFERENCES produce_listings (id) ON DELETE CASCADE,
+    FOREIGN KEY (requirement_id) REFERENCES buyer_requirements (id) ON DELETE CASCADE,
     FOREIGN KEY (enterprise_id) REFERENCES users (id) ON DELETE CASCADE,
     FOREIGN KEY (farmer_id) REFERENCES users (id) ON DELETE CASCADE,
     INDEX idx_offers_enterprise (enterprise_id),
@@ -394,8 +394,8 @@ CREATE TABLE messages (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (sender_id) REFERENCES users (id) ON DELETE CASCADE,
     FOREIGN KEY (receiver_id) REFERENCES users (id) ON DELETE CASCADE,
-    FOREIGN KEY (deal_id) REFERENCES deals (id) ON DELETE SET NULL,
-    FOREIGN KEY (listing_id) REFERENCES produce_listings (id) ON DELETE SET NULL,
+    FOREIGN KEY (deal_id) REFERENCES deals (id) ON DELETE CASCADE,
+    FOREIGN KEY (listing_id) REFERENCES produce_listings (id) ON DELETE CASCADE,
     INDEX idx_messages_convo (conversation_id),
     INDEX idx_messages_receiver (receiver_id, is_read)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_unicode_ci;
@@ -473,7 +473,7 @@ CREATE TABLE complaints (
     resolved_by INT DEFAULT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (deal_id) REFERENCES deals (id) ON DELETE SET NULL,
+    FOREIGN KEY (deal_id) REFERENCES deals (id) ON DELETE CASCADE,
     FOREIGN KEY (filed_by) REFERENCES users (id) ON DELETE CASCADE,
     FOREIGN KEY (against_user_id) REFERENCES users (id) ON DELETE CASCADE,
     FOREIGN KEY (resolved_by) REFERENCES users (id) ON DELETE SET NULL,
@@ -543,7 +543,24 @@ CREATE TABLE activity_logs (
     details JSON,
     ip_address VARCHAR(50),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE SET NULL,
+    FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE,
     INDEX idx_activity_user (user_id),
     INDEX idx_activity_action (action)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_unicode_ci;
+
+-- 23. Referential Integrity Triggers for Polymorphic saved_items
+DROP TRIGGER IF EXISTS trg_produce_listings_after_delete;
+CREATE TRIGGER trg_produce_listings_after_delete 
+AFTER DELETE ON produce_listings 
+FOR EACH ROW 
+BEGIN 
+    DELETE FROM saved_items WHERE item_type = 'listing' AND item_id = OLD.id; 
+END;
+
+DROP TRIGGER IF EXISTS trg_buyer_requirements_after_delete;
+CREATE TRIGGER trg_buyer_requirements_after_delete 
+AFTER DELETE ON buyer_requirements 
+FOR EACH ROW 
+BEGIN 
+    DELETE FROM saved_items WHERE item_type = 'requirement' AND item_id = OLD.id; 
+END;

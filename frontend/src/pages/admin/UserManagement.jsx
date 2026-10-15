@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useApp } from '../../context/AppContext';
-import { Search, ShieldCheck, Ban, RotateCcw, Eye, RefreshCw, AlertTriangle, ExternalLink } from 'lucide-react';
+import { Search, ShieldCheck, Ban, RotateCcw, Eye, RefreshCw, AlertTriangle, ExternalLink, Trash2 } from 'lucide-react';
 import { FadeUpItem } from '../../components/common/AnimatedComponents';
 import api from '../../services/api';
 import { getSocket } from '../../services/socket';
@@ -76,12 +76,14 @@ export default function UserManagement() {
     if (socket) {
       socket.on('new_user_registered', fetchUsers);
       socket.on('user_status_changed', fetchUsers);
+      socket.on('user_deleted', fetchUsers);
     }
 
     return () => {
       if (socket) {
         socket.off('new_user_registered', fetchUsers);
         socket.off('user_status_changed', fetchUsers);
+        socket.off('user_deleted', fetchUsers);
       }
     };
   }, [fetchUsers]);
@@ -103,6 +105,25 @@ export default function UserManagement() {
       addToast(`${action === 'suspend' ? '⛔ Suspended' : '✅ Verified / Restored'}`, action === 'suspend' ? 'warning' : 'success');
     } catch (err) {
       addToast(err.message || 'Action failed', 'error');
+    }
+  };
+
+  const handleDeleteUser = async (user) => {
+    const confirmMessage = `⚠️ Are you sure you want to permanently delete ${user.userType} "${user.name}"?\n\nThis will internally remove all entries:\n• Produce listings & images\n• Buyer requirements\n• Quotes, offers & counter-offers\n• Deals, documents & status logs\n• Messages, reviews & complaints\n\nThis action cannot be undone.`;
+    if (!window.confirm(confirmMessage)) return;
+
+    try {
+      setLoading(true);
+      const res = await api.admin.deleteUser(user.id);
+      addToast(res.message || `Deleted ${user.name} and all associated data.`, 'success');
+      setUsers(prev => ({
+        ...prev,
+        [activeTab]: prev[activeTab].filter(u => u.id !== user.id),
+      }));
+    } catch (err) {
+      addToast(err.message || 'Failed to delete user', 'error');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -297,6 +318,22 @@ export default function UserManagement() {
                           <RotateCcw size={14} />
                         </button>
                       )}
+                      <button
+                        className="btn btn-sm"
+                        style={{
+                          background: '#FEE2E2',
+                          color: '#DC2626',
+                          border: '1px solid #FCA5A5',
+                          padding: '4px 8px',
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                        }}
+                        onClick={() => handleDeleteUser(user)}
+                        title={`Permanently delete ${user.name} and all data`}
+                      >
+                        <Trash2 size={14} />
+                      </button>
                     </div>
                   </td>
                 </motion.tr>

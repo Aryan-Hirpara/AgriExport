@@ -299,6 +299,65 @@ router.put('/users/:id/status', async (req, res, next) => {
   }
 });
 
+// DELETE /api/admin/users/:id
+// Permanently deletes a user and cascades deletion to all listings, requirements, offers, deals, etc.
+router.delete('/users/:id', async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const cleanId = String(id).replace(/^[fe]/, '');
+
+    const [rows] = await pool.query('SELECT id, name, email, role FROM users WHERE id = ?', [cleanId]);
+    if (rows.length === 0) {
+      return res.status(404).json({ success: false, message: 'User not found in database.' });
+    }
+
+    const targetUser = rows[0];
+
+    // Protection: do not allow deleting admin accounts or self
+    if (targetUser.role === 'admin') {
+      return res.status(403).json({ success: false, message: 'Cannot delete platform administrator accounts.' });
+    }
+
+    if (Number(cleanId) === req.user.id) {
+      return res.status(403).json({ success: false, message: 'Administrators cannot delete their own active account.' });
+    }
+
+    // Clean up any polymorphic saved items referencing listings or requirements of this user
+    if (targetUser.role === 'farmer') {
+      await pool.query(
+        `DELETE FROM saved_items WHERE item_type = 'listing' AND item_id IN (SELECT id FROM produce_listings WHERE farmer_id = ?)`,
+        [cleanId]
+      );
+    } else if (targetUser.role === 'enterprise') {
+      await pool.query(
+        `DELETE FROM saved_items WHERE item_type = 'requirement' AND item_id IN (SELECT id FROM buyer_requirements WHERE enterprise_id = ?)`,
+        [cleanId]
+      );
+    }
+
+    // Execute cascade deletion directly in database
+    await pool.query('DELETE FROM users WHERE id = ?', [cleanId]);
+
+    const io = req.app.get('io');
+    if (io) {
+      io.to(`user_${cleanId}`).emit('account_deleted', {
+        userId: Number(cleanId),
+        message: 'Your account and all associated data have been deleted by the platform administrator.',
+      });
+      io.emit('user_deleted', { userId: Number(cleanId), role: targetUser.role });
+      io.emit('stats_updated');
+    }
+
+    res.json({
+      success: true,
+      message: `${targetUser.role === 'farmer' ? 'Farmer' : 'Enterprise'} "${targetUser.name}" and all associated listings, requirements, deals, and records have been deleted permanently.`,
+      deletedUserId: Number(cleanId),
+    });
+  } catch (err) {
+    next(err);
+  }
+});
+
 // POST /api/admin/impersonate/:userId
 // Allows admin to open verified user's dashboard and post produce or requirements on their behalf
 router.post('/impersonate/:userId', async (req, res, next) => {
