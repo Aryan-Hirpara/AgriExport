@@ -1,5 +1,7 @@
 import bcrypt from 'bcryptjs';
 import pool from '../config/db.js';
+import { ALL_STATES_MANDIS } from './populate_mandis.js';
+import { syncAgmarknetPrices } from '../services/mandiSync.js';
 
 export async function seedDatabase() {
   if (process.env.NODE_ENV === 'production') {
@@ -289,31 +291,23 @@ export async function seedDatabase() {
       [convoId, farmerIdMap['f2'], enterpriseIdMap['e3'], dealId]
     );
 
-    // 10. Seed Mandi Prices
-    console.log('📊 Seeding Mandi Prices...');
-    const mandiSeed = [
-      { crop: 'jeera', market: 'Unjha', district: 'Mehsana', modal: 31800, min: 28500, max: 34500, trend: 'up', change: 2.5, arrivals: 145 },
-      { crop: 'groundnut', market: 'Rajkot', district: 'Rajkot', modal: 6500, min: 5800, max: 7200, trend: 'up', change: 1.2, arrivals: 320 },
-      { crop: 'sesame', market: 'Rajkot', district: 'Rajkot', modal: 16200, min: 14800, max: 17800, trend: 'up', change: 2.1, arrivals: 85 },
-      { crop: 'castor', market: 'Deesa', district: 'Banaskantha', modal: 11600, min: 10800, max: 12800, trend: 'up', change: 1.8, arrivals: 210 },
-      { crop: 'isabgol', market: 'Unjha', district: 'Mehsana', modal: 14800, min: 12500, max: 16500, trend: 'up', change: 2.7, arrivals: 95 },
-      { crop: 'cotton', market: 'Rajkot', district: 'Rajkot', modal: 6100, min: 5600, max: 6800, trend: 'stable', change: 0.5, arrivals: 540 },
-      { crop: 'kesar-mango', market: 'Junagadh', district: 'Junagadh', modal: 18800, min: 16000, max: 22000, trend: 'up', change: 4.2, arrivals: 60 },
-      { crop: 'banana', market: 'Anand', district: 'Anand', modal: 2600, min: 1800, max: 3200, trend: 'up', change: 1.5, arrivals: 180 },
-      { crop: 'onion', market: 'Mahuva', district: 'Bhavnagar', modal: 2800, min: 1800, max: 3800, trend: 'up', change: 3.1, arrivals: 420 },
-      { crop: 'garlic', market: 'Gondal', district: 'Rajkot', modal: 11200, min: 8000, max: 14000, trend: 'up', change: 3.6, arrivals: 110 },
-      { crop: 'wheat', market: 'Rajkot', district: 'Rajkot', modal: 2400, min: 2200, max: 2700, trend: 'stable', change: 0.2, arrivals: 600 },
-      { crop: 'bajra', market: 'Surendranagar', district: 'Surendranagar', modal: 2200, min: 2000, max: 2500, trend: 'stable', change: 0.4, arrivals: 250 },
-    ];
-
+    // 10. Seed Mandi Prices (Across all states of India)
+    console.log('📊 Seeding All-India Mandi Prices...');
     const todayDate = new Date().toISOString().split('T')[0];
-    for (const m of mandiSeed) {
-      const cId = cropIdMap[m.crop];
-      if (!cId) continue;
+    for (const m of ALL_STATES_MANDIS) {
+      let cId = cropIdMap[m.commodity] || null;
+      if (!cId) {
+        for (const [slug, id] of Object.entries(cropIdMap)) {
+          if (m.commodity.toLowerCase().includes(slug) || slug.includes(m.commodity.toLowerCase())) {
+            cId = id;
+            break;
+          }
+        }
+      }
       await connection.query(
-        `INSERT INTO mandi_prices (crop_id, commodity, market_name, district, state, modal_price, min_price, max_price, arrivals_tonnes, price_date, trend, change_percent)
-         VALUES (?, ?, ?, ?, 'Gujarat', ?, ?, ?, ?, ?, ?, ?)`,
-        [cId, cropNameMap[m.crop] || m.crop, m.market, m.district, m.modal, m.min, m.max, m.arrivals, todayDate, m.trend, m.change]
+        `INSERT INTO mandi_prices (crop_id, commodity, market_name, district, state, modal_price, min_price, max_price, arrivals_tonnes, price_date, trend, change_percent, variety, grade)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+        [cId, m.commodity, m.market, m.district, m.state, m.modal, m.min, m.max, m.arrivals, todayDate, m.trend, m.change, m.variety || 'General', m.grade || 'FAQ']
       );
     }
 

@@ -49,17 +49,43 @@ const POPULAR_CROPS = [
   'Turmeric',
 ];
 
+const DEFAULT_INDIAN_STATES = [
+  'Andhra Pradesh',
+  'Assam',
+  'Bihar',
+  'Delhi',
+  'Gujarat',
+  'Haryana',
+  'Himachal Pradesh',
+  'Jammu and Kashmir',
+  'Karnataka',
+  'Keralam',
+  'Madhya Pradesh',
+  'Maharashtra',
+  'Nagaland',
+  'Odisha',
+  'Punjab',
+  'Rajasthan',
+  'Tamil Nadu',
+  'Telangana',
+  'Tripura',
+  'Uttar Pradesh',
+  'West Bengal',
+];
+
 export default function MandiPrices() {
   const [activeTab, setActiveTab] = useState('prices'); // 'prices' | 'guide'
   const [unit, setUnit] = useState('quintal'); // 'quintal' (₹/100kg) | 'kg' (₹/kg)
 
   // Filter metadata
   const [filterMeta, setFilterMeta] = useState({
-    states: [],
+    states: DEFAULT_INDIAN_STATES,
     commodities: [],
     marketsByState: {},
     stats: { totalRecords: 0, totalMarkets: 0, totalCommodities: 0, latestDate: null },
   });
+
+  const displayStates = filterMeta.states && filterMeta.states.length > 0 ? filterMeta.states : DEFAULT_INDIAN_STATES;
 
   // Filter state
   const [selectedState, setSelectedState] = useState('All');
@@ -357,7 +383,7 @@ export default function MandiPrices() {
                 Mandi Prices & Intelligence
               </h1>
               <p style={{ margin: '4px 0 0', color: '#64748B', fontSize: '0.875rem' }}>
-                Real-time APMC wholesale market rates across {filterMeta.states.length || 28} states and {filterMeta.stats.totalMarkets.toLocaleString()} mandis
+                Real-time APMC wholesale market rates across {displayStates.length} states and {filterMeta.stats.totalMarkets > 0 ? filterMeta.stats.totalMarkets.toLocaleString() : (availableMarkets.length > 0 ? availableMarkets.length : '100+')} mandis
               </p>
             </div>
 
@@ -560,7 +586,7 @@ export default function MandiPrices() {
                     }}
                   >
                     <option value="All">All States (India)</option>
-                    {filterMeta.states.map((st) => (
+                    {displayStates.map((st) => (
                       <option key={st} value={st}>
                         {st}
                       </option>
@@ -587,8 +613,12 @@ export default function MandiPrices() {
                   >
                     <option value="All">
                       {selectedState === 'All'
-                        ? `All Mandis (${availableMarkets.length})`
-                        : `All Mandis in ${selectedState} (${availableMarkets.length})`}
+                        ? availableMarkets.length > 0
+                          ? `All Mandis (${availableMarkets.length})`
+                          : 'All Mandis Across India'
+                        : availableMarkets.length > 0
+                          ? `All Mandis in ${selectedState} (${availableMarkets.length})`
+                          : `All Mandis in ${selectedState}`}
                     </option>
                     {availableMarkets.map((m) => (
                       <option key={m} value={m}>
