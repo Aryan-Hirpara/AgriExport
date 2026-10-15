@@ -53,6 +53,7 @@ const DEFAULT_INDIAN_STATES = [
   'Andhra Pradesh',
   'Assam',
   'Bihar',
+  'Chattisgarh',
   'Delhi',
   'Gujarat',
   'Haryana',
@@ -62,6 +63,7 @@ const DEFAULT_INDIAN_STATES = [
   'Keralam',
   'Madhya Pradesh',
   'Maharashtra',
+  'Meghalaya',
   'Nagaland',
   'Odisha',
   'Punjab',
@@ -73,22 +75,70 @@ const DEFAULT_INDIAN_STATES = [
   'West Bengal',
 ];
 
+const INITIAL_POPULAR_DISTRICTS = [
+  'Rajkot',
+  'Mehsana',
+  'Bhavnagar',
+  'Banaskantha',
+  'Surendranagar',
+  'Junagadh',
+  'Anand',
+  'Surat',
+  'Ahmedabad',
+  'Amreli',
+  'Ludhiana',
+  'Amritsar',
+  'Karnal',
+  'Sirsa',
+  'Rewari',
+  'Pune',
+  'Nashik',
+  'Kota',
+  'Jodhpur',
+  'Indore',
+  'Neemuch',
+  'Guntur',
+  'Bengaluru Urban',
+  'Chennai',
+  'North Delhi',
+];
+
 export default function MandiPrices() {
   const [activeTab, setActiveTab] = useState('prices'); // 'prices' | 'guide'
   const [unit, setUnit] = useState('quintal'); // 'quintal' (₹/100kg) | 'kg' (₹/kg)
 
-  // Filter metadata
+  // Filter metadata with comprehensive defaults so dropdowns are never blank
   const [filterMeta, setFilterMeta] = useState({
     states: DEFAULT_INDIAN_STATES,
-    commodities: [],
+    districts: INITIAL_POPULAR_DISTRICTS,
+    districtsByState: {
+      Gujarat: ['Rajkot', 'Mehsana', 'Bhavnagar', 'Banaskantha', 'Surendranagar', 'Junagadh', 'Anand', 'Surat', 'Ahmedabad', 'Amreli', 'Dahod'],
+      Punjab: ['Ludhiana', 'Amritsar', 'Jalandhar', 'Patiala', 'Ropar (Rupnagar)', 'Fatehgarh'],
+      Haryana: ['Karnal', 'Sirsa', 'Hisar', 'Rewari', 'Gurgaon', 'Rohtak'],
+      Maharashtra: ['Pune', 'Nashik', 'Thane', 'Jalgaon', 'Nagpur', 'Ratnagiri'],
+      Rajasthan: ['Kota', 'Jodhpur', 'Bikaner', 'Sri Ganganagar', 'Chittorgarh', 'Rajsamand'],
+      'Madhya Pradesh': ['Indore', 'Neemuch', 'Mandsaur', 'Dhar', 'Gwalior', 'Jhabua', 'Khandwa', 'Ratlam'],
+      Delhi: ['North Delhi', 'East Delhi'],
+      Karnataka: ['Bengaluru Urban', 'Dharwad', 'Haveri'],
+      'Tamil Nadu': ['Chennai', 'Erode', 'Madurai'],
+      'Andhra Pradesh': ['Guntur', 'Kurnool', 'Prakasam', 'Nandyal', 'Kakinada', 'Bapatla'],
+      Telangana: ['Warangal Urban', 'Nizamabad'],
+      'West Bengal': ['Kolkata', 'Darjeeling'],
+      Bihar: ['Purnia', 'Patna'],
+      Keralam: ['Ernakulam', 'Idukki'],
+    },
     marketsByState: {},
-    stats: { totalRecords: 0, totalMarkets: 0, totalCommodities: 0, latestDate: null },
+    marketsByDistrict: {},
+    marketDetails: {},
+    commodities: POPULAR_CROPS,
+    stats: { totalRecords: 5095, totalMarkets: 303, totalDistricts: 145, totalStates: 23, totalCommodities: 118, latestDate: null },
   });
 
   const displayStates = filterMeta.states && filterMeta.states.length > 0 ? filterMeta.states : DEFAULT_INDIAN_STATES;
 
   // Filter state
   const [selectedState, setSelectedState] = useState('All');
+  const [selectedDistrict, setSelectedDistrict] = useState('All');
   const [selectedMarket, setSelectedMarket] = useState('All');
   const [selectedCommodity, setSelectedCommodity] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
@@ -137,24 +187,40 @@ export default function MandiPrices() {
   const [selectedGuide, setSelectedGuide] = useState(null);
   const [checklist, setChecklist] = useState({});
 
-  // 1. Initial metadata loading
+  // 1. Initial metadata loading with automated retry
   useEffect(() => {
-    api.mandi
-      .getFilters()
-      .then((res) => {
-        if (res.data) setFilterMeta(res.data);
-      })
-      .catch((err) => console.error('Error loading filters:', err));
+    let isMounted = true;
+    const fetchMetadata = (retries = 3) => {
+      api.mandi
+        .getFilters()
+        .then((res) => {
+          if (isMounted && res.data) {
+            setFilterMeta(res.data);
+          }
+        })
+        .catch((err) => {
+          console.warn('[MandiPrices] Error loading filters:', err.message);
+          if (retries > 0 && isMounted) {
+            setTimeout(() => fetchMetadata(retries - 1), 1500);
+          }
+        });
+    };
+
+    fetchMetadata();
 
     api.guides
       .getAll()
       .then((res) => {
-        if (res.data?.length > 0) {
+        if (isMounted && res.data?.length > 0) {
           setGuides(res.data);
           setSelectedGuide(res.data[0]);
         }
       })
       .catch(() => { });
+
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   // 2. Fetch crops specifically in selected market
@@ -181,6 +247,7 @@ export default function MandiPrices() {
       sortOrder,
     };
     if (selectedState !== 'All') params.state = selectedState;
+    if (selectedDistrict !== 'All') params.district = selectedDistrict;
     if (selectedMarket !== 'All') params.market = selectedMarket;
     if (selectedCommodity !== 'All') params.commodity = selectedCommodity;
     if (searchQuery.trim()) params.search = searchQuery.trim();
@@ -202,7 +269,7 @@ export default function MandiPrices() {
             crop: selectedCommodity !== 'All' ? selectedCommodity : (searchQuery || 'No Crop Matched'),
             mandi: selectedMarket !== 'All' ? selectedMarket : 'APMC Mandi',
             state: selectedState !== 'All' ? selectedState : 'India',
-            district: '',
+            district: selectedDistrict !== 'All' ? selectedDistrict : '',
             modalQuintal: 0,
             today: 0,
             minQuintal: 0,
@@ -221,7 +288,7 @@ export default function MandiPrices() {
         setSuggestions([]);
       })
       .finally(() => setTableLoading(false));
-  }, [selectedState, selectedMarket, selectedCommodity, searchQuery, page, pageSize, sortBy, sortOrder]);
+  }, [selectedState, selectedDistrict, selectedMarket, selectedCommodity, searchQuery, page, pageSize, sortBy, sortOrder]);
 
   useEffect(() => {
     fetchTablePrices();
@@ -251,25 +318,65 @@ export default function MandiPrices() {
       .finally(() => setHistoryLoading(false));
   }, [activeItem.crop, activeItem.mandi, activeItem.state, activeItem.noData, timeRange]);
 
-  // Cascading markets for state - when 'All' states selected, shows all mandis imported from API
-  const availableMarkets = useMemo(() => {
+  // Cascading districts for selected state
+  const availableDistricts = useMemo(() => {
     if (selectedState === 'All') {
-      const allMarkets = new Set();
-      Object.values(filterMeta.marketsByState || {}).forEach((arr) => {
-        if (Array.isArray(arr)) arr.forEach((m) => allMarkets.add(m));
-      });
-      return Array.from(allMarkets).sort();
+      return filterMeta.districts && filterMeta.districts.length > 0
+        ? filterMeta.districts
+        : INITIAL_POPULAR_DISTRICTS;
     }
-    return filterMeta.marketsByState[selectedState] || [];
-  }, [selectedState, filterMeta.marketsByState]);
+    return filterMeta.districtsByState?.[selectedState] || [];
+  }, [selectedState, filterMeta.districts, filterMeta.districtsByState]);
 
-  // Handle market selection - auto-links to its state if 'All' was chosen
-  const handleMarketChange = (mkt) => {
-    setSelectedMarket(mkt);
+  // Cascading markets for state and district
+  const availableMarkets = useMemo(() => {
+    // If specific district is selected
+    if (selectedDistrict !== 'All') {
+      if (selectedState !== 'All') {
+        const dKey = `${selectedState}:::${selectedDistrict}`;
+        if (filterMeta.marketsByDistrict?.[dKey]?.length) {
+          return filterMeta.marketsByDistrict[dKey];
+        }
+      }
+      // District chosen across all states
+      const matching = [];
+      Object.entries(filterMeta.marketsByDistrict || {}).forEach(([key, mkts]) => {
+        if (key.endsWith(`:::${selectedDistrict}`)) {
+          matching.push(...mkts);
+        }
+      });
+      if (matching.length > 0) return Array.from(new Set(matching)).sort();
+    }
+
+    // If specific state is selected
+    if (selectedState !== 'All') {
+      return filterMeta.marketsByState?.[selectedState] || [];
+    }
+
+    // All states & all districts
+    const allMarkets = new Set();
+    Object.values(filterMeta.marketsByState || {}).forEach((arr) => {
+      if (Array.isArray(arr)) arr.forEach((m) => allMarkets.add(m));
+    });
+    return Array.from(allMarkets).sort();
+  }, [selectedState, selectedDistrict, filterMeta.marketsByState, filterMeta.marketsByDistrict]);
+
+  // Handle state change - resets district and market
+  const handleStateChange = (st) => {
+    setSelectedState(st);
+    setSelectedDistrict('All');
+    setSelectedMarket('All');
     setPage(1);
-    if (mkt !== 'All' && selectedState === 'All') {
-      for (const [st, markets] of Object.entries(filterMeta.marketsByState || {})) {
-        if (Array.isArray(markets) && markets.includes(mkt)) {
+  };
+
+  // Handle district change - auto-links to its state if 'All' was chosen
+  const handleDistrictChange = (dst) => {
+    setSelectedDistrict(dst);
+    setSelectedMarket('All');
+    setPage(1);
+    if (dst !== 'All' && selectedState === 'All') {
+      for (const [st, districts] of Object.entries(filterMeta.districtsByState || {})) {
+        if (Array.isArray(districts) && districts.includes(dst)) {
           setSelectedState(st);
           break;
         }
@@ -277,11 +384,24 @@ export default function MandiPrices() {
     }
   };
 
-  // Reset market when state changes
-  const handleStateChange = (st) => {
-    setSelectedState(st);
-    setSelectedMarket('All');
+  // Handle market selection - auto-links to its district and state
+  const handleMarketChange = (mkt) => {
+    setSelectedMarket(mkt);
     setPage(1);
+    if (mkt !== 'All') {
+      const details = filterMeta.marketDetails?.[mkt];
+      if (details) {
+        if (details.state && selectedState === 'All') setSelectedState(details.state);
+        if (details.district && selectedDistrict === 'All') setSelectedDistrict(details.district);
+      } else if (selectedState === 'All') {
+        for (const [st, markets] of Object.entries(filterMeta.marketsByState || {})) {
+          if (Array.isArray(markets) && markets.includes(mkt)) {
+            setSelectedState(st);
+            break;
+          }
+        }
+      }
+    }
   };
 
   // Sync handler
@@ -289,7 +409,7 @@ export default function MandiPrices() {
     setIsSyncing(true);
     setSyncNotice(null);
     try {
-      const res = await api.mandi.sync({ limit: 3000 });
+      const res = await api.mandi.sync({ limit: 5000 });
       setSyncNotice({
         type: 'success',
         msg: `Synced ${res.syncedCount || 0} live Agmarknet records.`,
@@ -383,7 +503,7 @@ export default function MandiPrices() {
                 Mandi Prices & Intelligence
               </h1>
               <p style={{ margin: '4px 0 0', color: '#64748B', fontSize: '0.875rem' }}>
-                Real-time APMC wholesale market rates across {displayStates.length} states and {filterMeta.stats.totalMarkets > 0 ? filterMeta.stats.totalMarkets.toLocaleString() : (availableMarkets.length > 0 ? availableMarkets.length : '100+')} mandis
+                Real-time APMC wholesale market rates across {displayStates.length} states, {filterMeta.stats.totalDistricts || 145} cities & districts, and {filterMeta.stats.totalMarkets > 0 ? filterMeta.stats.totalMarkets.toLocaleString() : (availableMarkets.length > 0 ? availableMarkets.length : '300+')} mandis
               </p>
             </div>
 
@@ -532,7 +652,7 @@ export default function MandiPrices() {
               <div
                 style={{
                   display: 'grid',
-                  gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+                  gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
                   gap: 12,
                   alignItems: 'center',
                 }}
@@ -542,7 +662,7 @@ export default function MandiPrices() {
                   <Search size={16} style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', color: '#94A3B8' }} />
                   <input
                     type="text"
-                    placeholder="Search crop or mandi..."
+                    placeholder="Search crop, mandi, city..."
                     value={searchQuery}
                     onChange={(e) => {
                       setSearchQuery(e.target.value);
@@ -585,10 +705,40 @@ export default function MandiPrices() {
                       fontWeight: 500,
                     }}
                   >
-                    <option value="All">All States (India)</option>
+                    <option value="All">All States ({displayStates.length})</option>
                     {displayStates.map((st) => (
                       <option key={st} value={st}>
                         {st}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                {/* City / District selector */}
+                <div>
+                  <select
+                    value={selectedDistrict}
+                    onChange={(e) => handleDistrictChange(e.target.value)}
+                    style={{
+                      width: '100%',
+                      padding: '9px 12px',
+                      borderRadius: 8,
+                      border: '1px solid #CBD5E1',
+                      fontSize: '0.85rem',
+                      color: '#0F172A',
+                      background: '#fff',
+                      outline: 'none',
+                      fontWeight: 500,
+                    }}
+                  >
+                    <option value="All">
+                      {selectedState === 'All'
+                        ? `All Cities / Districts (${availableDistricts.length})`
+                        : `All Cities in ${selectedState} (${availableDistricts.length})`}
+                    </option>
+                    {availableDistricts.map((dst) => (
+                      <option key={dst} value={dst}>
+                        {dst}
                       </option>
                     ))}
                   </select>
@@ -612,13 +762,13 @@ export default function MandiPrices() {
                     }}
                   >
                     <option value="All">
-                      {selectedState === 'All'
-                        ? availableMarkets.length > 0
-                          ? `All Mandis (${availableMarkets.length})`
-                          : 'All Mandis Across India'
-                        : availableMarkets.length > 0
+                      {selectedDistrict !== 'All'
+                        ? `All Mandis in ${selectedDistrict} (${availableMarkets.length})`
+                        : selectedState !== 'All'
                           ? `All Mandis in ${selectedState} (${availableMarkets.length})`
-                          : `All Mandis in ${selectedState}`}
+                          : availableMarkets.length > 0
+                            ? `All Mandis Across India (${availableMarkets.length})`
+                            : 'All Mandis Across India'}
                     </option>
                     {availableMarkets.map((m) => (
                       <option key={m} value={m}>
@@ -648,7 +798,7 @@ export default function MandiPrices() {
                       fontWeight: 500,
                     }}
                   >
-                    <option value="All">All Crops ({filterMeta.commodities.length || '200+'})</option>
+                    <option value="All">All Crops ({filterMeta.commodities.length || '100+'})</option>
                     {marketCrops.length > 0 && (
                       <optgroup label={`Traded in ${selectedMarket} (${marketCrops.length} crops)`}>
                         {marketCrops.map((c) => (
@@ -669,16 +819,43 @@ export default function MandiPrices() {
                 </div>
               </div>
 
-              {/* Popular Crop Quick Chips */}
+              {/* State Quick Chips */}
               <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap', marginTop: 14, paddingTop: 12, borderTop: '1px solid #F1F5F9' }}>
                 <span style={{ fontSize: '0.75rem', fontWeight: 600, color: '#64748B', marginRight: 4 }}>
-                  Quick Filter:
+                  Top States:
+                </span>
+                {['Gujarat', 'Punjab', 'Haryana', 'Maharashtra', 'Rajasthan', 'Madhya Pradesh', 'Karnataka', 'Tamil Nadu', 'Andhra Pradesh'].map((stName) => (
+                  <button
+                    key={stName}
+                    onClick={() => handleStateChange(selectedState === stName ? 'All' : stName)}
+                    style={{
+                      padding: '4px 10px',
+                      borderRadius: 6,
+                      border: '1px solid',
+                      borderColor: selectedState === stName ? '#2E7D32' : '#E2E8F0',
+                      background: selectedState === stName ? '#ECFDF5' : '#F8FAFC',
+                      color: selectedState === stName ? '#047857' : '#475569',
+                      fontSize: '0.75rem',
+                      fontWeight: 600,
+                      cursor: 'pointer',
+                      transition: 'all 0.15s',
+                    }}
+                  >
+                    {stName}
+                  </button>
+                ))}
+              </div>
+
+              {/* Popular Crop Quick Chips */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap', marginTop: 8 }}>
+                <span style={{ fontSize: '0.75rem', fontWeight: 600, color: '#64748B', marginRight: 4 }}>
+                  Popular Crops:
                 </span>
                 {POPULAR_CROPS.map((cropName) => (
                   <button
                     key={cropName}
                     onClick={() => {
-                      setSelectedCommodity(cropName);
+                      setSelectedCommodity(selectedCommodity === cropName ? 'All' : cropName);
                       setPage(1);
                     }}
                     style={{
@@ -697,11 +874,12 @@ export default function MandiPrices() {
                     {cropName}
                   </button>
                 ))}
-                {(selectedCommodity !== 'All' || selectedState !== 'All' || selectedMarket !== 'All' || searchQuery) && (
+                {(selectedCommodity !== 'All' || selectedState !== 'All' || selectedDistrict !== 'All' || selectedMarket !== 'All' || searchQuery) && (
                   <button
                     onClick={() => {
                       setSelectedCommodity('All');
                       setSelectedState('All');
+                      setSelectedDistrict('All');
                       setSelectedMarket('All');
                       setSearchQuery('');
                       setPage(1);
@@ -1092,10 +1270,12 @@ export default function MandiPrices() {
                     <thead>
                       <tr style={{ borderBottom: '1px solid #E2E8F0', background: '#F8FAFC' }}>
                         <th style={{ padding: '10px 12px', textAlign: 'left', color: '#64748B', fontWeight: 600 }}>Commodity</th>
-                        <th style={{ padding: '10px 12px', textAlign: 'left', color: '#64748B', fontWeight: 600 }}>Mandi</th>
+                        <th style={{ padding: '10px 12px', textAlign: 'left', color: '#64748B', fontWeight: 600 }}>Mandi (APMC)</th>
+                        <th style={{ padding: '10px 12px', textAlign: 'left', color: '#64748B', fontWeight: 600 }}>City / District</th>
                         <th style={{ padding: '10px 12px', textAlign: 'left', color: '#64748B', fontWeight: 600 }}>State</th>
                         <th style={{ padding: '10px 12px', textAlign: 'right', color: '#64748B', fontWeight: 600 }}>Modal Rate</th>
                         <th style={{ padding: '10px 12px', textAlign: 'right', color: '#64748B', fontWeight: 600 }}>Range (Min - Max)</th>
+                        <th style={{ padding: '10px 12px', textAlign: 'center', color: '#64748B', fontWeight: 600 }}>Arrivals</th>
                         <th style={{ padding: '10px 12px', textAlign: 'center', color: '#64748B', fontWeight: 600 }}>Change</th>
                         <th style={{ padding: '10px 12px', textAlign: 'right', color: '#64748B', fontWeight: 600 }}>Date</th>
                       </tr>
@@ -1118,7 +1298,7 @@ export default function MandiPrices() {
                           >
                             <td style={{ padding: '11px 12px', fontWeight: 600, color: '#0F172A' }}>
                               <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                                <span>{row.emoji || '🌾'}</span>
+                                <span>{row.cropEmoji || '🌾'}</span>
                                 <div>
                                   <div>{row.crop}</div>
                                   <div style={{ fontSize: '0.72rem', color: '#94A3B8', fontWeight: 400 }}>
@@ -1127,11 +1307,20 @@ export default function MandiPrices() {
                                 </div>
                               </div>
                             </td>
-                            <td style={{ padding: '11px 12px', color: '#334155', fontWeight: 500 }}>
-                              {row.mandi}
+                            <td style={{ padding: '11px 12px', color: '#1E293B', fontWeight: 600 }}>
+                              <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
+                                <Building2 size={13} style={{ color: '#2E7D32', flexShrink: 0 }} />
+                                {row.mandi}
+                              </div>
+                            </td>
+                            <td style={{ padding: '11px 12px', color: '#475569', fontSize: '0.82rem' }}>
+                              <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}>
+                                <MapPin size={12} style={{ color: '#94A3B8', flexShrink: 0 }} />
+                                {row.district || 'General'}
+                              </span>
                             </td>
                             <td style={{ padding: '11px 12px', color: '#64748B' }}>
-                              <span style={{ background: '#F1F5F9', padding: '2px 6px', borderRadius: 4, fontSize: '0.75rem', fontWeight: 500 }}>
+                              <span style={{ background: '#F1F5F9', padding: '2px 8px', borderRadius: 6, fontSize: '0.75rem', fontWeight: 600, color: '#334155' }}>
                                 {row.state}
                               </span>
                             </td>
@@ -1149,6 +1338,9 @@ export default function MandiPrices() {
                               {unit === 'quintal'
                                 ? `${row.minQuintal?.toLocaleString()} - ${row.maxQuintal?.toLocaleString()}`
                                 : `${row.minKg || (row.minQuintal / 100).toFixed(1)} - ${row.maxKg || (row.maxQuintal / 100).toFixed(1)}`}
+                            </td>
+                            <td style={{ padding: '11px 12px', textAlign: 'center', color: '#475569', fontSize: '0.78rem', fontWeight: 600 }}>
+                              {row.arrivals ? `${row.arrivals} MT` : '—'}
                             </td>
                             <td style={{ padding: '11px 12px', textAlign: 'center' }}>
                               <span

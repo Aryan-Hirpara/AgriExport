@@ -34,7 +34,7 @@ function generateHistoryPoints(latestPoint, days = 90) {
   return points;
 }
 
-// GET /api/mandi/filters - Metadata for cascading dropdowns
+// GET /api/mandi/filters - Metadata for cascading dropdowns (States, Cities/Districts, Markets, Crops)
 router.get('/filters', async (req, res, next) => {
   try {
     const [statesRows] = await pool.query(
@@ -48,24 +48,42 @@ router.get('/filters', async (req, res, next) => {
     const commodities = commoditiesRows.map(r => r.commodity);
 
     const [marketsRows] = await pool.query(
-      `SELECT DISTINCT state, district, market_name FROM mandi_prices WHERE market_name IS NOT NULL ORDER BY state, market_name ASC`
+      `SELECT DISTINCT state, district, market_name FROM mandi_prices WHERE market_name IS NOT NULL AND state IS NOT NULL ORDER BY state, district, market_name ASC`
     );
 
-    // Group markets by state
+    // Group districts and markets for cascading hierarchy
+    const districtsByState = {};
     const marketsByState = {};
+    const marketsByDistrict = {};
+    const marketDetails = {};
+    const allDistricts = new Set();
+
     for (const m of marketsRows) {
-      if (!marketsByState[m.state]) {
-        marketsByState[m.state] = [];
-      }
-      if (!marketsByState[m.state].includes(m.market_name)) {
-        marketsByState[m.state].push(m.market_name);
-      }
+      const st = m.state;
+      const dst = m.district || 'General';
+      const mkt = m.market_name;
+
+      allDistricts.add(dst);
+
+      if (!districtsByState[st]) districtsByState[st] = [];
+      if (!districtsByState[st].includes(dst)) districtsByState[st].push(dst);
+
+      if (!marketsByState[st]) marketsByState[st] = [];
+      if (!marketsByState[st].includes(mkt)) marketsByState[st].push(mkt);
+
+      const dKey = `${st}:::${dst}`;
+      if (!marketsByDistrict[dKey]) marketsByDistrict[dKey] = [];
+      if (!marketsByDistrict[dKey].includes(mkt)) marketsByDistrict[dKey].push(mkt);
+
+      marketDetails[mkt] = { state: st, district: dst };
     }
 
     const [[stats]] = await pool.query(`
       SELECT 
         COUNT(*) as totalRecords,
         COUNT(DISTINCT market_name) as totalMarkets,
+        COUNT(DISTINCT district) as totalDistricts,
+        COUNT(DISTINCT state) as totalStates,
         COUNT(DISTINCT commodity) as totalCommodities,
         MAX(price_date) as latestDate
       FROM mandi_prices
@@ -75,11 +93,17 @@ router.get('/filters', async (req, res, next) => {
       success: true,
       data: {
         states,
-        commodities,
+        districts: Array.from(allDistricts).sort(),
+        districtsByState,
         marketsByState,
+        marketsByDistrict,
+        marketDetails,
+        commodities,
         stats: {
           totalRecords: Number(stats.totalRecords),
           totalMarkets: Number(stats.totalMarkets),
+          totalDistricts: Number(stats.totalDistricts),
+          totalStates: Number(stats.totalStates),
           totalCommodities: Number(stats.totalCommodities),
           latestDate: stats.latestDate,
         }
