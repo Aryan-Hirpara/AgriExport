@@ -1,10 +1,9 @@
-import { Suspense, lazy, useState } from 'react';
-import { Routes, Route, Navigate, Outlet } from 'react-router-dom';
+import { Routes, Route, Navigate, Outlet, useNavigate } from 'react-router-dom';
 import { AppProvider, useApp } from './context/AppContext';
 import Navbar from './components/common/Navbar';
 import AdminSidebar from './components/common/AdminSidebar';
 import ToastManager from './components/common/ToastManager';
-import api from './services/api';
+
 
 // ── Public Pages ──────────────────────────────────────────────
 import Home from './pages/public/Home';
@@ -42,17 +41,7 @@ import UserManagement from './pages/admin/UserManagement';
 import Complaints from './pages/admin/Complaints';
 import SystemCheck from './pages/admin/SystemCheck';
 
-// Loading fallback
-function PageLoader() {
-  return (
-    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '60vh' }}>
-      <div style={{ textAlign: 'center' }}>
-        <div style={{ width: 48, height: 48, border: '3px solid var(--green-light)', borderTop: '3px solid var(--green-primary)', borderRadius: '50%', animation: 'spin 0.8s linear infinite', margin: '0 auto 16px' }} />
-        <p style={{ color: 'var(--text-muted)', fontWeight: 500 }}>Loading...</p>
-      </div>
-    </div>
-  );
-}
+
 
 // Layout: public pages with navbar
 function PublicLayout() {
@@ -82,25 +71,8 @@ function AppLayout() {
 
 // Layout: admin pages with sidebar
 function AdminLayout() {
-  const { role, user, loginAs, addToast } = useApp();
-  const [switching, setSwitching] = useState(false);
-
-  const handleSwitchToAdmin = async () => {
-    setSwitching(true);
-    try {
-      const res = await api.auth.login({ email: 'admin@agriexport.in', password: 'Admin@1234', role: 'admin' });
-      if (res?.token) {
-        localStorage.setItem('token', res.token);
-        loginAs('admin', res.user);
-        addToast('Admin session active! Live metrics loaded.', 'success');
-        window.location.reload();
-      }
-    } catch (e) {
-      addToast('Admin login failed: ' + (e.message || 'Error'), 'error');
-    } finally {
-      setSwitching(false);
-    }
-  };
+  const { role, user } = useApp();
+  const navigate = useNavigate();
 
   const isAdmin = role === 'admin';
 
@@ -133,12 +105,11 @@ function AdminLayout() {
               </div>
             </div>
             <button
-              onClick={handleSwitchToAdmin}
-              disabled={switching}
+              onClick={() => navigate('/login')}
               className="btn btn-primary btn-sm"
               style={{ fontSize: '0.8rem', padding: '6px 16px' }}
             >
-              {switching ? 'Authenticating...' : '🔑 Switch to Admin'}
+              🔑 Login as Admin
             </button>
           </div>
         )}
@@ -150,8 +121,6 @@ function AdminLayout() {
 }
 
 function AppRoutes() {
-  const { role } = useApp();
-
   return (
     <Routes>
       {/* Public */}

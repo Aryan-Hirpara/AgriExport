@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useApp } from '../../context/AppContext';
@@ -9,7 +9,7 @@ import { getSocket } from '../../services/socket';
 
 export default function VerificationQueue() {
   const navigate = useNavigate();
-  const { addToast, loginAs, impersonateUser } = useApp();
+  const { addToast, impersonateUser } = useApp();
   const [queue, setQueue] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -20,32 +20,11 @@ export default function VerificationQueue() {
   const [typeFilter, setTypeFilter] = useState('All');
   const [statusFilter, setStatusFilter] = useState('All');
 
-  const fetchQueue = async () => {
+  const fetchQueue = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
-      let res;
-      try {
-        res = await api.admin.getVerifications();
-      } catch (authErr) {
-        if (authErr?.status === 401 || authErr?.status === 403) {
-          const loginRes = await api.auth.login({
-            email: 'admin@agriexport.in',
-            password: 'Admin@1234',
-            role: 'admin',
-          });
-          if (loginRes?.token) {
-            localStorage.setItem('token', loginRes.token);
-            if (loginAs) loginAs('admin', loginRes.user);
-            res = await api.admin.getVerifications();
-          } else {
-            throw authErr;
-          }
-        } else {
-          throw authErr;
-        }
-      }
-
+      const res = await api.admin.getVerifications();
       if (res?.data) {
         setQueue(res.data);
         if (selected && !res.data.some(u => u.id === selected)) {
@@ -53,12 +32,17 @@ export default function VerificationQueue() {
         }
       }
     } catch (err) {
+      if (err?.status === 401 || err?.status === 403) {
+        addToast('Session expired. Please log in as admin.', 'error');
+        navigate('/login');
+        return;
+      }
       console.error('Failed to load verifications:', err);
       setError(err.message || 'Failed to load verification queue from database');
     } finally {
       setLoading(false);
     }
-  };
+  }, [addToast, navigate, selected]);
 
   useEffect(() => {
     fetchQueue();
@@ -75,7 +59,7 @@ export default function VerificationQueue() {
         socket.off('user_status_changed', fetchQueue);
       }
     };
-  }, []);
+  }, [fetchQueue]);
 
   const filtered = queue.filter(u => {
     const matchSearch = !search || u.name?.toLowerCase().includes(search.toLowerCase());

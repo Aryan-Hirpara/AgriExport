@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Users, Package, ShieldCheck, AlertTriangle, TrendingUp, Briefcase, MessageSquare, RefreshCw } from 'lucide-react';
 import { CountUp, FadeUpItem, StaggerGrid } from '../../components/common/AnimatedComponents';
@@ -8,7 +9,8 @@ import { getSocket } from '../../services/socket';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, BarChart, Bar, Legend } from 'recharts';
 
 export default function AdminOverview() {
-  const { role, loginAs } = useApp();
+  const { addToast } = useApp();
+  const navigate = useNavigate();
   const [data, setData] = useState({
     stats: {
       farmers: 0,
@@ -38,40 +40,24 @@ export default function AdminOverview() {
   const fetchStats = useCallback(async () => {
     try {
       setLoading(true);
-      let res;
-      try {
-        res = await api.admin.getStats();
-      } catch (authErr) {
-        // If 401 Unauthorized or 403 Forbidden, automatically authenticate as admin and retry
-        if (authErr?.status === 401 || authErr?.status === 403) {
-          const loginRes = await api.auth.login({
-            email: 'admin@agriexport.in',
-            password: 'Admin@1234',
-            role: 'admin',
-          });
-          if (loginRes?.token) {
-            localStorage.setItem('token', loginRes.token);
-            if (loginAs) loginAs('admin', loginRes.user);
-            res = await api.admin.getStats();
-          } else {
-            throw authErr;
-          }
-        } else {
-          throw authErr;
-        }
-      }
-
+      const res = await api.admin.getStats();
       if (res?.data) {
         setData(res.data);
         setError(null);
       }
     } catch (err) {
+      if (err?.status === 401 || err?.status === 403) {
+        addToast('Session expired. Please log in as admin.', 'error');
+        navigate('/login');
+        return;
+      }
       console.error('Failed to load admin stats:', err);
       setError(err.message || 'Failed to load live database metrics');
     } finally {
       setLoading(false);
     }
-  }, [loginAs]);
+  }, [navigate, addToast]);
+
 
   useEffect(() => {
     fetchStats();

@@ -8,6 +8,9 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 async function runSetup() {
+  if (process.env.NODE_ENV === 'production') {
+    throw new Error('FATAL: Database setup script is disabled in production environment!');
+  }
   console.log('🚀 Running database setup...');
   try {
     const schemaSql = fs.readFileSync(path.join(__dirname, 'schema.sql'), 'utf-8');

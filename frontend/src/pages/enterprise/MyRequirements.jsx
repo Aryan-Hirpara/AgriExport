@@ -4,8 +4,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useApp } from '../../context/AppContext';
 import {
   PlusCircle, Trash2, CheckCircle2, ChevronDown, ChevronUp,
-  MapPin, ExternalLink, ShieldCheck, X, Edit, Save, AlertCircle,
-  FileText, MessageCircle, Sparkles, Building2, Calendar, Check, RefreshCw
+  ShieldCheck, X, Edit, Save, AlertCircle,
+  FileText, MessageCircle, Sparkles, Check, RefreshCw
 } from 'lucide-react';
 import { FadeUpItem, StaggerGrid } from '../../components/common/AnimatedComponents';
 import cropAttributes from '../../data/crop_attributes.json';

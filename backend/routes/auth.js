@@ -7,11 +7,16 @@ import { verifyToken } from '../middleware/auth.js';
 
 const router = express.Router();
 
+const JWT_SECRET = process.env.JWT_SECRET;
+if (!JWT_SECRET) {
+  throw new Error('FATAL: JWT_SECRET environment variable is not set.');
+}
+
 // Generate JWT Helper
 const generateToken = (user) => {
   return jwt.sign(
     { id: user.id, role: user.role, email: user.email },
-    process.env.JWT_SECRET || 'agriexport_super_secret_jwt_key_2026',
+    JWT_SECRET,
     { expiresIn: process.env.JWT_EXPIRES_IN || '7d' }
   );
 };

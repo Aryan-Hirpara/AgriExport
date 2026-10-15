@@ -1,14 +1,12 @@
-import { useState, useMemo } from 'react';
+import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useApp } from '../../context/AppContext';
 import {
   MessageCircle, X, RefreshCw, ShieldCheck,
-  MapPin, CheckCircle2, ChevronRight, FileText, Sparkles,
-  Building2, ArrowUpRight, Check, AlertCircle, Info
+  FileText, Sparkles
 } from 'lucide-react';
 import { FadeUpItem, StaggerGrid } from '../../components/common/AnimatedComponents';
-import cropAttributes from '../../data/crop_attributes.json';
 
 const ALL_TABS = ['pending', 'countered', 'accepted', 'rejected', 'withdrawn', 'expired'];
 const TAB_LABELS = {
@@ -22,7 +20,6 @@ const TAB_LABELS = {
 
 export default function MyOffers() {
   const {
-    addToast,
     enterpriseOffers = [],
     acceptOffer,
     counterOffer,

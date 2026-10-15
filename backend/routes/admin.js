@@ -3,6 +3,12 @@ import jwt from 'jsonwebtoken';
 import pool from '../config/db.js';
 import { verifyToken, requireRole } from '../middleware/auth.js';
 
+const JWT_SECRET = process.env.JWT_SECRET;
+if (!JWT_SECRET) {
+  throw new Error('FATAL: JWT_SECRET environment variable is not set.');
+}
+
+
 const router = express.Router();
 
 // Require admin role for all admin routes
@@ -324,7 +330,7 @@ router.post('/impersonate/:userId', async (req, res, next) => {
 
     const token = jwt.sign(
       { id: targetUser.id, role: targetUser.role, email: targetUser.email },
-      process.env.JWT_SECRET || 'agriexport_secret',
+      JWT_SECRET,
       { expiresIn: '7d' }
     );
 

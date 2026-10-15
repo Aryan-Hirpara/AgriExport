@@ -1,10 +1,9 @@
 import { useState, useMemo } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useApp } from '../../context/AppContext';
 import {
-  Check, ArrowRight, ArrowLeft, PlusCircle, Info, ChevronDown,
-  Globe, Truck, ShieldCheck, Sparkles, Building2, Calendar,
+  Check, ArrowRight, ArrowLeft, Info, ChevronDown,
   Upload, X, Camera
 } from 'lucide-react';
 import { StepProgress, SpinnerBtn } from '../../components/common/AnimatedComponents';

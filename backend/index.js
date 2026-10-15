@@ -65,14 +65,24 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 // Static file serving for uploads
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-// Rate Limiter for API endpoints
+// Rate Limiter – General API (300 req / 15 min per IP)
 const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 1000, // Limit each IP to 1000 requests per window
+  windowMs: 15 * 60 * 1000,
+  max: 300,
   standardHeaders: true,
   legacyHeaders: false,
+  message: { success: false, message: 'Too many requests. Please try again later.' },
 });
 app.use('/api', limiter);
+
+// Strict Rate Limiter – Auth endpoints (20 req / 15 min per IP in production)
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: process.env.NODE_ENV === 'production' ? 20 : 500,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { success: false, message: 'Too many authentication attempts. Please try again in 15 minutes.' },
+});
 
 // Global request logger and mutation tracker
 let lastWriteTime = new Date().toISOString();
@@ -141,7 +151,7 @@ app.get('/api/health', async (req, res) => {
 });
 
 // API Routes
-app.use('/api/auth', authRoutes);
+app.use('/api/auth', authLimiter, authRoutes);
 app.use('/api/crops', cropRoutes);
 app.use('/api/listings', listingRoutes);
 app.use('/api/requirements', requirementRoutes);

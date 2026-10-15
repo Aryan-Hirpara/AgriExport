@@ -184,8 +184,15 @@ router.post('/', verifyToken, async (req, res, next) => {
 
     const finalPrice = Number(offeredPrice || price || 0);
     const finalQty = Number(quantity || qty || 1);
-    const multiplier = unit === 'ton' ? 1000 : unit === 'quintal' ? 100 : 1;
-    const totalAmount = Number(req.body.total || req.body.totalAmount) || (finalPrice * finalQty * multiplier);
+    let totalAmount = Number(req.body.total || req.body.totalAmount);
+    if (!totalAmount) {
+      if (finalPrice > 1000) {
+        totalAmount = finalPrice * finalQty;
+      } else {
+        const multiplier = unit === 'ton' ? 1000 : unit === 'quintal' ? 100 : 1;
+        totalAmount = finalPrice * finalQty * multiplier;
+      }
+    }
 
     const [resInsert] = await pool.query(
       `INSERT INTO offers

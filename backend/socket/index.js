@@ -1,6 +1,12 @@
 import jwt from 'jsonwebtoken';
 import pool from '../config/db.js';
 
+const JWT_SECRET = process.env.JWT_SECRET;
+if (!JWT_SECRET) {
+  throw new Error('FATAL: JWT_SECRET environment variable is not set.');
+}
+
+
 export function setupSocket(io) {
   // Authentication middleware for Socket.io
   io.use(async (socket, next) => {
@@ -10,7 +16,7 @@ export function setupSocket(io) {
         return next(new Error('Authentication error: Token missing'));
       }
 
-      const decoded = jwt.verify(token, process.env.JWT_SECRET || 'agriexport_super_secret_jwt_key_2026');
+      const decoded = jwt.verify(token, JWT_SECRET);
       const [users] = await pool.query('SELECT id, name, role, email FROM users WHERE id = ?', [decoded.id]);
       if (users.length === 0) {
         return next(new Error('User not found'));

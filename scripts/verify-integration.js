@@ -6,7 +6,7 @@
  */
 
 import pool from '../backend/config/db.js';
-import { io as ioClient } from 'socket.io-client';
+import { io as ioClient } from '../frontend/node_modules/socket.io-client/build/esm/index.js';
 
 const API_BASE = 'http://localhost:5001/api';
 const SOCKET_URL = 'http://localhost:5001';
@@ -464,6 +464,9 @@ async function runTests() {
     const { BUYER_TOKEN, BUYER_ID, buyerSocket } = results.testD;
     const { FARMER_TOKEN, FARMER_ID, farmerSocket } = results.testA;
 
+    printStep('E.0', 'Admin approves enterprise buyer');
+    await querySQL('UPDATE users SET is_verified = 1 WHERE id = ?', [BUYER_ID]);
+
     printStep('E.1', 'POST /api/requirements (enterprise posts requirement)');
     const reqEventP = adminSocket.waitForEvent('new_requirement_posted');
     const reqRes = await api('/requirements', {
@@ -504,7 +507,7 @@ async function runTests() {
         requirementId: REQ_DB_ID,
         enterpriseId: BUYER_ID,
         offeredPrice: 132000,
-        qty: 10, quantity: 10000, unit: 'ton',
+        qty: 10, quantity: 10, unit: 'ton',
         deliveryTerms: 'CIF Kandla Port',
         paymentTerms: '100% LC at sight',
         notes: 'Premium white sesame, FSSAI certified.',

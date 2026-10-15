@@ -2,6 +2,9 @@ import bcrypt from 'bcryptjs';
 import pool from '../config/db.js';
 
 export async function seedDatabase() {
+  if (process.env.NODE_ENV === 'production') {
+    throw new Error('FATAL: Database seed script is disabled in production environment!');
+  }
   console.log('🌱 Starting AgriExport Connect database seeding...');
 
   const connection = await pool.getConnection();

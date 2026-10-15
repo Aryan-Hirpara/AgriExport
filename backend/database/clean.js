@@ -1,6 +1,9 @@
 import pool from '../config/db.js';
 
 export async function cleanDatabase() {
+  if (process.env.NODE_ENV === 'production') {
+    throw new Error('FATAL: Database clean script is disabled in production environment!');
+  }
   console.log('🧹 Cleaning MySQL database: removing all dummy data, keeping crops and admin...');
 
   const connection = await pool.getConnection();

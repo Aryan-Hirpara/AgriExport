@@ -1,6 +1,11 @@
 import jwt from 'jsonwebtoken';
 import pool from '../config/db.js';
 
+const JWT_SECRET = process.env.JWT_SECRET;
+if (!JWT_SECRET) {
+  throw new Error('FATAL: JWT_SECRET environment variable is not set. Refusing to start.');
+}
+
 export const verifyToken = async (req, res, next) => {
   try {
     const authHeader = req.headers.authorization;
@@ -9,7 +14,7 @@ export const verifyToken = async (req, res, next) => {
     }
 
     const token = authHeader.split(' ')[1];
-    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'agriexport_secret');
+    const decoded = jwt.verify(token, JWT_SECRET);
 
     // Fetch user from DB to ensure user is active and exists
     const [rows] = await pool.query(
@@ -55,7 +60,7 @@ export const optionalAuth = async (req, res, next) => {
     const authHeader = req.headers.authorization;
     if (authHeader && authHeader.startsWith('Bearer ')) {
       const token = authHeader.split(' ')[1];
-      const decoded = jwt.verify(token, process.env.JWT_SECRET || 'agriexport_secret');
+      const decoded = jwt.verify(token, JWT_SECRET);
       const [rows] = await pool.query(
         'SELECT id, email, phone, role, name, is_verified FROM users WHERE id = ?',
         [decoded.id]

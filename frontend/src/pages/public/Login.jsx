@@ -19,7 +19,7 @@ export default function Login() {
       : initialRole === 'enterprise' ? 'ahmed@spiceexports.in'
       : 'ramesh@unjha.com'
   );
-  const [password, setPassword] = useState(initialRole === 'admin' ? 'Admin@1234' : 'demo1234');
+  const [password, setPassword] = useState(initialRole === 'admin' ? '' : 'demo1234');
   const [showPwd, setShowPwd] = useState(false);
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
@@ -27,7 +27,7 @@ export default function Login() {
   const handleLogin = async () => {
     setLoading(true);
     try {
-      // 1. Authenticate with real MySQL Backend API
+      // Authenticate with backend API
       const res = await api.auth.login({ email, password, role });
       if (res.token) {
         localStorage.setItem('token', res.token);
@@ -46,29 +46,14 @@ export default function Login() {
       }, 500);
     } catch (err) {
       setLoading(false);
-      // If error is 401/400 invalid credentials, report directly
-      if (err.status === 401 || err.status === 400) {
-        addToast(err.message || 'Invalid credentials. Please check your email and password.', 'error');
-        return;
-      }
-      // If server is not yet running, use graceful demo fallback
-      loginAs(role);
-      const roleLabel = role === 'farmer' ? 'Farmer'
-        : role === 'enterprise' ? 'Enterprise'
-        : 'Admin';
-      addToast(`Logged in as ${roleLabel}`, 'success');
-      setTimeout(() => {
-        if (role === 'farmer') navigate('/farmer/home');
-        else if (role === 'enterprise') navigate('/enterprise/home');
-        else navigate('/admin/overview');
-      }, 500);
+      addToast(err.message || 'Invalid credentials or server unavailable. Please try again.', 'error');
     }
   };
 
   const demoLogin = (r) => {
     setRole(r);
     setEmail(r === 'admin' ? 'admin@agriexport.in' : r === 'farmer' ? 'ramesh@unjha.com' : 'ahmed@spiceexports.in');
-    setPassword(r === 'admin' ? 'Admin@1234' : 'demo1234');
+    setPassword(r === 'admin' ? '' : 'demo1234');
   };
 
   return (

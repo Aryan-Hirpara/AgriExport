@@ -1,15 +1,15 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useApp } from '../../context/AppContext';
-import { Search, ShieldCheck, ShieldX, Ban, RotateCcw, Eye, RefreshCw, AlertTriangle, ExternalLink } from 'lucide-react';
+import { Search, ShieldCheck, Ban, RotateCcw, Eye, RefreshCw, AlertTriangle, ExternalLink } from 'lucide-react';
 import { FadeUpItem } from '../../components/common/AnimatedComponents';
 import api from '../../services/api';
 import { getSocket } from '../../services/socket';
 
 export default function UserManagement() {
   const navigate = useNavigate();
-  const { addToast, loginAs, impersonateUser } = useApp();
+  const { addToast, impersonateUser } = useApp();
   const [activeTab, setActiveTab] = useState('farmers');
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('All');
@@ -20,32 +20,11 @@ export default function UserManagement() {
     enterprises: [],
   });
 
-  const fetchUsers = async () => {
+  const fetchUsers = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
-      let res;
-      try {
-        res = await api.admin.getUsers();
-      } catch (authErr) {
-        if (authErr?.status === 401 || authErr?.status === 403) {
-          const loginRes = await api.auth.login({
-            email: 'admin@agriexport.in',
-            password: 'Admin@1234',
-            role: 'admin',
-          });
-          if (loginRes?.token) {
-            localStorage.setItem('token', loginRes.token);
-            if (loginAs) loginAs('admin', loginRes.user);
-            res = await api.admin.getUsers();
-          } else {
-            throw authErr;
-          }
-        } else {
-          throw authErr;
-        }
-      }
-
+      const res = await api.admin.getUsers();
       if (res?.data) {
         const raw = res.data;
         const farmers = raw.filter(u => u.role === 'farmer').map(f => ({
@@ -78,12 +57,17 @@ export default function UserManagement() {
         setUsers({ farmers, enterprises });
       }
     } catch (err) {
+      if (err?.status === 401 || err?.status === 403) {
+        addToast('Session expired. Please log in as admin.', 'error');
+        navigate('/login');
+        return;
+      }
       console.error('Failed to load users:', err);
       setError(err.message || 'Failed to load user directory from database');
     } finally {
       setLoading(false);
     }
-  };
+  }, [addToast, navigate]);
 
   useEffect(() => {
     fetchUsers();
@@ -100,7 +84,7 @@ export default function UserManagement() {
         socket.off('user_status_changed', fetchUsers);
       }
     };
-  }, []);
+  }, [fetchUsers]);
 
   const currentUsers = (users[activeTab] || []).filter(u => {
     const matchSearch = !search || u.name?.toLowerCase().includes(search.toLowerCase());

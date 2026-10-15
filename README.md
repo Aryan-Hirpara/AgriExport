@@ -119,3 +119,50 @@ npm run dev
 - `GET  /api/guides` – Export protocols & APEDA documentation
 - `GET  /api/admin/stats` – Dynamic analytics dashboard
 - `POST /api/admin/verifications/:id/review` – Approve/reject user documents
+
+---
+
+## 🧪 Automated Verification & Test Suites
+
+The project includes two end-to-end automated testing and security verification suites:
+
+### 1. Full E2E Integration Suite (Tests A–H)
+Verifies multi-user flows, live MySQL transactions, and Socket.io event delivery across roles:
+```bash
+node scripts/verify-integration.js
+```
+- **Test A**: Farmer Registration → Admin Document Verification → Live Socket Sync → DB Row Matching
+- **Test B**: Produce Listing Creation → MySQL Persistence → Live Market Browse
+- **Test C**: Listing Modification → Real-time SQL Update → Soft Deletion
+- **Test D**: Enterprise Offer Dispatch → Farmer Live Inbox → Deal Conversion
+- **Test E**: Buyer Requirement Posting → Farmer Quotation → Live Enterprise Notification
+- **Test F**: Encrypted Messaging & Chat → Real-time Socket Dispatch → Database Archive
+- **Test G**: Administrative Account Suspension → Live Token Revocation
+- **Test H**: Empty Query States & Null Safety Robustness
+
+### 2. OWASP & ASVS Security Hardening Suite (15 Automated Checks)
+Validates enterprise-grade security controls:
+```bash
+node scripts/verify-security.js
+```
+- **SQLi Defense**: Login and dynamic search SQL injection attempts blocked via parameterized queries.
+- **RBAC & Authorization**: Strict role isolation prevents farmer/enterprise from calling administrative endpoints.
+- **IDOR Protection**: Cross-user tampering of listings, offers, deals, or documents is rejected with 403 Forbidden.
+- **JWT Integrity**: Tampered tokens, malformed strings, and deleted user tokens are rejected immediately.
+- **HTTP Security Headers**: Express signature (`X-Powered-By`) hidden, `nosniff`, and Clickjacking protections active.
+- **XSS Sanitization**: Script injection payloads safely stored and treated as non-executable text.
+
+---
+
+## 🛡️ Permanent Engineering & Clean Code Rules
+
+1. **In-Place Modification Only**: When changing a feature, modify the existing function or file in place. Never create a second version (no "New", "V2", "Copy", "Old", "Temp", "Backup" names).
+2. **Atomic Replacements**: When replacing a method, delete the old method and update every caller in the same change. Never leave unused code, commented-out code, or unused imports.
+3. **Reuse First**: Before adding any helper, component, constant, endpoint, or file, search the project for an existing one and reuse or extend it. No duplicate logic.
+4. **Lean Footprint**: Do not create extra files, folders, scripts, or documentation unless required. Prefer editing existing files.
+5. **Single Source of Truth**: Keep one source of truth for each domain: API client (`src/services/api.js`), constants and enums (`src/data/crop_attributes.json`), validation rules, formatters, and crop attributes.
+6. **Zero-Trust Backend Security**: Every backend route must have role and ownership checks, input validation, and parameterized SQL queries. No exceptions.
+7. **No Secrets or Dummy Data in Code**: No secrets, API keys, or database passwords in source code. All configuration must be environment-variable driven. No `console.log` in production paths. No dummy/mock fallback data in production code.
+8. **Verification Discipline**: After each change: run lint, build, and tests, then report: files changed, what was removed, what was reused, and how it was tested.
+9. **Architectural Integrity**: If a user request would create duplication or break these rules, highlight the risk and implement the clean, standardized approach instead of a quick hack.
+

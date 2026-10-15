@@ -260,18 +260,13 @@ export const AppProvider = ({ children }) => {
       const meRes = await api.auth.getMe().catch(() => null);
       if (meRes?.user && meRes.user.role === 'admin') {
         loginAs('admin', meRes.user);
+        addToast('Returned to Admin Panel ✓', 'success');
       } else {
-        const loginRes = await api.auth.login({
-          email: 'admin@agriexport.in',
-          password: 'Admin@1234',
-          role: 'admin',
-        });
-        if (loginRes?.token) {
-          localStorage.setItem('token', loginRes.token);
-          loginAs('admin', loginRes.user);
-        }
+        localStorage.removeItem('token');
+        setUser(null);
+        setRole('guest');
+        addToast('Admin session expired. Please log in again.', 'warning');
       }
-      addToast('Returned to Admin Panel ✓', 'success');
     } catch (err) {
       console.error('returnToAdmin error:', err);
       addToast('Failed to restore admin session', 'error');
