@@ -483,7 +483,10 @@ CREATE TABLE complaints (
 -- 19. Mandi Prices
 CREATE TABLE mandi_prices (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    crop_id INT NOT NULL,
+    crop_id INT NULL,
+    commodity VARCHAR(100),
+    variety VARCHAR(100) DEFAULT 'General',
+    grade VARCHAR(50) DEFAULT 'FAQ',
     market_name VARCHAR(100) NOT NULL,
     district VARCHAR(100) NOT NULL,
     state VARCHAR(100) DEFAULT 'Gujarat',

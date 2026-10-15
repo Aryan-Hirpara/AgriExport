@@ -120,6 +120,7 @@ export async function seedDatabase() {
     ];
 
     const cropIdMap = {};
+    const cropNameMap = {};
     for (const c of cropsData) {
       const [res] = await connection.query(
         `INSERT INTO crops (slug, name, gujarati_name, emoji, indicative_price, default_unit, export_grade, description)
@@ -127,6 +128,7 @@ export async function seedDatabase() {
         [c.slug, c.name, c.gujarati, c.emoji, c.price, c.unit, c.grade, c.desc]
       );
       cropIdMap[c.slug] = res.insertId;
+      cropNameMap[c.slug] = c.name;
     }
 
     // 5. Seed Produce Listings (42 listings)
@@ -309,9 +311,9 @@ export async function seedDatabase() {
       const cId = cropIdMap[m.crop];
       if (!cId) continue;
       await connection.query(
-        `INSERT INTO mandi_prices (crop_id, market_name, district, state, modal_price, min_price, max_price, arrivals_tonnes, price_date, trend, change_percent)
-         VALUES (?, ?, ?, 'Gujarat', ?, ?, ?, ?, ?, ?, ?)`,
-        [cId, m.market, m.district, m.modal, m.min, m.max, m.arrivals, todayDate, m.trend, m.change]
+        `INSERT INTO mandi_prices (crop_id, commodity, market_name, district, state, modal_price, min_price, max_price, arrivals_tonnes, price_date, trend, change_percent)
+         VALUES (?, ?, ?, ?, 'Gujarat', ?, ?, ?, ?, ?, ?, ?)`,
+        [cId, cropNameMap[m.crop] || m.crop, m.market, m.district, m.modal, m.min, m.max, m.arrivals, todayDate, m.trend, m.change]
       );
     }
 

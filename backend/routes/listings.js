@@ -125,6 +125,8 @@ router.get('/', optionalAuth, async (req, res, next) => {
         dbId: l.id,
         farmerId: `f${l.farmer_id}`,
         farmerDbId: l.farmer_id,
+        title: l.title || `${l.crop_name} (${l.variety || 'Export Grade'})`,
+        variety: l.variety,
         crop: l.crop_slug,
         cropName: l.crop_name,
         emoji: l.crop_emoji || '🌿',

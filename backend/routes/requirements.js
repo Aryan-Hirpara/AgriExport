@@ -380,8 +380,8 @@ router.post('/', verifyToken, async (req, res, next) => {
 
     const [resInsert] = await pool.query(
       `INSERT INTO buyer_requirements
-        (enterprise_id, crop_id, title, quantity, unit, target_price, price_range, destination, destination_flag, urgency, urgency_label, specs, image_url, delivery_terms, payment_terms, deadline, notes, status)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'open')`,
+        (enterprise_id, crop_id, title, quantity, unit, target_price, price_range, destination, destination_flag, urgency, urgency_label, specs, delivery_terms, payment_terms, deadline, notes, status)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'open')`,
       [
         req.user.id,
         resolvedCropId,
@@ -395,7 +395,6 @@ router.post('/', verifyToken, async (req, res, next) => {
         safeUrgency,
         urgencyLabel || 'Active Demand',
         specs ? JSON.stringify(specs) : null,
-        finalImage,
         deliveryTerms || '',
         paymentTerms || '',
         deadline || null,
