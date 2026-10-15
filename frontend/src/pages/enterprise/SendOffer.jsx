@@ -25,7 +25,7 @@ export default function SendOffer() {
       .finally(() => setLoadingListing(false));
   }, [listingId]);
 
-  const listing = produceListings.find(l => l.id === listingId || l.dbId === listingId || String(l.dbId) === String(listingId)) || dbListing;
+  const listing = dbListing || produceListings.find(l => l.id === listingId || l.dbId === listingId || String(l.dbId) === String(listingId) || String(l.id) === String(listingId));
 
   const farmer = listing?.farmer || {
     name: 'Farmer',
@@ -55,8 +55,8 @@ export default function SendOffer() {
 
   useEffect(() => {
     if (listing) {
-      setPrice(Math.max(1, (listing.price || 50) - 5));
-      setQty(Math.min(5, listing.qty || 10));
+      setPrice(listing.price != null ? Number(listing.price) : 0);
+      setQty(listing.qty != null ? Number(listing.qty) : (listing.quantity != null ? Number(listing.quantity) : 1));
       setSelectedGrade(listing.grade || cropAttr.grades?.[0]?.label || 'Standard');
       setSelectedPackaging(listing.specs?.packaging || cropAttr.packaging?.[0] || 'Standard Packing');
     }
@@ -138,31 +138,56 @@ export default function SendOffer() {
   return (
     <div className="page-wrapper" style={{ paddingBottom: 80 }}>
       {/* Header Banner */}
-      <div style={{ background: 'var(--green-primary)', padding: '36px 0 52px', color: '#fff' }}>
+      <div style={{ background: 'var(--green-primary)', padding: '32px 0 48px', color: '#fff' }}>
         <div className="container">
           <FadeUpItem>
-            <Link
-              to={`/produce/${listing.id}`}
+            {/* Back to details link on its own top row */}
+            <div style={{ marginBottom: 16 }}>
+              <Link
+                to={`/produce/${listing.id}`}
+                style={{
+                  color: '#fff',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: 8,
+                  fontSize: '0.85rem',
+                  fontWeight: 600,
+                  textDecoration: 'none',
+                  background: 'rgba(255, 255, 255, 0.15)',
+                  border: '1px solid rgba(255, 255, 255, 0.25)',
+                  padding: '6px 14px',
+                  borderRadius: 99,
+                  backdropFilter: 'blur(8px)',
+                  transition: 'background 0.2s ease',
+                }}
+                onMouseEnter={e => e.currentTarget.style.background = 'rgba(255, 255, 255, 0.25)'}
+                onMouseLeave={e => e.currentTarget.style.background = 'rgba(255, 255, 255, 0.15)'}
+              >
+                <ChevronLeft size={16} /> Back to Produce Details
+              </Link>
+            </div>
+
+            {/* Section Badge on separate line */}
+            <div
+              className="section-label"
               style={{
-                color: 'rgba(255,255,255,0.85)',
+                background: 'rgba(255, 255, 255, 0.18)',
+                color: '#fff',
+                border: '1px solid rgba(255, 255, 255, 0.28)',
+                marginBottom: 12,
                 display: 'inline-flex',
                 alignItems: 'center',
                 gap: 6,
-                fontSize: '0.875rem',
-                textDecoration: 'none',
-                marginBottom: 16,
               }}
             >
-              <ChevronLeft size={16} /> Back to Produce Details
-            </Link>
-            <div className="section-label" style={{ background: 'rgba(255,255,255,0.15)', color: '#fff' }}>
-              Make Offer
+              <Sparkles size={13} /> Make Purchase Offer
             </div>
-            <h2 style={{ color: '#fff', marginBottom: 6 }}>
+
+            <h2 style={{ color: '#fff', marginBottom: 6, fontFamily: 'var(--font-heading)', fontSize: '1.85rem' }}>
               Send Purchase Offer to Farmer
             </h2>
-            <p style={{ color: 'rgba(255,255,255,0.85)', margin: 0, fontSize: '0.95rem' }}>
-              Propose your procurement terms, quantity, target price, and delivery method directly.
+            <p style={{ color: 'rgba(255, 255, 255, 0.9)', margin: 0, fontSize: '0.95rem', maxWidth: 640 }}>
+              Propose your procurement terms, quantity, target price, and delivery method directly to the farmer.
             </p>
           </FadeUpItem>
         </div>
@@ -174,29 +199,53 @@ export default function SendOffer() {
           {/* Form */}
           <FadeUpItem>
             <div className="card card-body" style={{ padding: 28 }}>
-              {/* Farmer and Produce info card */}
-              <div style={{ background: 'var(--sand-light)', borderRadius: 16, padding: '16px 20px', marginBottom: 24, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <div style={{ display: 'flex', gap: 14, alignItems: 'center' }}>
-                  <div style={{ width: 56, height: 56, borderRadius: 12, background: 'linear-gradient(135deg, var(--green-light), #C8E6C9)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '2.5rem', flexShrink: 0, overflow: 'hidden' }}>
-                    {typeof listing.photos?.[0] === 'string' && (listing.photos[0].startsWith('http') || listing.photos[0].startsWith('/')) ? (
+              {/* Farmer and Produce info card from database */}
+              <div style={{ background: '#f8fafc', borderRadius: 16, padding: '18px 20px', marginBottom: 24, border: '1px solid var(--border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 16 }}>
+                <div style={{ display: 'flex', gap: 14, alignItems: 'center', minWidth: 260 }}>
+                  <div style={{ width: 60, height: 60, borderRadius: 12, background: 'linear-gradient(135deg, var(--green-light), #C8E6C9)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '2.4rem', flexShrink: 0, overflow: 'hidden' }}>
+                    {typeof listing.photos?.[0] === 'string' && (listing.photos[0].startsWith('http') || listing.photos[0].startsWith('data:') || listing.photos[0].startsWith('/')) ? (
                       <img src={listing.photos[0]} alt={listing.cropName} style={{ width: '100%', height: '100%', objectFit: 'cover' }} onError={(e) => { e.currentTarget.style.display = 'none'; e.currentTarget.parentElement.innerText = cropObj.emoji || listing.emoji || '🌾'; }} />
                     ) : (
                       cropObj.emoji || listing.emoji || listing.photos?.[0] || '🌾'
                     )}
                   </div>
                   <div>
-                    <h4 style={{ margin: '0 0 4px', fontFamily: 'var(--font-heading)' }}>{listing.cropName}</h4>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap', marginBottom: 3 }}>
+                      <h4 style={{ margin: 0, fontFamily: 'var(--font-heading)', fontSize: '1.1rem' }}>{listing.cropName}</h4>
+                      {listing.variety && (
+                        <span className="badge badge-gray" style={{ fontSize: '0.72rem' }}>
+                          {listing.variety}
+                        </span>
+                      )}
+                      {listing.grade && (
+                        <span className="badge badge-blue" style={{ fontSize: '0.72rem' }}>
+                          {listing.grade}
+                        </span>
+                      )}
+                    </div>
                     <p style={{ margin: 0, fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
-                      Seller: <strong>{farmer.name}</strong> • 📍 {listing.village}, {listing.district}
+                      Seller: <strong style={{ color: 'var(--text-primary)' }}>{farmer.name}</strong> {farmer.verified && <ShieldCheck size={14} color="var(--green-primary)" style={{ display: 'inline', verticalAlign: 'middle' }} />} • 📍 {listing.village ? `${listing.village}, ` : ''}{listing.district || 'Gujarat'}
                     </p>
+                    <div style={{ display: 'flex', gap: 6, marginTop: 6, flexWrap: 'wrap' }}>
+                      {listing.organic && <span className="badge badge-green" style={{ fontSize: '0.7rem' }}>🌿 Organic Certified</span>}
+                      {listing.labTested && <span className="badge badge-blue" style={{ fontSize: '0.7rem' }}>🔬 Lab Tested</span>}
+                    </div>
                   </div>
                 </div>
-                <div style={{ textAlign: 'right' }}>
-                  <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Asking Price</div>
-                  <div className="notranslate" style={{ fontFamily: 'var(--font-heading)', fontWeight: 800, fontSize: '1.25rem', color: 'var(--green-primary)' }}>
+
+                <div style={{ textAlign: 'right', minWidth: 160 }}>
+                  <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 600 }}>Asking Price</div>
+                  <div className="notranslate" style={{ fontFamily: 'var(--font-heading)', fontWeight: 800, fontSize: '1.35rem', color: 'var(--green-primary)' }}>
                     ₹{listing.price}/kg
                   </div>
-                  <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Available: {listing.qty} {listing.unit}</div>
+                  <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)', marginTop: 2 }}>
+                    Available: <strong style={{ color: 'var(--text-primary)' }}>{listing.qty?.toLocaleString('en-IN') || listing.qty} {listing.unit || 'kg'}</strong>
+                  </div>
+                  {listing.minOrder && Number(listing.minOrder) > 0 && (
+                    <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>
+                      Min Order: {listing.minOrder} {listing.unit || 'kg'}
+                    </div>
+                  )}
                 </div>
               </div>
 
@@ -205,9 +254,20 @@ export default function SendOffer() {
                 {/* Price and Quantity */}
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
                   <div className="form-group">
-                    <label className="form-label">
-                      Your Offered Price (₹/kg) <span style={{ color: 'var(--red)' }}>*</span>
-                    </label>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
+                      <label className="form-label" style={{ margin: 0 }}>
+                        Your Offered Price (₹/kg) <span style={{ color: 'var(--red)' }}>*</span>
+                      </label>
+                      {Number(price) !== Number(listing.price) && (
+                        <button
+                          type="button"
+                          onClick={() => setPrice(Number(listing.price))}
+                          style={{ background: 'none', border: 'none', color: 'var(--green-primary)', fontSize: '0.72rem', fontWeight: 600, cursor: 'pointer', padding: 0 }}
+                        >
+                          Reset to asking (₹{listing.price})
+                        </button>
+                      )}
+                    </div>
                     <div style={{ position: 'relative' }}>
                       <span style={{ position: 'absolute', left: 14, top: '50%', transform: 'translateY(-50%)', fontWeight: 700, color: 'var(--text-muted)' }}>₹</span>
                       <input
@@ -216,22 +276,39 @@ export default function SendOffer() {
                         style={{ paddingLeft: 32 }}
                         value={price}
                         onChange={e => setPrice(e.target.value)}
-                        placeholder="308"
+                        placeholder={String(listing.price || 308)}
                       />
                     </div>
+                    <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)', marginTop: 4, display: 'block' }}>
+                      Original database asking price: <strong>₹{listing.price}/kg</strong>
+                    </span>
                   </div>
 
                   <div className="form-group">
-                    <label className="form-label">
-                      Order Quantity ({listing.unit}) <span style={{ color: 'var(--red)' }}>*</span>
-                    </label>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
+                      <label className="form-label" style={{ margin: 0 }}>
+                        Order Quantity ({listing.unit || 'kg'}) <span style={{ color: 'var(--red)' }}>*</span>
+                      </label>
+                      {Number(qty) !== Number(listing.qty) && (
+                        <button
+                          type="button"
+                          onClick={() => setQty(Number(listing.qty))}
+                          style={{ background: 'none', border: 'none', color: 'var(--green-primary)', fontSize: '0.72rem', fontWeight: 600, cursor: 'pointer', padding: 0 }}
+                        >
+                          Max available ({listing.qty} {listing.unit || 'kg'})
+                        </button>
+                      )}
+                    </div>
                     <input
                       type="number"
                       className="form-input"
                       value={qty}
                       onChange={e => setQty(e.target.value)}
-                      placeholder="5"
+                      placeholder={String(listing.qty || 10)}
                     />
+                    <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)', marginTop: 4, display: 'block' }}>
+                      Available lot in database: <strong>{listing.qty?.toLocaleString('en-IN') || listing.qty} {listing.unit || 'kg'}</strong>
+                    </span>
                   </div>
                 </div>
 
@@ -299,18 +376,19 @@ export default function SendOffer() {
                 </h4>
                 {[
                   { label: 'Crop', value: listing.cropName },
-                  { label: 'Offered Price', value: `₹${price}/kg` },
-                  { label: 'Quantity', value: `${qty} ${listing.unit}` },
-                  { label: 'Delivery', value: delivery },
-                  { label: 'Payment', value: payment },
-                  { label: 'Validity', value: `${validDays} days` },
+                  { label: 'Farmer Asking Price', value: `₹${listing.price}/kg`, highlight: false },
+                  { label: 'Offered Price', value: `₹${price}/kg`, highlight: true },
+                  { label: 'Quantity', value: `${Number(qty || 0).toLocaleString('en-IN')} ${listing.unit || 'kg'}` },
+                  { label: 'Delivery Terms', value: delivery },
+                  { label: 'Payment Terms', value: payment },
+                  { label: 'Offer Validity', value: `${validDays} days` },
                 ].map(item => (
                   <div
                     key={item.label}
                     style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 10, paddingBottom: 10, borderBottom: '1px solid var(--border)' }}
                   >
                     <span style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>{item.label}</span>
-                    <strong style={{ fontSize: '0.85rem', color: 'var(--text-primary)', textAlign: 'right', maxWidth: 180 }}>
+                    <strong style={{ fontSize: '0.85rem', color: item.highlight ? 'var(--green-primary)' : 'var(--text-primary)', textAlign: 'right', maxWidth: 180 }}>
                       {item.value}
                     </strong>
                   </div>
