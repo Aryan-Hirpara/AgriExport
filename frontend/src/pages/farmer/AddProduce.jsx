@@ -69,6 +69,10 @@ export default function AddProduce() {
   const cropObj = crops.find(c => (c.slug || c.id) === selectedCrop) || crops[0] || { id: 'jeera', slug: 'jeera', name: 'Jeera (Cumin)', emoji: '🌿', price: 318, grade: 'Premium' };
   const mandiData = mandiPrices.find(c => c.cropSlug === selectedCrop || c.crop?.toLowerCase() === cropObj.name?.toLowerCase());
 
+  const POPULAR_SLUGS = ['groundnut', 'jeera', 'cotton', 'sesame', 'kesar-mango', 'isabgol'];
+  const popularCrops = useMemo(() => crops.filter(c => POPULAR_SLUGS.includes(c.slug)), [crops]);
+  const otherCrops = useMemo(() => crops.filter(c => !POPULAR_SLUGS.includes(c.slug)), [crops]);
+
   // Auto-set grade/price/packaging when crop changes
   const handleCropChange = (id) => {
     setSelectedCrop(id);
@@ -174,20 +178,122 @@ export default function AddProduce() {
               {/* Step 0: Crop Selection */}
               {step === 0 && (
                 <div>
-                  <h4 style={{ fontFamily: 'var(--font-heading)', marginBottom: 20 }}>{'What are you selling?'}</h4>
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(130px, 1fr))', gap: 12 }}>
-                    {crops.map(crop => (
-                      <motion.div key={crop.slug || crop.id}
-                        className={`crop-tile ${selectedCrop === (crop.slug || crop.id) ? 'selected' : ''}`}
-                        onClick={() => handleCropChange(crop.slug || crop.id)}
-                        whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}>
-                        <span className="crop-emoji">{crop.emoji}</span>
-                        <span className="crop-name">{crop.name}</span>
-                        {selectedCrop === (crop.slug || crop.id) && <Check size={16} color="var(--green-primary)" />}
-                      </motion.div>
-                    ))}
+                  <h4 style={{ fontFamily: 'var(--font-heading)', marginBottom: 6 }}>{'What are you selling?'}</h4>
+                  <p style={{ color: 'var(--text-secondary)', fontSize: '0.875rem', marginBottom: 20 }}>
+                    Select the agricultural commodity or crop you are offering for wholesale trade or export.
+                  </p>
+
+                  <div className="form-group" style={{ marginBottom: 20 }}>
+                    <label className="form-label" style={{ fontWeight: 600 }}>Select Crop / Commodity</label>
+                    <div style={{ position: 'relative' }}>
+                      <select
+                        className="form-select"
+                        value={selectedCrop}
+                        onChange={e => handleCropChange(e.target.value)}
+                        style={{
+                          height: 52,
+                          fontSize: '1rem',
+                          fontWeight: 500,
+                          paddingRight: 40,
+                          background: '#FAFAFA',
+                          cursor: 'pointer',
+                        }}
+                      >
+                        {popularCrops.length > 0 && (
+                          <optgroup label="⭐ Popular Benchmark Crops">
+                            {popularCrops.map(crop => (
+                              <option key={crop.slug || crop.id} value={crop.slug || crop.id}>
+                                {crop.emoji || '🌱'} {crop.name}{crop.gujarati_name ? ` (${crop.gujarati_name})` : ''}
+                              </option>
+                            ))}
+                          </optgroup>
+                        )}
+                        <optgroup label={popularCrops.length > 0 ? "🌾 All Other Crops" : "🌾 All Agricultural Crops"}>
+                          {otherCrops.map(crop => (
+                            <option key={crop.slug || crop.id} value={crop.slug || crop.id}>
+                              {crop.emoji || '🌱'} {crop.name}{crop.gujarati_name ? ` (${crop.gujarati_name})` : ''}
+                            </option>
+                          ))}
+                        </optgroup>
+                      </select>
+                      <ChevronDown
+                        size={18}
+                        style={{
+                          position: 'absolute',
+                          right: 14,
+                          top: '50%',
+                          transform: 'translateY(-50%)',
+                          pointerEvents: 'none',
+                          color: 'var(--text-muted)',
+                        }}
+                      />
+                    </div>
                   </div>
-                  <label style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer', fontSize: '0.9rem', fontWeight: 500, marginTop: 20 }}>
+
+                  {/* Selected Crop Card Preview */}
+                  {cropObj && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 6 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        padding: '16px 20px',
+                        background: 'linear-gradient(135deg, rgba(47,125,50,0.06) 0%, rgba(47,125,50,0.02) 100%)',
+                        border: '1.5px solid rgba(47,125,50,0.2)',
+                        borderRadius: 16,
+                        marginBottom: 20,
+                        gap: 16,
+                        flexWrap: 'wrap',
+                      }}
+                    >
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+                        <div
+                          style={{
+                            width: 52,
+                            height: 52,
+                            borderRadius: 12,
+                            background: '#fff',
+                            boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            fontSize: '1.8rem',
+                            flexShrink: 0,
+                          }}
+                        >
+                          {cropObj.emoji || '🌱'}
+                        </div>
+                        <div>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                            <h5 style={{ margin: 0, fontSize: '1.05rem', fontWeight: 700, color: 'var(--text-primary)' }}>
+                              {cropObj.name}
+                            </h5>
+                            {cropObj.gujarati_name && (
+                              <span style={{ fontSize: '0.825rem', color: 'var(--text-muted)', background: '#fff', padding: '2px 8px', borderRadius: 6, border: '1px solid var(--border)' }}>
+                                {cropObj.gujarati_name}
+                              </span>
+                            )}
+                          </div>
+                          <p style={{ margin: '4px 0 0', fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
+                            {cropAttr.category || 'Agricultural Produce'} • Standard Grade: {cropObj.export_grade || cropObj.grade || 'Export Quality'}
+                          </p>
+                        </div>
+                      </div>
+
+                      <div style={{ textAlign: 'right' }}>
+                        <span style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                          Indicative APMC Price
+                        </span>
+                        <div style={{ fontSize: '1.15rem', fontWeight: 800, color: 'var(--green-primary)' }}>
+                          ₹{cropObj.indicative_price || cropObj.price || 50} <span style={{ fontSize: '0.85rem', fontWeight: 500, color: 'var(--text-secondary)' }}>/ {cropObj.default_unit || 'kg'}</span>
+                        </div>
+                      </div>
+                    </motion.div>
+                  )}
+
+                  <label style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer', fontSize: '0.9rem', fontWeight: 500, marginTop: 12 }}>
                     <input type="checkbox" checked={organic} onChange={e => setOrganic(e.target.checked)} style={{ accentColor: 'var(--green-primary)', width: 18, height: 18 }} />
                     🌱 {'Organically grown (no synthetic pesticides)'}
                   </label>
