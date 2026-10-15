@@ -548,7 +548,21 @@ CREATE TABLE activity_logs (
     INDEX idx_activity_action (action)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_unicode_ci;
 
--- 23. Referential Integrity Triggers for Polymorphic saved_items
+-- 23. Password Resets
+CREATE TABLE password_resets (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    identifier VARCHAR(255) NOT NULL,
+    otp_code VARCHAR(10) NOT NULL,
+    expires_at TIMESTAMP NOT NULL,
+    used BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE,
+    INDEX idx_resets_identifier (identifier),
+    INDEX idx_resets_code (otp_code)
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_unicode_ci;
+
+-- 24. Referential Integrity Triggers for Polymorphic saved_items
 DROP TRIGGER IF EXISTS trg_produce_listings_after_delete;
 CREATE TRIGGER trg_produce_listings_after_delete 
 AFTER DELETE ON produce_listings 

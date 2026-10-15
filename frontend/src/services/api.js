@@ -61,6 +61,9 @@ export const api = {
     getMe: () => request('/auth/me'),
     updateProfile: (profileData) => request('/auth/profile', { method: 'PUT', body: JSON.stringify(profileData) }),
     changePassword: (passwords) => request('/auth/change-password', { method: 'POST', body: JSON.stringify(passwords) }),
+    forgotPassword: (identifier) => request('/auth/forgot-password', { method: 'POST', body: JSON.stringify({ identifier }) }),
+    verifyResetOtp: (identifier, otp) => request('/auth/verify-reset-otp', { method: 'POST', body: JSON.stringify({ identifier, otp }) }),
+    resetPassword: (identifier, otp, newPassword) => request('/auth/reset-password', { method: 'POST', body: JSON.stringify({ identifier, otp, newPassword }) }),
     getPlatformStats: () => request('/auth/stats'),
   },
 

@@ -152,7 +152,19 @@ export default function Login() {
                   </button>
                 </div>
                 <div style={{ textAlign: 'right', marginTop: 4 }}>
-                  <a href="#" style={{ fontSize: '0.8125rem', color: 'var(--green-primary)', fontWeight: 500 }}>Forgot password?</a>
+                  <Link
+                    to="/forgot-password"
+                    style={{
+                      fontSize: '0.8125rem',
+                      color: 'var(--green-primary)',
+                      fontWeight: 600,
+                      textDecoration: 'none',
+                    }}
+                    onMouseEnter={e => e.currentTarget.style.textDecoration = 'underline'}
+                    onMouseLeave={e => e.currentTarget.style.textDecoration = 'none'}
+                  >
+                    Forgot password?
+                  </Link>
                 </div>
               </div>
               <SpinnerBtn loading={loading} success={success} onClick={handleLogin} className="btn btn-primary btn-full" style={{ marginTop: 8 }}>

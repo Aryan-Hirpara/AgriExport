@@ -8,6 +8,7 @@ import ToastManager from './components/common/ToastManager';
 // ── Public Pages ──────────────────────────────────────────────
 import Home from './pages/public/Home';
 import Login from './pages/public/Login';
+import ForgotPassword from './pages/public/ForgotPassword';
 import Register from './pages/public/Register';
 import BrowseProduce from './pages/public/BrowseProduce';
 import ProduceDetail from './pages/public/ProduceDetail';
@@ -127,6 +128,7 @@ function AppRoutes() {
       <Route element={<PublicLayout />}>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/register" element={<Register />} />
         <Route path="/browse" element={<BrowseProduce />} />
         <Route path="/demands" element={<FindBuyers />} />
