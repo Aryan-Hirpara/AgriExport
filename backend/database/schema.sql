@@ -67,7 +67,7 @@ CREATE TABLE users (
         'admin'
     ) NOT NULL,
     name VARCHAR(150) NOT NULL,
-    avatar VARCHAR(255) DEFAULT NULL,
+    avatar LONGTEXT DEFAULT NULL,
     is_verified BOOLEAN DEFAULT FALSE,
     rating DECIMAL(3, 2) DEFAULT 5.00,
     reviews_count INT DEFAULT 0,
@@ -137,7 +137,7 @@ CREATE TABLE verification_documents (
         'other'
     ) NOT NULL,
     doc_number VARCHAR(100),
-    doc_url VARCHAR(255) NOT NULL,
+    doc_url LONGTEXT NOT NULL,
     status ENUM(
         'pending',
         'verified',
@@ -160,7 +160,7 @@ CREATE TABLE crops (
     gujarati_name VARCHAR(100),
     scientific_name VARCHAR(100),
     emoji VARCHAR(20) DEFAULT '🌱',
-    image_url VARCHAR(255),
+    image_url LONGTEXT,
     default_unit VARCHAR(20) DEFAULT 'kg',
     indicative_price DECIMAL(10, 2) DEFAULT 0.00,
     export_grade VARCHAR(100),
@@ -214,7 +214,7 @@ CREATE TABLE produce_listings (
 CREATE TABLE listing_images (
     id INT AUTO_INCREMENT PRIMARY KEY,
     listing_id INT NOT NULL,
-    image_url VARCHAR(255) NOT NULL,
+    image_url LONGTEXT NOT NULL,
     is_primary BOOLEAN DEFAULT FALSE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (listing_id) REFERENCES produce_listings (id) ON DELETE CASCADE,
@@ -371,7 +371,7 @@ CREATE TABLE deal_documents (
         'payment_receipt',
         'other'
     ) NOT NULL,
-    file_url VARCHAR(255) NOT NULL,
+    file_url LONGTEXT NOT NULL,
     file_size INT DEFAULT 0,
     uploaded_by INT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -389,7 +389,7 @@ CREATE TABLE messages (
     deal_id INT DEFAULT NULL,
     listing_id INT DEFAULT NULL,
     content TEXT NOT NULL,
-    attachment_url VARCHAR(255) DEFAULT NULL,
+    attachment_url LONGTEXT DEFAULT NULL,
     is_read BOOLEAN DEFAULT FALSE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (sender_id) REFERENCES users (id) ON DELETE CASCADE,
