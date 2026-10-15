@@ -48,7 +48,12 @@ export default function FindBuyers() {
       req.enterpriseName.toLowerCase().includes(search.toLowerCase()) ||
       (req.destination && req.destination.toLowerCase().includes(search.toLowerCase()));
 
-    const matchCrop = selectedCrop === 'All' || req.crop === selectedCrop || req.cropName?.toLowerCase().includes(selectedCrop.toLowerCase());
+    const matchCrop = selectedCrop === 'All' || 
+      req.crop === selectedCrop || 
+      req.cropName?.toLowerCase().includes(selectedCrop.toLowerCase()) ||
+      (selectedCrop === 'jeera' && req.cropName?.toLowerCase().includes('cumin')) ||
+      (selectedCrop === 'sesame' && req.cropName?.toLowerCase().includes('til')) ||
+      (selectedCrop === 'isabgol' && req.cropName?.toLowerCase().includes('psyllium'));
     const matchUrgent = !urgentOnly || req.urgency === 'urgent';
 
     return matchSearch && matchCrop && matchUrgent;
@@ -98,9 +103,14 @@ export default function FindBuyers() {
     }, 500);
   };
 
-  const cropChips = [
+  const POPULAR_CROPS = [
     { id: 'All', name: 'All Crops', emoji: '🌾' },
-    ...crops.map(c => ({ id: c.slug || c.id, name: c.name, emoji: c.emoji }))
+    { id: 'groundnut', name: 'Groundnut', emoji: '🥜' },
+    { id: 'jeera', name: 'Jeera (Cumin)', emoji: '🌿' },
+    { id: 'cotton', name: 'Cotton', emoji: '🌸' },
+    { id: 'sesame', name: 'Sesame (Til)', emoji: '🌱' },
+    { id: 'kesar-mango', name: 'Kesar Mango', emoji: '🥭' },
+    { id: 'isabgol', name: 'Isabgol (Psyllium)', emoji: '🌾' },
   ];
 
   return (
@@ -221,7 +231,7 @@ export default function FindBuyers() {
             </div>
 
             <div className="chip-group" style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
-              {cropChips.map(c => (
+              {POPULAR_CROPS.map(c => (
                 <button
                   key={c.id}
                   className={`chip ${selectedCrop === c.id ? 'active' : ''}`}

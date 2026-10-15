@@ -8,6 +8,15 @@ import { StaggerGrid, FadeUpItem } from '../../components/common/AnimatedCompone
 const DISTRICTS = ['All Districts', 'Mehsana', 'Rajkot', 'Ahmedabad', 'Junagadh', 'Bhavnagar', 'Surendranagar', 'Patan', 'Banaskantha', 'Surat'];
 const SORT_OPTIONS = ['Newest First', 'Price: Low to High', 'Price: High to Low', 'Most Offers'];
 
+const POPULAR_CROPS = [
+  { slug: 'groundnut', name: 'Groundnut', emoji: '🥜' },
+  { slug: 'jeera', name: 'Jeera (Cumin)', emoji: '🌿' },
+  { slug: 'cotton', name: 'Cotton', emoji: '🌸' },
+  { slug: 'sesame', name: 'Sesame (Til)', emoji: '🌱' },
+  { slug: 'kesar-mango', name: 'Kesar Mango', emoji: '🥭' },
+  { slug: 'isabgol', name: 'Isabgol (Psyllium)', emoji: '🌾' },
+];
+
 export default function BrowseProduce() {
   const { produceListings, crops = [] } = useApp();
   const [search, setSearch] = useState('');
@@ -28,7 +37,12 @@ export default function BrowseProduce() {
         cropName.toLowerCase().includes(search.toLowerCase()) ||
         village.toLowerCase().includes(search.toLowerCase()) ||
         district.toLowerCase().includes(search.toLowerCase());
-      const matchCrop = activeCropId === 'all' || l.crop === activeCropId;
+      const matchCrop = activeCropId === 'all' || 
+        l.crop === activeCropId || 
+        cropName.toLowerCase().includes(activeCropId.toLowerCase()) ||
+        (activeCropId === 'jeera' && cropName.toLowerCase().includes('cumin')) ||
+        (activeCropId === 'sesame' && cropName.toLowerCase().includes('til')) ||
+        (activeCropId === 'isabgol' && cropName.toLowerCase().includes('psyllium'));
       const matchDistrict = activeDistrict === 'All Districts' || district === activeDistrict;
       const matchOrganic = !organicOnly || l.organic;
       const matchExport = !exportOnly || l.exportReady;
@@ -74,7 +88,7 @@ export default function BrowseProduce() {
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16, flexWrap: 'wrap', gap: 12 }}>
             <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
               <SlidersHorizontal size={18} color="var(--text-secondary)" />
-              <span style={{ fontWeight: 600, fontSize: '0.9rem' }}>Filters</span>
+              <span style={{ fontWeight: 600, fontSize: '0.9rem' }}>Popular Crops & Filters</span>
             </div>
             <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
               <label style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer', fontSize: '0.875rem', fontWeight: 500 }}>
@@ -87,13 +101,13 @@ export default function BrowseProduce() {
               </label>
             </div>
           </div>
-          {/* All Crops as filter chips */}
+          {/* Popular 6 Crops as filter chips */}
           <div className="chip-group" style={{ marginBottom: 12, flexWrap: 'wrap' }}>
             <button className={`chip ${activeCropId === 'all' ? 'active' : ''}`} onClick={() => setActiveCropId('all')}>
               All Crops
             </button>
-            {crops.map(c => (
-              <button key={c.id || c.slug} className={`chip ${activeCropId === (c.slug || c.id) ? 'active' : ''}`} onClick={() => setActiveCropId(c.slug || c.id)}>
+            {POPULAR_CROPS.map(c => (
+              <button key={c.slug} className={`chip ${activeCropId === c.slug ? 'active' : ''}`} onClick={() => setActiveCropId(c.slug)}>
                 {c.emoji} {c.name}
               </button>
             ))}
@@ -112,7 +126,7 @@ export default function BrowseProduce() {
             <span className="notranslate" style={{ color: 'var(--green-primary)', fontWeight: 700 }}>{filtered.length}</span> listings found
             {activeCropId !== 'all' && (
               <span style={{ color: 'var(--text-muted)', fontSize: '0.85rem', marginLeft: 8 }}>
-                ({crops.find(c => (c.slug || c.id) === activeCropId)?.name})
+                ({POPULAR_CROPS.find(c => c.slug === activeCropId)?.name || activeCropId})
               </span>
             )}
           </p>
