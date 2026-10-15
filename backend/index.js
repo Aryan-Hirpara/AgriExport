@@ -65,10 +65,10 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 // Static file serving for uploads
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-// Rate Limiter – General API (300 req / 15 min per IP)
+// Rate Limiter – General API (300 req / 15 min per IP in prod, 2000 in dev)
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  max: 300,
+  max: process.env.NODE_ENV === 'production' ? 300 : 2000,
   standardHeaders: true,
   legacyHeaders: false,
   message: { success: false, message: 'Too many requests. Please try again later.' },

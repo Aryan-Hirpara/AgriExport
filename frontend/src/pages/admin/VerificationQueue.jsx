@@ -2,14 +2,14 @@ import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useApp } from '../../context/AppContext';
-import { ShieldCheck, ShieldX, Search, X, RefreshCw, AlertTriangle, ExternalLink } from 'lucide-react';
+import { ShieldCheck, ShieldX, Search, X, RefreshCw, AlertTriangle } from 'lucide-react';
 import { FadeUpItem } from '../../components/common/AnimatedComponents';
 import api from '../../services/api';
 import { getSocket } from '../../services/socket';
 
 export default function VerificationQueue() {
   const navigate = useNavigate();
-  const { addToast, impersonateUser } = useApp();
+  const { addToast } = useApp();
   const [queue, setQueue] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -88,25 +88,6 @@ export default function VerificationQueue() {
       addToast('User rejected with reason.', 'warning');
     } catch (err) {
       addToast(err.message || 'Rejection failed', 'error');
-    }
-  };
-
-  const handleOpenDashboard = async (targetUser) => {
-    try {
-      const cleanId = String(targetUser.dbId || targetUser.id).replace(/^[a-z]+/i, '');
-      addToast(`Switching to ${targetUser.name}'s account...`, 'info');
-      const userObj = await impersonateUser(cleanId);
-      if (userObj.role === 'farmer') {
-        navigate('/farmer/add-produce');
-        addToast(`Switched to farmer ${targetUser.name}! Post produce directly.`, 'success');
-      } else if (userObj.role === 'enterprise') {
-        navigate('/enterprise/post-requirement');
-        addToast(`Switched to enterprise ${targetUser.name}! Post procurement requirement directly.`, 'success');
-      } else {
-        navigate('/');
-      }
-    } catch (err) {
-      addToast(err.message || 'Failed to open user dashboard', 'error');
     }
   };
 
@@ -229,7 +210,7 @@ export default function VerificationQueue() {
                   </p>
                 </div>
                 <div style={{ display: 'flex', gap: 8 }}>
-                  {user.status === 'pending' ? (
+                  {user.status === 'pending' && (
                     <>
                       <motion.button className="btn btn-primary btn-sm" whileHover={{ scale: 1.05 }} onClick={e => { e.stopPropagation(); handleApprove(user.id); }}>
                         <ShieldCheck size={14} /> Approve
@@ -238,26 +219,6 @@ export default function VerificationQueue() {
                         <ShieldX size={14} /> Reject
                       </motion.button>
                     </>
-                  ) : (
-                    <motion.button
-                      className="btn btn-sm"
-                      whileHover={{ scale: 1.05 }}
-                      onClick={e => { e.stopPropagation(); handleOpenDashboard(user); }}
-                      style={{
-                        display: 'inline-flex',
-                        alignItems: 'center',
-                        gap: 5,
-                        background: '#E8F5E9',
-                        color: 'var(--green-primary)',
-                        border: '1px solid #A5D6A7',
-                        fontWeight: 700,
-                        fontSize: '0.8rem',
-                        padding: '6px 12px',
-                      }}
-                      title={`Open ${user.name}'s Dashboard`}
-                    >
-                      <ExternalLink size={13} /> Open Dashboard
-                    </motion.button>
                   )}
                 </div>
               </motion.div>
@@ -383,28 +344,10 @@ export default function VerificationQueue() {
                     </button>
                   </div>
                 ) : (
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-                    <div style={{ textAlign: 'center', padding: '4px 0' }}>
-                      <span className="badge badge-green" style={{ fontSize: '0.85rem', padding: '6px 14px' }}>
-                        ✓ Account Verified & Approved
-                      </span>
-                    </div>
-                    <button
-                      className="btn btn-primary btn-full"
-                      onClick={() => handleOpenDashboard(selectedUser)}
-                      style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        gap: 8,
-                        padding: '12px 20px',
-                        fontSize: '0.95rem',
-                        fontWeight: 700,
-                        boxShadow: 'var(--shadow-md)',
-                      }}
-                    >
-                      <ExternalLink size={17} /> Open {selectedUser.type} Dashboard & Post {selectedUser.type === 'Farmer' ? 'Produce' : 'Requirement'}
-                    </button>
+                  <div style={{ textAlign: 'center', padding: '12px 0' }}>
+                    <span className="badge badge-green" style={{ fontSize: '0.85rem', padding: '6px 14px' }}>
+                      ✓ Account Verified & Approved
+                    </span>
                   </div>
                 )}
               </div>

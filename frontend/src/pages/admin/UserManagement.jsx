@@ -2,14 +2,14 @@ import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useApp } from '../../context/AppContext';
-import { Search, ShieldCheck, Ban, RotateCcw, Eye, RefreshCw, AlertTriangle, ExternalLink, Trash2 } from 'lucide-react';
+import { Search, ShieldCheck, Ban, RotateCcw, Eye, RefreshCw, AlertTriangle, Trash2 } from 'lucide-react';
 import { FadeUpItem } from '../../components/common/AnimatedComponents';
 import api from '../../services/api';
 import { getSocket } from '../../services/socket';
 
 export default function UserManagement() {
   const navigate = useNavigate();
-  const { addToast, impersonateUser } = useApp();
+  const { addToast } = useApp();
   const [activeTab, setActiveTab] = useState('farmers');
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('All');
@@ -124,25 +124,6 @@ export default function UserManagement() {
       addToast(err.message || 'Failed to delete user', 'error');
     } finally {
       setLoading(false);
-    }
-  };
-
-  const handleOpenDashboard = async (targetUser) => {
-    try {
-      const cleanId = String(targetUser.id).replace(/^[a-z]+/i, '');
-      addToast(`Switching to ${targetUser.name}'s account...`, 'info');
-      const userObj = await impersonateUser(cleanId);
-      if (userObj.role === 'farmer') {
-        navigate('/farmer/add-produce');
-        addToast(`Switched to farmer ${targetUser.name}! Ready to list produce.`, 'success');
-      } else if (userObj.role === 'enterprise') {
-        navigate('/enterprise/post-requirement');
-        addToast(`Switched to enterprise ${targetUser.name}! Ready to post requirement.`, 'success');
-      } else {
-        navigate('/');
-      }
-    } catch (err) {
-      addToast(err.message || 'Failed to open user dashboard', 'error');
     }
   };
 
@@ -288,24 +269,6 @@ export default function UserManagement() {
                   </td>
                   <td style={{ padding: '16px 20px' }}>
                     <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
-                      <button
-                        className="btn btn-sm"
-                        style={{
-                          display: 'inline-flex',
-                          alignItems: 'center',
-                          gap: 4,
-                          background: '#E8F5E9',
-                          color: 'var(--green-primary)',
-                          border: '1px solid #A5D6A7',
-                          fontWeight: 700,
-                          fontSize: '0.78rem',
-                          padding: '4px 8px',
-                        }}
-                        onClick={() => handleOpenDashboard(user)}
-                        title={`Open ${user.name}'s Dashboard`}
-                      >
-                        <ExternalLink size={13} /> Dashboard
-                      </button>
                       <button className="btn btn-ghost btn-sm" title="View Profile" onClick={() => addToast(`User ID #${user.id}: ${user.name}`, 'info')}>
                         <Eye size={14} />
                       </button>
