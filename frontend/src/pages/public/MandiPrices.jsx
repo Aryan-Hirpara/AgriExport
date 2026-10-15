@@ -128,7 +128,7 @@ export default function MandiPrices() {
           setSelectedGuide(res.data[0]);
         }
       })
-      .catch(() => {});
+      .catch(() => { });
   }, []);
 
   // 2. Fetch crops specifically in selected market
@@ -225,11 +225,31 @@ export default function MandiPrices() {
       .finally(() => setHistoryLoading(false));
   }, [activeItem.crop, activeItem.mandi, activeItem.state, activeItem.noData, timeRange]);
 
-  // Cascading markets for state
+  // Cascading markets for state - when 'All' states selected, shows all mandis imported from API
   const availableMarkets = useMemo(() => {
-    if (selectedState === 'All') return [];
+    if (selectedState === 'All') {
+      const allMarkets = new Set();
+      Object.values(filterMeta.marketsByState || {}).forEach((arr) => {
+        if (Array.isArray(arr)) arr.forEach((m) => allMarkets.add(m));
+      });
+      return Array.from(allMarkets).sort();
+    }
     return filterMeta.marketsByState[selectedState] || [];
   }, [selectedState, filterMeta.marketsByState]);
+
+  // Handle market selection - auto-links to its state if 'All' was chosen
+  const handleMarketChange = (mkt) => {
+    setSelectedMarket(mkt);
+    setPage(1);
+    if (mkt !== 'All' && selectedState === 'All') {
+      for (const [st, markets] of Object.entries(filterMeta.marketsByState || {})) {
+        if (Array.isArray(markets) && markets.includes(mkt)) {
+          setSelectedState(st);
+          break;
+        }
+      }
+    }
+  };
 
   // Reset market when state changes
   const handleStateChange = (st) => {
@@ -552,10 +572,7 @@ export default function MandiPrices() {
                 <div>
                   <select
                     value={selectedMarket}
-                    onChange={(e) => {
-                      setSelectedMarket(e.target.value);
-                      setPage(1);
-                    }}
+                    onChange={(e) => handleMarketChange(e.target.value)}
                     style={{
                       width: '100%',
                       padding: '9px 12px',
@@ -568,7 +585,11 @@ export default function MandiPrices() {
                       fontWeight: 500,
                     }}
                   >
-                    <option value="All">{selectedState === 'All' ? 'All Mandis' : `All Mandis in ${selectedState}`}</option>
+                    <option value="All">
+                      {selectedState === 'All'
+                        ? `All Mandis (${availableMarkets.length})`
+                        : `All Mandis in ${selectedState} (${availableMarkets.length})`}
+                    </option>
                     {availableMarkets.map((m) => (
                       <option key={m} value={m}>
                         {m}
