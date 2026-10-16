@@ -43,7 +43,7 @@ const CLIENT_URL = process.env.CLIENT_URL || 'http://localhost:5173';
 // Socket.io initialization
 const io = new Server(server, {
   cors: {
-    origin: [CLIENT_URL, 'http://localhost:5174', 'http://127.0.0.1:5173'],
+    origin: (origin, callback) => callback(null, true),
     methods: ['GET', 'POST'],
     credentials: true,
   },
@@ -55,7 +55,7 @@ setupSocket(io);
 app.use(helmet({ crossOriginResourcePolicy: { policy: 'cross-origin' } }));
 app.use(
   cors({
-    origin: [CLIENT_URL, 'http://localhost:5174', 'http://127.0.0.1:5173'],
+    origin: (origin, callback) => callback(null, true),
     credentials: true,
   })
 );
@@ -178,16 +178,24 @@ const PORT = process.env.PORT || 5000;
 async function startServer() {
   const isConnected = await testConnection();
   if (!isConnected) {
-    console.error('❌ Cannot start server: Database connection failed.');
-    process.exit(1);
+    console.warn('⚠️ Warning: Database connection failed. Running in degraded mode.');
+    if (!process.env.VERCEL && process.env.NODE_ENV !== 'production') {
+      // In local development, you may want to know DB is down
+      console.warn('💡 Make sure MySQL is running locally.');
+    }
+  } else {
+    console.log('✅ Connected to MySQL database (agriexport_connect)');
   }
-  console.log('✅ Connected to MySQL database (agriexport_connect)');
 
-  server.listen(PORT, () => {
-    console.log(`🚀 AgriExport Connect Backend Server running on port ${PORT}`);
-    console.log(`🌐 API base URL: http://localhost:${PORT}/api`);
-    console.log(`💬 Socket.io server ready for connections`);
-  });
+  if (!process.env.VERCEL) {
+    server.listen(PORT, () => {
+      console.log(`🚀 AgriExport Connect Backend Server running on port ${PORT}`);
+      console.log(`🌐 API base URL: http://localhost:${PORT}/api`);
+      console.log(`💬 Socket.io server ready for connections`);
+    });
+  }
 }
 
 startServer();
+
+export default app;
