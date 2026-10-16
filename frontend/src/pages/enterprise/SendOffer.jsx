@@ -6,6 +6,7 @@ import { Send, ShieldCheck, ChevronLeft, Info, Check, Package, Sparkles } from '
 import { FadeUpItem, SpinnerBtn } from '../../components/common/AnimatedComponents';
 import cropAttributes from '../../data/crop_attributes.json';
 import api from '../../services/api';
+import { getCropImage } from '../../utils/cropImages';
 
 export default function SendOffer() {
   const { listingId } = useParams();
@@ -202,13 +203,28 @@ export default function SendOffer() {
               {/* Farmer and Produce info card from database */}
               <div style={{ background: '#f8fafc', borderRadius: 16, padding: '18px 20px', marginBottom: 24, border: '1px solid var(--border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 16 }}>
                 <div style={{ display: 'flex', gap: 14, alignItems: 'center', minWidth: 260 }}>
-                  <div style={{ width: 60, height: 60, borderRadius: 12, background: 'linear-gradient(135deg, var(--green-light), #C8E6C9)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '2.4rem', flexShrink: 0, overflow: 'hidden' }}>
-                    {typeof listing.photos?.[0] === 'string' && (listing.photos[0].startsWith('http') || listing.photos[0].startsWith('data:') || listing.photos[0].startsWith('/')) ? (
-                      <img src={listing.photos[0]} alt={listing.cropName} style={{ width: '100%', height: '100%', objectFit: 'cover' }} onError={(e) => { e.currentTarget.style.display = 'none'; e.currentTarget.parentElement.innerText = cropObj.emoji || listing.emoji || '🌾'; }} />
-                    ) : (
-                      cropObj.emoji || listing.emoji || listing.photos?.[0] || '🌾'
-                    )}
-                  </div>
+                  {(() => {
+                    const produceImg = getCropImage(listing.crop || listing.cropName, listing.photos?.[0]);
+                    return (
+                      <div style={{ width: 60, height: 60, borderRadius: 12, background: 'linear-gradient(135deg, var(--green-light), #C8E6C9)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '2.4rem', flexShrink: 0, overflow: 'hidden' }}>
+                        {produceImg ? (
+                          <img
+                            src={produceImg}
+                            alt={listing.cropName}
+                            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                            onError={(e) => {
+                              e.currentTarget.style.display = 'none';
+                              const fallback = e.currentTarget.parentElement?.querySelector('.offer-produce-fallback');
+                              if (fallback) fallback.style.display = 'block';
+                            }}
+                          />
+                        ) : null}
+                        <span className="offer-produce-fallback" style={{ display: produceImg ? 'none' : 'block' }}>
+                          {cropObj.emoji || listing.emoji || '🌾'}
+                        </span>
+                      </div>
+                    );
+                  })()}
                   <div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap', marginBottom: 3 }}>
                       <h4 style={{ margin: 0, fontFamily: 'var(--font-heading)', fontSize: '1.1rem' }}>{listing.cropName}</h4>

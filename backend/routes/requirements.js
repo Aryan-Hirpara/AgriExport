@@ -13,6 +13,8 @@ function formatRequirement(req, quotes = []) {
     specs = req.specs;
   }
 
+  const finalImageUrl = req.crop_image_url || req.image_url || null;
+
   return {
     id: `br${req.id}`,
     dbId: req.id,
@@ -26,8 +28,8 @@ function formatRequirement(req, quotes = []) {
     crop: req.crop_slug,
     cropName: req.crop_name,
     emoji: req.crop_emoji || '🌿',
-    image: req.image_url || null,
-    imageUrl: req.image_url || null,
+    image: finalImageUrl,
+    imageUrl: finalImageUrl,
     qty: Number(req.quantity),
     unit: req.unit,
     minLot: req.min_lot_size || '1 MT',
@@ -60,6 +62,7 @@ router.get('/', optionalAuth, async (req, res, next) => {
     let query = `
       SELECT 
         br.*, c.name AS crop_name, c.slug AS crop_slug, c.emoji AS crop_emoji,
+        COALESCE(br.image_url, c.image_url) AS crop_image_url,
         u.name AS enterprise_name, u.avatar AS enterprise_logo, u.is_verified AS enterprise_verified, u.phone AS enterprise_phone,
         ep.company_name, ep.business_type, ep.city,
         (SELECT COUNT(*) FROM offers o WHERE o.requirement_id = br.id) AS quotes_count
@@ -174,6 +177,7 @@ router.get('/my', verifyToken, async (req, res, next) => {
   try {
     const [rows] = await pool.query(
       `SELECT br.*, c.name AS crop_name, c.slug AS crop_slug, c.emoji AS crop_emoji,
+              COALESCE(br.image_url, c.image_url) AS crop_image_url,
               (SELECT COUNT(*) FROM offers o WHERE o.requirement_id = br.id) AS quotes_count
        FROM buyer_requirements br
        JOIN crops c ON br.crop_id = c.id
@@ -248,6 +252,7 @@ router.get('/:id', optionalAuth, async (req, res, next) => {
     const [rows] = await pool.query(
       `SELECT 
         br.*, c.name AS crop_name, c.slug AS crop_slug, c.emoji AS crop_emoji,
+        COALESCE(br.image_url, c.image_url) AS crop_image_url,
         u.name AS enterprise_name, u.avatar AS enterprise_logo, u.is_verified AS enterprise_verified, u.phone AS enterprise_phone,
         ep.company_name, ep.business_type, ep.city
        FROM buyer_requirements br
@@ -380,8 +385,8 @@ router.post('/', verifyToken, async (req, res, next) => {
 
     const [resInsert] = await pool.query(
       `INSERT INTO buyer_requirements
-        (enterprise_id, crop_id, title, quantity, unit, target_price, price_range, destination, destination_flag, urgency, urgency_label, specs, delivery_terms, payment_terms, deadline, notes, status)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'open')`,
+        (enterprise_id, crop_id, title, quantity, unit, target_price, price_range, destination, destination_flag, urgency, urgency_label, specs, delivery_terms, payment_terms, deadline, notes, image_url, status)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'open')`,
       [
         req.user.id,
         resolvedCropId,
@@ -399,6 +404,7 @@ router.post('/', verifyToken, async (req, res, next) => {
         paymentTerms || '',
         deadline || null,
         notes || '',
+        finalImage,
       ]
     );
 

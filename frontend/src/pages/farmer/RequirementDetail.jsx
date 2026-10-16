@@ -9,6 +9,7 @@ import {
 } from 'lucide-react';
 import { FadeUpItem, StarRating } from '../../components/common/AnimatedComponents';
 import api from '../../services/api';
+import { getCropImage } from '../../utils/cropImages';
 
 export default function RequirementDetail() {
   const { id } = useParams();
@@ -72,9 +73,10 @@ export default function RequirementDetail() {
     gst: req.gst || '',
   };
 
+  const cropImg = getCropImage(req.crop || req.cropName, req.imageUrl || req.image);
   const photos = [];
-  if (req.imageUrl || req.image) {
-    photos.push({ url: req.imageUrl || req.image, label: `${req.cropName || 'Crop'} Reference Sample` });
+  if (cropImg) {
+    photos.push({ url: cropImg, label: `${req.cropName || 'Crop'} Reference Sample` });
   }
   photos.push({ emoji: req.emoji || '🌿', label: req.cropName || req.title });
   photos.push({ emoji: req.logo || enterprise.logo || '🏢', label: req.enterpriseName });

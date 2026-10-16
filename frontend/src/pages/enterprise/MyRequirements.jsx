@@ -9,6 +9,7 @@ import {
 } from 'lucide-react';
 import { FadeUpItem, StaggerGrid } from '../../components/common/AnimatedComponents';
 import cropAttributes from '../../data/crop_attributes.json';
+import { getCropImage } from '../../utils/cropImages';
 
 const DESTINATIONS = [
   'UAE (Dubai)',
@@ -250,21 +251,28 @@ export default function MyRequirements() {
                 <motion.div className="card card-body" whileHover={{ y: -2, boxShadow: 'var(--shadow-md)' }}>
                   <div style={{ display: 'flex', gap: 16, alignItems: 'flex-start' }}>
                     {/* Thumbnail */}
-                    <div style={{ width: 72, height: 72, background: 'linear-gradient(135deg, #E3F2FD, #BBDEFB)', borderRadius: 14, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '2.5rem', flexShrink: 0, overflow: 'hidden' }}>
-                      {req.imageUrl || req.image ? (
-                        <img
-                          src={req.imageUrl || req.image}
-                          alt={req.cropName}
-                          style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                          onError={(e) => {
-                            e.currentTarget.style.display = 'none';
-                            e.currentTarget.parentElement.innerText = req.emoji || '🌿';
-                          }}
-                        />
-                      ) : (
-                        req.emoji || '🌿'
-                      )}
-                    </div>
+                    {(() => {
+                      const cropImg = getCropImage(req.crop || req.cropName, req.imageUrl || req.image);
+                      return (
+                        <div style={{ width: 72, height: 72, background: 'linear-gradient(135deg, #E3F2FD, #BBDEFB)', borderRadius: 14, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '2.5rem', flexShrink: 0, overflow: 'hidden' }}>
+                          {cropImg ? (
+                            <img
+                              src={cropImg}
+                              alt={req.cropName}
+                              style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                              onError={(e) => {
+                                e.currentTarget.style.display = 'none';
+                                const fallback = e.currentTarget.parentElement?.querySelector('.req-fallback-emoji');
+                                if (fallback) fallback.style.display = 'block';
+                              }}
+                            />
+                          ) : null}
+                          <span className="req-fallback-emoji" style={{ display: cropImg ? 'none' : 'block' }}>
+                            {req.emoji || '🌿'}
+                          </span>
+                        </div>
+                      );
+                    })()}
 
                     <div style={{ flex: 1 }}>
                       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 6 }}>

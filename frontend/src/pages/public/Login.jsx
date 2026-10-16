@@ -14,21 +14,26 @@ export default function Login() {
     : params.get('role') === 'enterprise' ? 'enterprise' 
     : 'farmer';
   const [role, setRole] = useState(initialRole);
-  const [email, setEmail] = useState(
-    initialRole === 'admin' ? 'admin@agriexport.in'
-      : initialRole === 'enterprise' ? 'ahmed@spiceexports.in'
-      : 'ramesh@unjha.com'
-  );
-  const [password, setPassword] = useState(initialRole === 'admin' ? '' : 'demo1234');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [showPwd, setShowPwd] = useState(false);
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
 
   const handleLogin = async () => {
+    if (!email.trim()) {
+      addToast('Please enter your registered email or phone number.', 'warning');
+      return;
+    }
+    if (!password) {
+      addToast('Please enter your password.', 'warning');
+      return;
+    }
+
     setLoading(true);
     try {
       // Authenticate with backend API
-      const res = await api.auth.login({ email, password, role });
+      const res = await api.auth.login({ email: email.trim(), password, role });
       if (res.token) {
         localStorage.setItem('token', res.token);
       }
@@ -48,12 +53,6 @@ export default function Login() {
       setLoading(false);
       addToast(err.message || 'Invalid credentials or server unavailable. Please try again.', 'error');
     }
-  };
-
-  const demoLogin = (r) => {
-    setRole(r);
-    setEmail(r === 'admin' ? 'admin@agriexport.in' : r === 'farmer' ? 'ramesh@unjha.com' : 'ahmed@spiceexports.in');
-    setPassword(r === 'admin' ? '' : 'demo1234');
   };
 
   return (
@@ -101,7 +100,7 @@ export default function Login() {
                 </div>
                 <button
                   type="button"
-                  onClick={() => demoLogin('farmer')}
+                  onClick={() => setRole('farmer')}
                   style={{ border: 'none', background: 'none', color: '#2563eb', fontSize: '0.8125rem', fontWeight: 600, cursor: 'pointer' }}
                 >
                   Switch to User
@@ -118,7 +117,7 @@ export default function Login() {
                     <motion.button
                       key={r.key}
                       type="button"
-                      onClick={() => { setRole(r.key); demoLogin(r.key); }}
+                      onClick={() => setRole(r.key)}
                       whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.97 }}
                       style={{
@@ -140,13 +139,13 @@ export default function Login() {
           <FadeUpItem>
             <div className="flex-col gap-16" style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
               <div className="form-group">
-                <label className="form-label">Email or Phone</label>
-                <input className="form-input notranslate" type="text" value={email} onChange={e => setEmail(e.target.value)} placeholder="ramesh@example.com" />
+                <label className="form-label">Email or Phone <span style={{ color: 'var(--red)' }}>*</span></label>
+                <input className="form-input notranslate" type="text" value={email} onChange={e => setEmail(e.target.value)} placeholder="Enter your email or phone number" required />
               </div>
               <div className="form-group">
                 <label className="form-label">Password</label>
                 <div style={{ position: 'relative' }}>
-                  <input className="form-input" type={showPwd ? 'text' : 'password'} value={password} onChange={e => setPassword(e.target.value)} placeholder="••••••••" style={{ paddingRight: 48 }} />
+                  <input className="form-input" type={showPwd ? 'text' : 'password'} value={password} onChange={e => setPassword(e.target.value)} placeholder="Enter your password" style={{ paddingRight: 48 }} />
                   <button onClick={() => setShowPwd(!showPwd)} style={{ position: 'absolute', right: 14, top: '50%', transform: 'translateY(-50%)', border: 'none', background: 'none', cursor: 'pointer', color: 'var(--text-muted)' }}>
                     {showPwd ? <EyeOff size={18} /> : <Eye size={18} />}
                   </button>
@@ -170,20 +169,6 @@ export default function Login() {
               <SpinnerBtn loading={loading} success={success} onClick={handleLogin} className="btn btn-primary btn-full" style={{ marginTop: 8 }}>
                 Sign In
               </SpinnerBtn>
-            </div>
-          </FadeUpItem>
-
-          {/* Demo Accounts */}
-          <FadeUpItem>
-            <div style={{ marginTop: 28, paddingTop: 24, borderTop: '1px solid var(--border)' }}>
-              <p style={{ fontSize: '0.8125rem', textAlign: 'center', marginBottom: 12, color: 'var(--text-muted)' }}>Try demo accounts</p>
-              <div style={{ display: 'flex', gap: 8, justifyContent: 'center' }}>
-                {['admin', 'farmer', 'enterprise'].map(r => (
-                  <button key={r} onClick={() => demoLogin(r)} className="chip" style={{ fontSize: '0.8125rem' }}>
-                    {r === 'admin' ? '👤' : r === 'farmer' ? '🧑‍🌾' : '🏢'} {r.charAt(0).toUpperCase() + r.slice(1)}
-                  </button>
-                ))}
-              </div>
             </div>
           </FadeUpItem>
 

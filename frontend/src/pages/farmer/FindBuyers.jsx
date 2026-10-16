@@ -10,6 +10,7 @@ import {
 import { useEffect } from 'react';
 import { FadeUpItem, StaggerGrid } from '../../components/common/AnimatedComponents';
 import api from '../../services/api';
+import { getCropImage } from '../../utils/cropImages';
 
 export default function FindBuyers() {
   const navigate = useNavigate();
@@ -51,6 +52,8 @@ export default function FindBuyers() {
     const matchCrop = selectedCrop === 'All' || 
       req.crop === selectedCrop || 
       req.cropName?.toLowerCase().includes(selectedCrop.toLowerCase()) ||
+      (selectedCrop === 'onion' && req.cropName?.toLowerCase().includes('onion')) ||
+      (selectedCrop === 'soyabean' && req.cropName?.toLowerCase().includes('soya')) ||
       (selectedCrop === 'jeera' && req.cropName?.toLowerCase().includes('cumin')) ||
       (selectedCrop === 'sesame' && req.cropName?.toLowerCase().includes('til')) ||
       (selectedCrop === 'isabgol' && req.cropName?.toLowerCase().includes('psyllium'));
@@ -105,6 +108,8 @@ export default function FindBuyers() {
 
   const POPULAR_CROPS = [
     { id: 'All', name: 'All Crops', emoji: '🌾' },
+    { id: 'onion', name: 'Red Onion', emoji: '🧅' },
+    { id: 'soyabean', name: 'Soyabean', emoji: '🫘' },
     { id: 'groundnut', name: 'Groundnut', emoji: '🥜' },
     { id: 'jeera', name: 'Jeera (Cumin)', emoji: '🌿' },
     { id: 'cotton', name: 'Cotton', emoji: '🌸' },
@@ -277,6 +282,7 @@ export default function FindBuyers() {
                     (req.id && String(o.requirementId) === String(req.id))
                   );
                   const hasSubmittedQuote = !!submittedQuotes[req.id] || !!existingOffer;
+                  const cropImg = getCropImage(req.crop || req.cropName, req.imageUrl || req.image);
 
                   return (
                     <FadeUpItem key={req.id} delay={i * 0.04} style={{ height: '100%', display: 'flex' }}>
@@ -297,21 +303,27 @@ export default function FindBuyers() {
                               justifyContent: 'center',
                               fontSize: '4.5rem',
                               position: 'relative',
+                              overflow: 'hidden',
                             }}
                           >
-                            {req.imageUrl || req.image ? (
+                            {cropImg ? (
                               <img
-                                src={req.imageUrl || req.image}
+                                src={cropImg}
                                 alt={req.cropName}
                                 style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                                 onError={(e) => {
                                   e.currentTarget.style.display = 'none';
-                                  e.currentTarget.parentElement.innerText = req.emoji || '🌿';
+                                  const fallback = e.currentTarget.parentElement?.querySelector('.crop-fallback-emoji');
+                                  if (fallback) fallback.style.display = 'block';
                                 }}
                               />
-                            ) : (
-                              <span>{req.emoji || '🌿'}</span>
-                            )}
+                            ) : null}
+                            <span
+                              className="crop-fallback-emoji"
+                              style={{ display: cropImg ? 'none' : 'block' }}
+                            >
+                              {req.emoji || '🌿'}
+                            </span>
 
                             {/* Bottom-Left Badges */}
                             <div style={{ position: 'absolute', bottom: 12, left: 12, display: 'flex', gap: 6, flexWrap: 'wrap' }}>

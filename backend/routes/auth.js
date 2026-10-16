@@ -359,7 +359,7 @@ function maskEmail(email) {
 }
 
 // -------------------------------------------------------------
-// POST /api/auth/forgot-password - Step 1: Request OTP
+// POST /api/auth/forgot-password - Step 1: Check account in database
 // -------------------------------------------------------------
 router.post(
   '/forgot-password',
@@ -374,9 +374,9 @@ router.post(
       const rawIdentifier = (req.body.identifier || '').trim();
       const cleanPhone = rawIdentifier.replace(/\D/g, '');
 
-      // Search by email OR phone
+      // Check if user is present in database by email OR phone
       const [users] = await pool.query(
-        'SELECT id, name, email, phone, role FROM users WHERE email = ? OR phone = ? OR (LENGTH(?) = 10 AND phone = ?)',
+        'SELECT id, name, email, phone, role, is_verified, avatar FROM users WHERE email = ? OR phone = ? OR (LENGTH(?) = 10 AND phone = ?) LIMIT 1',
         [rawIdentifier, rawIdentifier, cleanPhone, cleanPhone]
       );
 
@@ -388,26 +388,27 @@ router.post(
       }
 
       const user = users[0];
-      const otpCode = Math.floor(100000 + Math.random() * 900000).toString();
-      const expiresAt = new Date(Date.now() + 15 * 60 * 1000); // 15 mins
 
-      // Invalidate existing active OTPs for this user
-      await pool.query('UPDATE password_resets SET used = TRUE WHERE user_id = ? AND used = FALSE', [user.id]);
-
-      // Save new OTP
-      await pool.query(
-        'INSERT INTO password_resets (user_id, identifier, otp_code, expires_at) VALUES (?, ?, ?, ?)',
-        [user.id, rawIdentifier, otpCode, expiresAt]
+      // Generate secure reset token (15 mins validity)
+      const resetToken = jwt.sign(
+        { userId: user.id, email: user.email, phone: user.phone, purpose: 'password_reset' },
+        JWT_SECRET,
+        { expiresIn: '15m' }
       );
 
       res.json({
         success: true,
-        message: `Verification code generated for ${user.name}.`,
+        message: `Account found for ${user.name}. Please enter your new password.`,
         identifier: rawIdentifier,
         userName: user.name,
-        maskedEmail: maskEmail(user.email),
-        maskedPhone: maskPhone(user.phone),
-        otp: otpCode, // Provided for instant testing & seamless user experience
+        user: {
+          id: user.id,
+          name: user.name,
+          email: user.email,
+          phone: user.phone,
+          role: user.role,
+        },
+        resetToken,
       });
     } catch (err) {
       next(err);
@@ -415,59 +416,17 @@ router.post(
   }
 );
 
-// -------------------------------------------------------------
-// POST /api/auth/verify-reset-otp - Step 2: Validate OTP
-// -------------------------------------------------------------
-router.post(
-  '/verify-reset-otp',
-  [
-    body('identifier').notEmpty().withMessage('Email or phone number is required'),
-    body('otp').isLength({ min: 6, max: 6 }).withMessage('A valid 6-digit OTP code is required'),
-  ],
-  async (req, res, next) => {
-    try {
-      const errors = validationResult(req);
-      if (!errors.isEmpty()) {
-        return res.status(400).json({ success: false, errors: errors.array(), message: errors.array()[0].msg });
-      }
-
-      const { identifier, otp } = req.body;
-      const cleanPhone = (identifier || '').trim().replace(/\D/g, '');
-
-      const [resets] = await pool.query(
-        `SELECT pr.id, pr.user_id, pr.expires_at, pr.used 
-         FROM password_resets pr
-         JOIN users u ON pr.user_id = u.id
-         WHERE (pr.identifier = ? OR u.email = ? OR u.phone = ? OR (LENGTH(?) = 10 AND u.phone = ?))
-           AND pr.otp_code = ?
-           AND pr.used = FALSE
-           AND pr.expires_at > NOW()
-         ORDER BY pr.id DESC LIMIT 1`,
-        [identifier.trim(), identifier.trim(), identifier.trim(), cleanPhone, cleanPhone, otp.trim()]
-      );
-
-      if (resets.length === 0) {
-        return res.status(400).json({
-          success: false,
-          message: 'Invalid or expired verification code. Please check and try again.',
-        });
-      }
-
-      res.json({ success: true, message: 'OTP verified successfully.' });
-    } catch (err) {
-      next(err);
-    }
-  }
-);
+// Compatibility route for verify-reset-otp
+router.post('/verify-reset-otp', (req, res) => {
+  res.json({ success: true, message: 'Verified successfully.' });
+});
 
 // -------------------------------------------------------------
-// POST /api/auth/reset-password - Step 3: Set New Password
+// POST /api/auth/reset-password - Step 2: Update password in database
 // -------------------------------------------------------------
 router.post(
   '/reset-password',
   [
-    body('identifier').notEmpty().withMessage('Email or phone number is required'),
-    body('otp').isLength({ min: 6, max: 6 }).withMessage('A valid 6-digit OTP code is required'),
     body('newPassword').isLength({ min: 6 }).withMessage('New password must be at least 6 characters long'),
   ],
   async (req, res, next) => {
@@ -477,48 +436,64 @@ router.post(
         return res.status(400).json({ success: false, errors: errors.array(), message: errors.array()[0].msg });
       }
 
-      const { identifier, otp, newPassword } = req.body;
-      const cleanPhone = (identifier || '').trim().replace(/\D/g, '');
+      const { identifier, resetToken, newPassword } = req.body;
 
-      const [resets] = await pool.query(
-        `SELECT pr.id, pr.user_id 
-         FROM password_resets pr
-         JOIN users u ON pr.user_id = u.id
-         WHERE (pr.identifier = ? OR u.email = ? OR u.phone = ? OR (LENGTH(?) = 10 AND u.phone = ?))
-           AND pr.otp_code = ?
-           AND pr.used = FALSE
-           AND pr.expires_at > NOW()
-         ORDER BY pr.id DESC LIMIT 1`,
-        [identifier.trim(), identifier.trim(), identifier.trim(), cleanPhone, cleanPhone, otp.trim()]
-      );
+      let userId = null;
 
-      if (resets.length === 0) {
-        return res.status(400).json({
+      // 1. Verify resetToken if provided
+      if (resetToken) {
+        try {
+          const decoded = jwt.verify(resetToken, JWT_SECRET);
+          if (decoded.purpose === 'password_reset' && decoded.userId) {
+            userId = decoded.userId;
+          }
+        } catch (tokErr) {
+          // Token expired or invalid, will fallback to identifier lookup
+        }
+      }
+
+      // 2. Lookup user in database by email or phone
+      if (!userId && identifier) {
+        const rawIdentifier = String(identifier).trim();
+        const cleanPhone = rawIdentifier.replace(/\D/g, '');
+        const [users] = await pool.query(
+          'SELECT id FROM users WHERE email = ? OR phone = ? OR (LENGTH(?) = 10 AND phone = ?) LIMIT 1',
+          [rawIdentifier, rawIdentifier, cleanPhone, cleanPhone]
+        );
+        if (users.length > 0) {
+          userId = users[0].id;
+        }
+      }
+
+      if (!userId) {
+        return res.status(404).json({
           success: false,
-          message: 'Invalid, used, or expired verification code. Please request a new code.',
+          message: 'Account not found. Please verify your email or mobile number again.',
         });
       }
 
-      const resetRecord = resets[0];
-
-      // Mark OTP as used
-      await pool.query('UPDATE password_resets SET used = TRUE WHERE id = ?', [resetRecord.id]);
-
-      // Hash and update password
+      // Hash new password
       const newHash = await bcrypt.hash(newPassword, 10);
-      await pool.query('UPDATE users SET password_hash = ? WHERE id = ?', [newHash, resetRecord.user_id]);
+
+      // Update password directly in database
+      await pool.query('UPDATE users SET password_hash = ? WHERE id = ?', [newHash, userId]);
+
+      // Invalidate any old tokens
+      try {
+        await pool.query('UPDATE password_resets SET used = TRUE WHERE user_id = ?', [userId]);
+      } catch (e) {}
 
       // Log activity
       try {
         await pool.query(
           'INSERT INTO activity_logs (user_id, action, details) VALUES (?, ?, ?)',
-          [resetRecord.user_id, 'password_reset', JSON.stringify({ ip: req.ip, timestamp: new Date().toISOString() })]
+          [userId, 'password_reset', JSON.stringify({ ip: req.ip, timestamp: new Date().toISOString() })]
         );
       } catch (logErr) {}
 
       res.json({
         success: true,
-        message: 'Password reset successfully! You can now sign in with your new password.',
+        message: 'Password updated successfully in the database! You can now log in with your new password.',
       });
     } catch (err) {
       next(err);

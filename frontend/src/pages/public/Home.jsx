@@ -6,6 +6,7 @@ import { CountUp, FadeUpItem, StaggerGrid } from '../../components/common/Animat
 import { useApp } from '../../context/AppContext';
 import api from '../../services/api';
 import { getSocket } from '../../services/socket';
+import { getCropImage } from '../../utils/cropImages';
 
 const HOW_IT_WORKS = [
   { step: 1, icon: '📝', title: 'Register & Verify', desc: 'Create your account. Admin verifies your documents within 48 hours.' },
@@ -183,47 +184,53 @@ export default function Home() {
             </div>
           ) : (
             <StaggerGrid className="grid-4">
-              {featuredProduce.map((listing) => (
-                <FadeUpItem key={listing.id}>
-                  <Link to={`/produce/${listing.id}`} style={{ textDecoration: 'none' }}>
-                    <motion.div className="card produce-card" whileHover={{ y: -6, boxShadow: 'var(--shadow-card-hover)' }}>
-                      <div style={{ height: 180, background: `linear-gradient(135deg, var(--green-light) 0%, #C8E6C9 100%)`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '4rem', position: 'relative', overflow: 'hidden' }}>
-                        {typeof listing.photos?.[0] === 'string' && (listing.photos[0].startsWith('http') || listing.photos[0].startsWith('/') || listing.photos[0].startsWith('data:')) ? (
-                          <img
-                            src={listing.photos[0]}
-                            alt={listing.cropName}
-                            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                            onError={(e) => {
-                              e.currentTarget.style.display = 'none';
-                              e.currentTarget.parentElement.innerText = listing.emoji || '🌿';
-                            }}
-                          />
-                        ) : (
-                          listing.emoji || listing.photos?.[0] || '🌿'
-                        )}
-                        {listing.organic && <span className="badge badge-green" style={{ position: 'absolute', top: 12, left: 12 }}>🌱 Organic</span>}
-                      </div>
-                      <div className="card-body" style={{ padding: '16px 20px' }}>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 8 }}>
-                          <div>
-                            <h5 style={{ fontFamily: 'var(--font-heading)' }}>{listing.cropName}</h5>
-                            <p style={{ fontSize: '0.8125rem', margin: 0 }}>📍 {listing.village || listing.district}</p>
-                          </div>
-                          <div style={{ textAlign: 'right' }}>
-                            <div style={{ fontFamily: 'var(--font-heading)', fontWeight: 800, fontSize: '1.125rem', color: 'var(--green-primary)' }}>
-                              <span className="notranslate">₹{listing.price}</span><span style={{ fontSize: '0.75rem', fontWeight: 500, color: 'var(--text-muted)' }}>/<span className="notranslate">{listing.unit === 'ton' ? 'kg' : listing.unit || 'kg'}</span></span>
+              {featuredProduce.map((listing) => {
+                const produceImg = getCropImage(listing.crop || listing.cropName, listing.photos?.[0]);
+
+                return (
+                  <FadeUpItem key={listing.id}>
+                    <Link to={`/produce/${listing.id}`} style={{ textDecoration: 'none' }}>
+                      <motion.div className="card produce-card" whileHover={{ y: -6, boxShadow: 'var(--shadow-card-hover)' }}>
+                        <div style={{ height: 180, background: `linear-gradient(135deg, var(--green-light) 0%, #C8E6C9 100%)`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '4rem', position: 'relative', overflow: 'hidden' }}>
+                          {produceImg ? (
+                            <img
+                              src={produceImg}
+                              alt={listing.cropName}
+                              style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                              onError={(e) => {
+                                e.currentTarget.style.display = 'none';
+                                const fallback = e.currentTarget.parentElement?.querySelector('.home-produce-fallback');
+                                if (fallback) fallback.style.display = 'block';
+                              }}
+                            />
+                          ) : null}
+                          <span className="home-produce-fallback" style={{ display: produceImg ? 'none' : 'block' }}>
+                            {listing.emoji || '🌿'}
+                          </span>
+                          {listing.organic && <span className="badge badge-green" style={{ position: 'absolute', top: 12, left: 12 }}>🌱 Organic</span>}
+                        </div>
+                        <div className="card-body" style={{ padding: '16px 20px' }}>
+                          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 8 }}>
+                            <div>
+                              <h5 style={{ fontFamily: 'var(--font-heading)' }}>{listing.cropName}</h5>
+                              <p style={{ fontSize: '0.8125rem', margin: 0 }}>📍 {listing.village || listing.district}</p>
+                            </div>
+                            <div style={{ textAlign: 'right' }}>
+                              <div style={{ fontFamily: 'var(--font-heading)', fontWeight: 800, fontSize: '1.125rem', color: 'var(--green-primary)' }}>
+                                <span className="notranslate">₹{listing.price}</span><span style={{ fontSize: '0.75rem', fontWeight: 500, color: 'var(--text-muted)' }}>/<span className="notranslate">{listing.unit === 'ton' ? 'kg' : listing.unit || 'kg'}</span></span>
+                              </div>
                             </div>
                           </div>
+                          <div style={{ display: 'flex', gap: 8, alignItems: 'center', flexWrap: 'wrap' }}>
+                            <span className="badge badge-gray notranslate">{listing.qty} {listing.unit || 'ton'}</span>
+                            <span className="badge badge-blue notranslate">{listing.grade}</span>
+                          </div>
                         </div>
-                        <div style={{ display: 'flex', gap: 8, alignItems: 'center', flexWrap: 'wrap' }}>
-                          <span className="badge badge-gray notranslate">{listing.qty} {listing.unit || 'ton'}</span>
-                          <span className="badge badge-blue notranslate">{listing.grade}</span>
-                        </div>
-                      </div>
-                    </motion.div>
-                  </Link>
-                </FadeUpItem>
-              ))}
+                      </motion.div>
+                    </Link>
+                  </FadeUpItem>
+                );
+              })}
             </StaggerGrid>
           )}
         </div>
@@ -251,24 +258,29 @@ export default function Home() {
             </div>
           ) : (
             <StaggerGrid className="grid-3">
-              {activeRequirements.slice(0, 3).map((req) => (
-                <FadeUpItem key={req.id}>
-                  <Link to={`/requirement/${req.id}`} style={{ textDecoration: 'none' }}>
-                    <motion.div className="card produce-card" whileHover={{ y: -6, boxShadow: 'var(--shadow-card-hover)' }} style={{ overflow: 'hidden' }}>
-                      <div style={{ height: 160, background: 'linear-gradient(135deg, #E0F2FE 0%, #BAE6FD 100%)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '3.8rem', position: 'relative', overflow: 'hidden' }}>
-                        {req.imageUrl || req.image ? (
-                          <img
-                            src={req.imageUrl || req.image}
-                            alt={req.cropName}
-                            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                            onError={(e) => {
-                              e.currentTarget.style.display = 'none';
-                              e.currentTarget.parentElement.innerText = req.emoji || '🌾';
-                            }}
-                          />
-                        ) : (
-                          <span>{req.emoji || '🌾'}</span>
-                        )}
+              {activeRequirements.slice(0, 3).map((req) => {
+                const reqImg = getCropImage(req.crop || req.cropName, req.imageUrl || req.image);
+
+                return (
+                  <FadeUpItem key={req.id}>
+                    <Link to={`/requirement/${req.id}`} style={{ textDecoration: 'none' }}>
+                      <motion.div className="card produce-card" whileHover={{ y: -6, boxShadow: 'var(--shadow-card-hover)' }} style={{ overflow: 'hidden' }}>
+                        <div style={{ height: 160, background: 'linear-gradient(135deg, #E0F2FE 0%, #BAE6FD 100%)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '3.8rem', position: 'relative', overflow: 'hidden' }}>
+                          {reqImg ? (
+                            <img
+                              src={reqImg}
+                              alt={req.cropName}
+                              style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                              onError={(e) => {
+                                e.currentTarget.style.display = 'none';
+                                const fallback = e.currentTarget.parentElement?.querySelector('.home-req-fallback');
+                                if (fallback) fallback.style.display = 'block';
+                              }}
+                            />
+                          ) : null}
+                          <span className="home-req-fallback" style={{ display: reqImg ? 'none' : 'block' }}>
+                            {req.emoji || '🌾'}
+                          </span>
                         <div style={{ position: 'absolute', bottom: 12, left: 12, display: 'flex', gap: 6, flexWrap: 'wrap' }}>
                           <span className="badge badge-blue notranslate" style={{ fontSize: '0.72rem' }}>
                             {req.qty} {req.unit || 'ton'} Needed
@@ -313,9 +325,10 @@ export default function Home() {
                     </motion.div>
                   </Link>
                 </FadeUpItem>
-              ))}
-            </StaggerGrid>
-          )}
+              );
+            })}
+          </StaggerGrid>
+        )}
         </div>
       </section>
 

@@ -246,6 +246,7 @@ CREATE TABLE buyer_requirements (
     payment_terms VARCHAR(255),
     deadline DATE,
     notes TEXT,
+    image_url LONGTEXT,
     status ENUM(
         'open',
         'fulfilled',

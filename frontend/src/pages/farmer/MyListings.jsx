@@ -5,6 +5,7 @@ import { useApp } from '../../context/AppContext';
 import { Edit, Trash2, Eye, PlusCircle, X, Save } from 'lucide-react';
 import { FadeUpItem, StaggerGrid } from '../../components/common/AnimatedComponents';
 import api from '../../services/api';
+import { getCropImage } from '../../utils/cropImages';
 
 export default function MyListings() {
   const { user, produceListings, updateProduceListing, deleteProduceListing, addToast } = useApp();
@@ -154,21 +155,28 @@ export default function MyListings() {
             <FadeUpItem key={listing.id} delay={i * 0.05}>
               <motion.div className="card card-body" whileHover={{ y: -2, boxShadow: 'var(--shadow-md)' }} style={{ border: '1px solid var(--border)' }}>
                 <div style={{ display: 'flex', gap: 16, alignItems: 'flex-start' }}>
-                  <div style={{ width: 72, height: 72, background: 'linear-gradient(135deg, var(--green-light), #C8E6C9)', borderRadius: 14, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '2.5rem', flexShrink: 0, overflow: 'hidden' }}>
-                    {typeof listing.photos?.[0] === 'string' && (listing.photos[0].startsWith('http') || listing.photos[0].startsWith('/') || listing.photos[0].startsWith('data:')) ? (
-                      <img
-                        src={listing.photos[0]}
-                        alt={listing.cropName}
-                        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                        onError={(e) => {
-                          e.currentTarget.style.display = 'none';
-                          e.currentTarget.parentElement.innerText = listing.emoji || '🌿';
-                        }}
-                      />
-                    ) : (
-                      listing.emoji || listing.photos?.[0] || '🌿'
-                    )}
-                  </div>
+                  {(() => {
+                    const produceImg = getCropImage(listing.crop || listing.cropName, listing.photos?.[0]);
+                    return (
+                      <div style={{ width: 72, height: 72, background: 'linear-gradient(135deg, var(--green-light), #C8E6C9)', borderRadius: 14, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '2.5rem', flexShrink: 0, overflow: 'hidden' }}>
+                        {produceImg ? (
+                          <img
+                            src={produceImg}
+                            alt={listing.cropName}
+                            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                            onError={(e) => {
+                              e.currentTarget.style.display = 'none';
+                              const fallback = e.currentTarget.parentElement?.querySelector('.listing-fallback-emoji');
+                              if (fallback) fallback.style.display = 'block';
+                            }}
+                          />
+                        ) : null}
+                        <span className="listing-fallback-emoji" style={{ display: produceImg ? 'none' : 'block' }}>
+                          {listing.emoji || '🌿'}
+                        </span>
+                      </div>
+                    );
+                  })()}
                   <div style={{ flex: 1 }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 6 }}>
                       <div>

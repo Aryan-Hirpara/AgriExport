@@ -29,7 +29,7 @@ router.get('/', optionalAuth, async (req, res, next) => {
         l.price_per_unit, l.min_order_quantity, l.location_village, l.location_district,
         l.quality_grade, l.harvest_date, l.packaging_type, l.organic_certified,
         l.lab_tested, l.attributes, l.description, l.status, l.views_count, l.created_at,
-        c.name AS crop_name, c.slug AS crop_slug, c.emoji AS crop_emoji,
+        c.name AS crop_name, c.slug AS crop_slug, c.emoji AS crop_emoji, c.image_url AS crop_image_url,
         u.name AS farmer_name, u.rating AS farmer_rating, u.reviews_count AS farmer_reviews_count,
         u.is_verified AS farmer_verified, u.avatar AS farmer_avatar,
         (SELECT COUNT(*) FROM offers o WHERE o.listing_id = l.id) AS offers_count
@@ -144,7 +144,7 @@ router.get('/', optionalAuth, async (req, res, next) => {
         state: 'Gujarat',
         status: l.status,
         offers: l.offers_count || 0,
-        photos: imagesByListing[l.id] && imagesByListing[l.id].length > 0 ? imagesByListing[l.id] : [l.crop_emoji || '🌿'],
+        photos: imagesByListing[l.id] && imagesByListing[l.id].length > 0 ? imagesByListing[l.id] : (l.crop_image_url ? [l.crop_image_url] : [l.crop_emoji || '🌿']),
         description: l.description,
         specs: attrs,
         farmer: {
@@ -175,7 +175,7 @@ router.get('/', optionalAuth, async (req, res, next) => {
 router.get('/my', verifyToken, async (req, res, next) => {
   try {
     const [listings] = await pool.query(
-      `SELECT l.*, c.name AS crop_name, c.slug AS crop_slug, c.emoji AS crop_emoji,
+      `SELECT l.*, c.name AS crop_name, c.slug AS crop_slug, c.emoji AS crop_emoji, c.image_url AS crop_image_url,
               (SELECT COUNT(*) FROM offers o WHERE o.listing_id = l.id) AS offers_count
        FROM produce_listings l
        JOIN crops c ON l.crop_id = c.id
@@ -225,7 +225,7 @@ router.get('/my', verifyToken, async (req, res, next) => {
         state: 'Gujarat',
         status: l.status,
         offers: l.offers_count || 0,
-        photos: imagesByListing[l.id]?.length > 0 ? imagesByListing[l.id] : [l.crop_emoji || '🌿'],
+        photos: imagesByListing[l.id]?.length > 0 ? imagesByListing[l.id] : (l.crop_image_url ? [l.crop_image_url] : [l.crop_emoji || '🌿']),
         description: l.description,
         specs: attrs,
         createdAt: l.created_at,
@@ -243,7 +243,7 @@ router.get('/:id', optionalAuth, async (req, res, next) => {
   try {
     const cleanId = String(req.params.id).replace('l', '');
     const [rows] = await pool.query(
-      `SELECT l.*, c.name AS crop_name, c.slug AS crop_slug, c.emoji AS crop_emoji,
+      `SELECT l.*, c.name AS crop_name, c.slug AS crop_slug, c.emoji AS crop_emoji, c.image_url AS crop_image_url,
               u.name AS farmer_name, u.phone AS farmer_phone, u.rating AS farmer_rating,
               u.reviews_count AS farmer_reviews, u.is_verified AS farmer_verified, u.avatar AS farmer_avatar,
               fp.land_size, fp.experience_years
@@ -293,7 +293,7 @@ router.get('/:id', optionalAuth, async (req, res, next) => {
         status: item.status,
         description: item.description,
         specs: attrs,
-        photos: images.length > 0 ? images.map(i => i.image_url) : [item.crop_emoji || '🌿'],
+        photos: images.length > 0 ? images.map(i => i.image_url) : (item.crop_image_url ? [item.crop_image_url] : [item.crop_emoji || '🌿']),
         farmer: {
           name: item.farmer_name,
           phone: item.farmer_phone,

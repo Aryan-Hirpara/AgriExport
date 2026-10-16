@@ -88,8 +88,8 @@ export default function Register() {
         addToast('Please enter a valid email address or leave it blank', 'warning');
         return;
       }
-      if (form.password && form.password.length < 6) {
-        addToast('Password must be at least 6 characters', 'warning');
+      if (!form.password || form.password.length < 6) {
+        addToast('Please enter a password of at least 6 characters', 'warning');
         return;
       }
     }
@@ -119,7 +119,7 @@ export default function Register() {
           name: form.name.trim(),
           phone: cleanPhone,
           email: form.email?.trim() || undefined,
-          password: form.password || 'demo1234',
+          password: form.password,
           role,
           avatar: form.avatar || (role === 'farmer' ? '🧑‍🌾' : '🏢'),
           village: form.village?.trim() || undefined,
@@ -269,8 +269,8 @@ export default function Register() {
                   <input className="form-input notranslate" type="email" value={form.email} onChange={e => setForm({ ...form, email: e.target.value })} placeholder={role === 'farmer' ? 'ramesh@gmail.com' : 'exports@company.com'} />
                 </div>
                 <div className="form-group">
-                  <label className="form-label">Password <span style={{ color: 'var(--text-muted)', fontWeight: 400 }}>(Min. 6 chars, default: demo1234)</span></label>
-                  <input className="form-input" type="password" value={form.password} onChange={e => setForm({ ...form, password: e.target.value })} placeholder="Min. 6 characters" />
+                  <label className="form-label">Password <span style={{ color: 'var(--red)' }}>*</span> <span style={{ color: 'var(--text-muted)', fontWeight: 400 }}>(Min. 6 characters)</span></label>
+                  <input className="form-input" type="password" value={form.password} onChange={e => setForm({ ...form, password: e.target.value })} placeholder="Create a password (min. 6 characters)" required />
                 </div>
               </div>
             )}

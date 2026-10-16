@@ -4,11 +4,14 @@ import { motion } from 'framer-motion';
 import { useApp } from '../../context/AppContext';
 import { Search, SlidersHorizontal, MapPin, ShieldCheck, Star } from 'lucide-react';
 import { StaggerGrid, FadeUpItem } from '../../components/common/AnimatedComponents';
+import { getCropImage } from '../../utils/cropImages';
 
 const DISTRICTS = ['All Districts', 'Mehsana', 'Rajkot', 'Ahmedabad', 'Junagadh', 'Bhavnagar', 'Surendranagar', 'Patan', 'Banaskantha', 'Surat'];
 const SORT_OPTIONS = ['Newest First', 'Price: Low to High', 'Price: High to Low', 'Most Offers'];
 
 const POPULAR_CROPS = [
+  { slug: 'onion', name: 'Red Onion', emoji: '🧅' },
+  { slug: 'soyabean', name: 'Soyabean', emoji: '🫘' },
   { slug: 'groundnut', name: 'Groundnut', emoji: '🥜' },
   { slug: 'jeera', name: 'Jeera (Cumin)', emoji: '🌿' },
   { slug: 'cotton', name: 'Cotton', emoji: '🌸' },
@@ -157,27 +160,28 @@ export default function BrowseProduce() {
               rating: 5.0,
               verified: true,
             };
-            const firstPhoto = listing.photos?.[0] || '🌾';
-            const isPhotoUrl = typeof firstPhoto === 'string' && (firstPhoto.startsWith('http') || firstPhoto.startsWith('/') || firstPhoto.startsWith('data:'));
+            const photoUrl = getCropImage(listing.crop || listing.cropName, listing.photos?.[0]);
 
             return (
               <FadeUpItem key={listing.id} delay={i * 0.04} style={{ height: '100%', display: 'flex' }}>
                 <Link to={`/produce/${listing.id}`} style={{ textDecoration: 'none', color: 'inherit', display: 'flex', flexDirection: 'column', width: '100%', height: '100%' }}>
                   <motion.div className="card produce-card" whileHover={{ y: -6, boxShadow: 'var(--shadow-card-hover)' }} style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
                     <div style={{ height: 200, flexShrink: 0, background: 'linear-gradient(135deg, var(--green-light), #C8E6C9)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '4.5rem', position: 'relative', overflow: 'hidden' }}>
-                      {isPhotoUrl ? (
+                      {photoUrl ? (
                         <img
-                          src={firstPhoto}
+                          src={photoUrl}
                           alt={listing.cropName}
                           style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                           onError={(e) => {
                             e.currentTarget.style.display = 'none';
-                            e.currentTarget.parentElement.innerText = listing.emoji || '🌾';
+                            const fallback = e.currentTarget.parentElement?.querySelector('.browse-fallback-emoji');
+                            if (fallback) fallback.style.display = 'block';
                           }}
                         />
-                      ) : (
-                        listing.emoji || firstPhoto
-                      )}
+                      ) : null}
+                      <span className="browse-fallback-emoji" style={{ display: photoUrl ? 'none' : 'block' }}>
+                        {listing.emoji || '🌾'}
+                      </span>
                       <div style={{ position: 'absolute', bottom: 12, left: 12, display: 'flex', gap: 6 }}>
                         {listing.organic && <span className="badge badge-green" style={{ fontSize: '0.7rem', padding: '3px 8px' }}>🌱 Organic</span>}
                         {listing.exportReady && <span className="badge badge-blue" style={{ fontSize: '0.7rem', padding: '3px 8px' }}>✈️ Export</span>}

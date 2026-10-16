@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { useApp } from '../../context/AppContext';
 import { PlusCircle, ShieldCheck, ShieldAlert, Clock, TrendingUp, Package, MessageSquare, FileText } from 'lucide-react';
 import { CountUp, FadeUpItem, StaggerGrid } from '../../components/common/AnimatedComponents';
+import { getCropImage } from '../../utils/cropImages';
 
 export default function FarmerHome() {
   const { user, buyerRequirements = [], produceListings = [], farmerOffers = [], mandiPrices = [] } = useApp();
@@ -111,24 +112,29 @@ export default function FarmerHome() {
               </div>
             ) : (
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: 16 }}>
-                {urgentRequirements.map((req, i) => (
-                  <FadeUpItem key={req.id} delay={i * 0.05}>
-                    <Link to={`/farmer/requirement/${req.id}`} style={{ textDecoration: 'none' }}>
-                      <motion.div className="card produce-card" whileHover={{ y: -5, boxShadow: 'var(--shadow-card-hover)' }} style={{ overflow: 'hidden' }}>
-                        <div style={{ height: 140, background: 'linear-gradient(135deg, var(--green-light), #C8E6C9)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '3.5rem', position: 'relative', overflow: 'hidden' }}>
-                          {req.imageUrl || req.image ? (
-                            <img
-                              src={req.imageUrl || req.image}
-                              alt={req.cropName}
-                              style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                              onError={(e) => {
-                                e.currentTarget.style.display = 'none';
-                                e.currentTarget.parentElement.innerText = req.emoji || '🌿';
-                              }}
-                            />
-                          ) : (
-                            <span>{req.emoji || '🌿'}</span>
-                          )}
+                {urgentRequirements.map((req, i) => {
+                  const reqImg = getCropImage(req.crop || req.cropName, req.imageUrl || req.image);
+
+                  return (
+                    <FadeUpItem key={req.id} delay={i * 0.05}>
+                      <Link to={`/farmer/requirement/${req.id}`} style={{ textDecoration: 'none' }}>
+                        <motion.div className="card produce-card" whileHover={{ y: -5, boxShadow: 'var(--shadow-card-hover)' }} style={{ overflow: 'hidden' }}>
+                          <div style={{ height: 140, background: 'linear-gradient(135deg, var(--green-light), #C8E6C9)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '3.5rem', position: 'relative', overflow: 'hidden' }}>
+                            {reqImg ? (
+                              <img
+                                src={reqImg}
+                                alt={req.cropName}
+                                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                                onError={(e) => {
+                                  e.currentTarget.style.display = 'none';
+                                  const fallback = e.currentTarget.parentElement?.querySelector('.farmer-req-fallback');
+                                  if (fallback) fallback.style.display = 'block';
+                                }}
+                              />
+                            ) : null}
+                            <span className="farmer-req-fallback" style={{ display: reqImg ? 'none' : 'block' }}>
+                              {req.emoji || '🌿'}
+                            </span>
                           <div style={{ position: 'absolute', bottom: 10, left: 10, display: 'flex', gap: 6 }}>
                             <span className="badge badge-blue notranslate" style={{ fontSize: '0.7rem' }}>{req.qty} {req.unit || 'ton'}</span>
                             {req.flag && <span className="notranslate" style={{ background: '#fff', padding: '2px 6px', borderRadius: 8, fontSize: '0.7rem', fontWeight: 600 }}>{req.flag}</span>}
@@ -174,8 +180,9 @@ export default function FarmerHome() {
                       </motion.div>
                     </Link>
                   </FadeUpItem>
-                ))}
-              </div>
+                );
+              })}
+            </div>
             )}
           </div>
         </FadeUpItem>

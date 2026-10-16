@@ -5,6 +5,7 @@ import { useApp } from '../../context/AppContext';
 import { MapPin, ShieldCheck, ChevronLeft, ChevronRight, MessageSquare } from 'lucide-react';
 import { FadeUpItem, StarRating } from '../../components/common/AnimatedComponents';
 import api from '../../services/api';
+import { getCropImage } from '../../utils/cropImages';
 
 export default function ProduceDetail() {
   const { id } = useParams();
@@ -103,8 +104,9 @@ export default function ProduceDetail() {
     avatar: '🧑‍🌾',
   };
 
-  const rawPhotos = listing.photos && listing.photos.length > 0 ? listing.photos : ['🌿'];
-  const photos = rawPhotos.length > 0 ? rawPhotos : ['🌿'];
+  const defaultCropImage = getCropImage(listing.crop || listing.cropName);
+  const rawPhotos = listing.photos && listing.photos.length > 0 ? listing.photos : (defaultCropImage ? [defaultCropImage] : ['🌿']);
+  const photos = rawPhotos.map(p => getCropImage(listing.crop || listing.cropName, p) || p);
 
   return (
     <div className="page-wrapper">

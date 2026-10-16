@@ -107,27 +107,28 @@ export async function seedDatabase() {
     // 4. Seed Crops
     console.log('🌾 Seeding Crops...');
     const cropsData = [
-      { slug: 'groundnut', name: 'Groundnut', gujarati: 'મગફળી', emoji: '🥜', price: 65, unit: 'kg', grade: 'Bold 40/50', desc: 'Premium Gujarat Saurashtra Groundnut. High oil content, export grade bold kernels.' },
-      { slug: 'jeera', name: 'Jeera (Cumin)', gujarati: 'જીરું', emoji: '🌿', price: 318, unit: 'kg', grade: 'Premium Bold', desc: 'World-renowned Unjha Cumin. Machine cleaned 99.5% purity, high volatile oil.' },
+      { slug: 'groundnut', name: 'Groundnut', gujarati: 'મગફળી', emoji: '🥜', price: 65, unit: 'kg', grade: 'Bold 40/50', desc: 'Premium Gujarat Saurashtra Groundnut. High oil content, export grade bold kernels.', image: '/crops/mandvi.jpeg' },
+      { slug: 'jeera', name: 'Jeera (Cumin)', gujarati: 'જીરું', emoji: '🌿', price: 318, unit: 'kg', grade: 'Premium Bold', desc: 'World-renowned Unjha Cumin. Machine cleaned 99.5% purity, high volatile oil.', image: '/crops/jeera.jpeg' },
       { slug: 'sesame', name: 'Sesame (Til)', gujarati: 'તલ', emoji: '🌱', price: 162, unit: 'kg', grade: 'Natural White 99/1', desc: 'Natural white and hulled sesame seeds. Premium sortex cleaned for export.' },
       { slug: 'castor', name: 'Castor Seeds', gujarati: 'દિવેલા', emoji: '🟤', price: 116, unit: 'kg', grade: 'FAQ GCH-7', desc: 'High oil yielding castor seeds from Banaskantha and Ahmedabad regions.' },
       { slug: 'isabgol', name: 'Isabgol (Psyllium)', gujarati: 'ઇસબગોલ', emoji: '🌾', price: 148, unit: 'kg', grade: 'Husk 99%', desc: 'Top pharmaceutical grade Psyllium husk and seeds with high swelling factor.' },
-      { slug: 'cotton', name: 'Cotton (Kapas)', gujarati: 'કપાસ', emoji: '🌸', price: 61, unit: 'kg', grade: 'Shankar-6', desc: 'Shankar-6 staple cotton, 29-30mm length with excellent ginning turnout.' },
+      { slug: 'cotton', name: 'Cotton (Kapas)', gujarati: 'કપાસ', emoji: '🌸', price: 61, unit: 'kg', grade: 'Shankar-6', desc: 'Shankar-6 staple cotton, 29-30mm length with excellent ginning turnout.', image: '/crops/cotton.jpeg' },
       { slug: 'kesar-mango', name: 'Kesar Mango', gujarati: 'કેસર કેરી', emoji: '🥭', price: 188, unit: 'kg', grade: 'Export A (GI Tagged)', desc: 'Geographically Indicated Talala Gir Kesar mangoes. Tree-ripened, Brix 22°+.' },
       { slug: 'banana', name: 'Banana', gujarati: 'કેળાં', emoji: '🍌', price: 26, unit: 'kg', grade: 'Grand Naine', desc: 'Grand Naine Cavendish bananas from Anand and South Gujarat with high shelf life.' },
-      { slug: 'onion', name: 'Onion', gujarati: 'ડુંગળી', emoji: '🧅', price: 28, unit: 'kg', grade: 'Export Grade A', desc: 'Mahuva & Bhavnagar Red Onions with dry neck and long storage capability.' },
+      { slug: 'onion', name: 'Onion', gujarati: 'ડુંગળી', emoji: '🧅', price: 28, unit: 'kg', grade: 'Export Grade A', desc: 'Mahuva & Bhavnagar Red Onions with dry neck and long storage capability.', image: '/crops/onion.webp' },
       { slug: 'garlic', name: 'Garlic', gujarati: 'લસણ', emoji: '🧄', price: 112, unit: 'kg', grade: 'Export Sortex', desc: 'Gujarat sortex cleaned large bulb garlic with pungent aroma and firm cloves.' },
       { slug: 'wheat', name: 'Wheat (Ghau)', gujarati: 'ઘઉં', emoji: '🌾', price: 24, unit: 'kg', grade: 'Bold FAQ (GW-322)', desc: 'Bhalia and GW-322 high-protein durum wheat, optimal for flour and export.' },
       { slug: 'bajra', name: 'Bajra (Pearl Millet)', gujarati: 'બાજરો', emoji: '🟡', price: 22, unit: 'kg', grade: 'Bold GHB-719', desc: 'Nutrient-rich pearl millet for human consumption and international feed market.' },
+      { slug: 'soyabean', name: 'Soyabean', gujarati: 'સોયાબીન', emoji: '🫘', price: 50, unit: 'kg', grade: 'Export Standard', desc: 'High protein yellow soyabean for crushing and export.', image: '/crops/soyabean.jpeg' },
     ];
 
     const cropIdMap = {};
     const cropNameMap = {};
     for (const c of cropsData) {
       const [res] = await connection.query(
-        `INSERT INTO crops (slug, name, gujarati_name, emoji, indicative_price, default_unit, export_grade, description)
-         VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
-        [c.slug, c.name, c.gujarati, c.emoji, c.price, c.unit, c.grade, c.desc]
+        `INSERT INTO crops (slug, name, gujarati_name, emoji, image_url, indicative_price, default_unit, export_grade, description)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+        [c.slug, c.name, c.gujarati, c.emoji, c.image || null, c.price, c.unit, c.grade, c.desc]
       );
       cropIdMap[c.slug] = res.insertId;
       cropNameMap[c.slug] = c.name;
