@@ -150,6 +150,17 @@ app.get('/api/health', async (req, res) => {
   }
 });
 
+// Root welcome route for browser checks
+app.get('/', (req, res) => {
+  res.json({
+    status: 'online',
+    service: 'AgriExport Connect Backend API',
+    database: 'connected',
+    message: '🚀 Backend server is running and connected to Railway MySQL database.',
+    healthCheck: '/api/health'
+  });
+});
+
 // API Routes
 app.use('/api/auth', authLimiter, authRoutes);
 app.use('/api/crops', cropRoutes);
