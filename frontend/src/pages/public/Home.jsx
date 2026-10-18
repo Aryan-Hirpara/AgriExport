@@ -85,7 +85,7 @@ export default function Home() {
           <StaggerGrid>
             <FadeUpItem>
               <div className="section-label" style={{ background: 'rgba(255,255,255,0.15)', color: '#fff', backdropFilter: 'blur(8px)' }}>
-                🌿 Gujarat Agri Platform
+                🌿 India's Agri Export Platform
               </div>
             </FadeUpItem>
             <FadeUpItem>
@@ -434,7 +434,7 @@ export default function Home() {
               </div>
               <span className="notranslate" style={{ fontFamily: 'var(--font-heading)', fontWeight: 700, color: '#fff', fontSize: '1rem' }}>AgriExport<span style={{ color: 'var(--amber)' }}>Connect</span></span>
             </div>
-            <p style={{ fontSize: '0.8125rem', margin: 0 }}>Connecting Gujarat farmers to the world</p>
+            <p style={{ fontSize: '0.8125rem', margin: 0 }}>Connecting Indian farmers to the world</p>
           </div>
           <div style={{ display: 'flex', gap: 20, fontSize: '0.875rem', flexWrap: 'wrap', alignItems: 'center' }}>
             <Link to="/about" style={{ color: 'rgba(255,255,255,0.6)' }}>About</Link>

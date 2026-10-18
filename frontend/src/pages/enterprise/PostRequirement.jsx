@@ -853,7 +853,7 @@ export default function PostRequirement() {
                     Requirement Preview
                   </h4>
                   <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', marginBottom: 20 }}>
-                    Review all crop attributes and terms before publishing to Gujarat farmers.
+                    Review all crop attributes and terms before publishing to Indian farmers.
                   </p>
 
                   {/* Buyer Requirement Card Preview */}

@@ -148,7 +148,7 @@ export default function FarmerHome() {
                                 {req.cropName || req.title}
                               </h5>
                               <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
-                                📍 {req.deliveryTerms || req.destination || 'Gujarat'}
+                                📍 {req.city || req.deliveryTerms || req.destination || 'India'}
                               </span>
                             </div>
                             <div style={{ textAlign: 'right' }}>

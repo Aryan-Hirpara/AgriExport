@@ -21,10 +21,10 @@ export default function About() {
           <FadeUpItem>
             <div className="section-label" style={{ background: 'rgba(255,255,255,0.15)', color: '#fff' }}>Our Mission</div>
             <h1 style={{ color: '#fff', marginBottom: 20, maxWidth: 620 }}>
-              Empowering Gujarat farmers with fair market access
+              Empowering Indian farmers with fair market access
             </h1>
             <p style={{ color: 'rgba(255,255,255,0.85)', fontSize: '1.125rem', maxWidth: 560 }}>
-              We built <span className="notranslate">AgriExport Connect</span> because we saw Gujarat farmers getting 30–40% less than market price due to middlemen. We believe technology can fix that.
+              We built <span className="notranslate">AgriExport Connect</span> because we saw Indian farmers getting 30–40% less than market price due to middlemen. We believe technology can fix that.
             </p>
           </FadeUpItem>
         </div>

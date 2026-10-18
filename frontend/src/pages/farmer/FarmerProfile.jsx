@@ -30,7 +30,7 @@ export default function FarmerProfile() {
   const [profileFields, setProfileFields] = useState([
     { key: 'name', label: 'Full Name', value: user?.name || 'Farmer' },
     { key: 'phone', label: 'Mobile', value: user?.phone || 'Not provided' },
-    { key: 'village', label: 'Village / District', value: [fp.village || user?.village, fp.district || user?.district || fp.state || user?.state].filter(Boolean).join(', ') || 'Gujarat, India' },
+    { key: 'village', label: 'Village / District', value: [fp.village || user?.village, fp.district || user?.district || fp.state || user?.state].filter(Boolean).join(', ') || 'India' },
     { key: 'land', label: 'Land Size', value: fp.landSize ? `${fp.landSize} ${fp.landUnit || 'acre'}` : 'Not specified' },
     { key: 'crops', label: 'Main Crops', value: Array.isArray(fp.mainCrops) ? fp.mainCrops.join(', ') : (fp.mainCrops || 'Groundnut, Cotton, Spices') },
   ]);
@@ -41,7 +41,7 @@ export default function FarmerProfile() {
       setProfileFields([
         { key: 'name', label: 'Full Name', value: user.name || 'Farmer' },
         { key: 'phone', label: 'Mobile', value: user.phone || 'Not provided' },
-        { key: 'village', label: 'Village / District', value: [p.village || user.village, p.district || user.district || p.state || user.state].filter(Boolean).join(', ') || 'Gujarat, India' },
+        { key: 'village', label: 'Village / District', value: [p.village || user.village, p.district || user.district || p.state || user.state].filter(Boolean).join(', ') || 'India' },
         { key: 'land', label: 'Land Size', value: p.landSize ? `${p.landSize} ${p.landUnit || 'acre'}` : 'Not specified' },
         { key: 'crops', label: 'Main Crops', value: Array.isArray(p.mainCrops) ? p.mainCrops.join(', ') : (p.mainCrops || 'Groundnut, Cotton, Spices') },
       ]);

@@ -21,12 +21,16 @@ export default function Register() {
 
   const [form, setForm] = useState({
     name: '', phone: '', email: '', password: '',
-    village: '', district: 'Mehsana', state: 'Gujarat', land: '',
+    village: '', district: '', state: 'Gujarat', land: '',
     company: '', gst: '', iec: '', address: '',
     avatar: '',
   });
 
-  const districts = ['Mehsana', 'Rajkot', 'Ahmedabad', 'Junagadh', 'Surat', 'Vadodara', 'Jamnagar', 'Gandhinagar'];
+  const states = [
+    'Gujarat', 'Maharashtra', 'Punjab', 'Haryana', 'Rajasthan', 'Madhya Pradesh',
+    'Uttar Pradesh', 'Karnataka', 'Andhra Pradesh', 'Telangana', 'Tamil Nadu',
+    'Kerala', 'Bihar', 'West Bengal', 'Odisha', 'Assam', 'Himachal Pradesh', 'Uttarakhand'
+  ];
 
   const [registeredUser, setRegisteredUser] = useState(null);
 
@@ -124,6 +128,7 @@ export default function Register() {
           avatar: form.avatar || (role === 'farmer' ? '🧑‍🌾' : '🏢'),
           village: form.village?.trim() || undefined,
           district: form.district || undefined,
+          state: form.state || undefined,
           land_size: form.land?.trim() || undefined,
           company_name: form.company?.trim() || (role === 'enterprise' ? `${form.name.trim()} Enterprises` : undefined),
           gst_number: form.gst?.trim() || undefined,
@@ -279,18 +284,22 @@ export default function Register() {
             {step === 1 && role === 'farmer' && (
               <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
                 <div className="form-group">
-                  <label className="form-label">Village</label>
-                  <input className="form-input" value={form.village} onChange={e => setForm({ ...form, village: e.target.value })} placeholder="Unjha" />
-                </div>
-                <div className="form-group">
-                  <label className="form-label">District</label>
-                  <select className="form-select" value={form.district} onChange={e => setForm({ ...form, district: e.target.value })}>
-                    {districts.map(d => <option key={d}>{d}</option>)}
+                  <label className="form-label">State <span style={{ color: 'var(--red)' }}>*</span></label>
+                  <select className="form-select" value={form.state} onChange={e => setForm({ ...form, state: e.target.value })}>
+                    {states.map(s => <option key={s} value={s}>{s}</option>)}
                   </select>
                 </div>
                 <div className="form-group">
-                  <label className="form-label">Land Size (bigha / acre)</label>
-                  <input className="form-input notranslate" value={form.land} onChange={e => setForm({ ...form, land: e.target.value })} placeholder="12 bigha" />
+                  <label className="form-label">District <span style={{ color: 'var(--red)' }}>*</span></label>
+                  <input className="form-input" value={form.district} onChange={e => setForm({ ...form, district: e.target.value })} placeholder="e.g. Mehsana, Nashik, Ludhiana, Indore" required />
+                </div>
+                <div className="form-group">
+                  <label className="form-label">Village / Town <span style={{ color: 'var(--red)' }}>*</span></label>
+                  <input className="form-input" value={form.village} onChange={e => setForm({ ...form, village: e.target.value })} placeholder="e.g. Unjha, Baramati, Khanna" required />
+                </div>
+                <div className="form-group">
+                  <label className="form-label">Land Size (acre / bigha / hectare)</label>
+                  <input className="form-input notranslate" value={form.land} onChange={e => setForm({ ...form, land: e.target.value })} placeholder="e.g. 10 acre" />
                 </div>
               </div>
             )}

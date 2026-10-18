@@ -65,7 +65,7 @@ export default function RequirementDetail() {
   const enterprise = req.enterprise || {
     name: req.enterpriseName || 'Export Enterprise',
     type: req.buyerType || 'Exporter',
-    city: req.city || 'Gujarat',
+    city: req.city || 'India',
     rating: 4.8,
     reviews: 0,
     logo: req.logo || '🏢',
@@ -334,7 +334,7 @@ export default function RequirementDetail() {
                     <div style={{ display: 'flex', alignItems: 'center', gap: 4, marginBottom: 8 }}>
                       <MapPin size={14} color="var(--text-muted)" />
                       <span style={{ fontSize: '0.875rem', color: 'var(--text-secondary)' }}>
-                        {req.city || enterprise.city || 'Gujarat'}, India
+                        {[req.city || enterprise.city, req.state || enterprise.state].filter(Boolean).join(', ') || 'India'}
                       </span>
                     </div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10 }}>

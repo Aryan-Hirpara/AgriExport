@@ -64,7 +64,7 @@ export default function BrowseProduce() {
         <div className="container">
           <FadeUpItem>
             <div className="section-label" style={{ background: 'rgba(255,255,255,0.15)', color: '#fff' }}>Browse Produce</div>
-            <h2 style={{ color: '#fff', marginBottom: 24 }}>Find produce from Gujarat farmers</h2>
+            <h2 style={{ color: '#fff', marginBottom: 24 }}>Find produce from Indian farmers</h2>
             {/* Search Bar */}
             <div style={{ position: 'relative', maxWidth: 560 }}>
               <Search size={20} color="var(--text-muted)" style={{ position: 'absolute', left: 16, top: '50%', transform: 'translateY(-50%)' }} />
@@ -155,7 +155,7 @@ export default function BrowseProduce() {
             </div>
           ) : filtered.map((listing, i) => {
             const farmer = listing.farmer || {
-              name: 'Gujarat Farmer',
+              name: 'Indian Farmer',
               avatar: '🧑‍🌾',
               rating: 5.0,
               verified: true,

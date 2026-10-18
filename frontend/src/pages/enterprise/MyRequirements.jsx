@@ -414,7 +414,7 @@ export default function MyRequirements() {
                               💬 {'Received Farmer Quotes:'} ({quotesList.length})
                             </h6>
                             <span className="badge badge-green" style={{ fontSize: '0.7rem' }}>
-                              ✓ {'Verified Gujarat Farmers'}
+                              ✓ {'Verified Indian Farmers'}
                             </span>
                           </div>
 
@@ -758,7 +758,7 @@ export default function MyRequirements() {
                         )}
                       </div>
                       <p style={{ margin: '3px 0 0', fontSize: '0.835rem', color: 'var(--text-muted)' }}>
-                        📍 {quote.village || farmer.village}, {quote.district || farmer.district}, Gujarat • ⭐ {farmer.rating} ({farmer.reviews} verified reviews)
+                        📍 {[quote.village || farmer.village, quote.district || farmer.district, quote.state || farmer.state].filter(Boolean).join(', ') || 'India'} • ⭐ {farmer.rating} ({farmer.reviews} verified reviews)
                       </p>
                       <p style={{ margin: '2px 0 0', fontSize: '0.78rem', color: 'var(--text-secondary)' }}>
                         🚜 Land: {farmer.land || '12 bigha'} • Member since {farmer.since || '2023'} • 💬 {'Direct Chat Available'}

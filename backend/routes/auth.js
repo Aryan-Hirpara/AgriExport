@@ -191,10 +191,11 @@ router.post(
       const userId = userRes.insertId;
 
       if (role === 'farmer') {
+        const farmerState = req.body.state || state || 'India';
         await connection.query(
-          `INSERT INTO farmer_profiles (user_id, village, district, land_size, primary_crops)
-           VALUES (?, ?, ?, ?, ?)`,
-          [userId, village || '', district || '', land_size || '', JSON.stringify(primary_crops || [])]
+          `INSERT INTO farmer_profiles (user_id, village, district, state, land_size, primary_crops)
+           VALUES (?, ?, ?, ?, ?, ?)`,
+          [userId, village || '', district || '', farmerState, land_size || '', JSON.stringify(primary_crops || [])]
         );
       } else if (role === 'enterprise') {
         const VALID_BTYPE = ['Exporter', 'Trader', 'Processor', 'Manufacturer'];
@@ -552,7 +553,7 @@ router.get('/enterprises', async (req, res, next) => {
         dbId: e.id,
         name: e.company_name || e.name,
         type: e.business_type || 'Exporter',
-        city: e.city || 'Gujarat',
+        city: e.city || '',
         country: e.country || 'India',
         countries: countryList,
         flags: flags.length > 0 ? flags : ['🇮🇳', '🇦🇪'],
@@ -603,7 +604,7 @@ router.get('/farmers', async (req, res, next) => {
         name: f.name,
         village: f.village || '',
         district: f.district || '',
-        state: f.state || 'Gujarat',
+        state: f.state || 'India',
         phone: f.phone,
         land: f.land_size ? `${f.land_size} bigha` : '',
         crops: Array.isArray(crops) ? crops : [],

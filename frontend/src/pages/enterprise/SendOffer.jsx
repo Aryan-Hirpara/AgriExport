@@ -240,7 +240,7 @@ export default function SendOffer() {
                       )}
                     </div>
                     <p style={{ margin: 0, fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
-                      Seller: <strong style={{ color: 'var(--text-primary)' }}>{farmer.name}</strong> {farmer.verified && <ShieldCheck size={14} color="var(--green-primary)" style={{ display: 'inline', verticalAlign: 'middle' }} />} • 📍 {listing.village ? `${listing.village}, ` : ''}{listing.district || 'Gujarat'}
+                      Seller: <strong style={{ color: 'var(--text-primary)' }}>{farmer.name}</strong> {farmer.verified && <ShieldCheck size={14} color="var(--green-primary)" style={{ display: 'inline', verticalAlign: 'middle' }} />} • 📍 {[listing.village, listing.district, listing.state].filter(Boolean).join(', ') || 'India'}
                     </p>
                     <div style={{ display: 'flex', gap: 6, marginTop: 6, flexWrap: 'wrap' }}>
                       {listing.organic && <span className="badge badge-green" style={{ fontSize: '0.7rem' }}>🌿 Organic Certified</span>}

@@ -32,10 +32,12 @@ router.get('/', optionalAuth, async (req, res, next) => {
         c.name AS crop_name, c.slug AS crop_slug, c.emoji AS crop_emoji, c.image_url AS crop_image_url,
         u.name AS farmer_name, u.rating AS farmer_rating, u.reviews_count AS farmer_reviews_count,
         u.is_verified AS farmer_verified, u.avatar AS farmer_avatar,
+        fp.state AS location_state,
         (SELECT COUNT(*) FROM offers o WHERE o.listing_id = l.id) AS offers_count
       FROM produce_listings l
       JOIN crops c ON l.crop_id = c.id
       JOIN users u ON l.farmer_id = u.id
+      LEFT JOIN farmer_profiles fp ON l.farmer_id = fp.user_id
       WHERE 1=1
     `;
 
@@ -141,7 +143,7 @@ router.get('/', optionalAuth, async (req, res, next) => {
         exportReady: Boolean(l.lab_tested),
         district: l.location_district,
         village: l.location_village,
-        state: 'Gujarat',
+        state: l.location_state || 'India',
         status: l.status,
         offers: l.offers_count || 0,
         photos: imagesByListing[l.id] && imagesByListing[l.id].length > 0 ? imagesByListing[l.id] : (l.crop_image_url ? [l.crop_image_url] : [l.crop_emoji || '🌿']),
@@ -176,9 +178,11 @@ router.get('/my', verifyToken, async (req, res, next) => {
   try {
     const [listings] = await pool.query(
       `SELECT l.*, c.name AS crop_name, c.slug AS crop_slug, c.emoji AS crop_emoji, c.image_url AS crop_image_url,
+              fp.state AS location_state,
               (SELECT COUNT(*) FROM offers o WHERE o.listing_id = l.id) AS offers_count
        FROM produce_listings l
        JOIN crops c ON l.crop_id = c.id
+       LEFT JOIN farmer_profiles fp ON fp.user_id = l.farmer_id
        WHERE l.farmer_id = ?
        ORDER BY l.created_at DESC`,
       [req.user.id]
@@ -222,7 +226,7 @@ router.get('/my', verifyToken, async (req, res, next) => {
         organic: Boolean(l.organic_certified),
         district: l.location_district,
         village: l.location_village,
-        state: 'Gujarat',
+        state: l.location_state || 'India',
         status: l.status,
         offers: l.offers_count || 0,
         photos: imagesByListing[l.id]?.length > 0 ? imagesByListing[l.id] : (l.crop_image_url ? [l.crop_image_url] : [l.crop_emoji || '🌿']),
@@ -246,7 +250,7 @@ router.get('/:id', optionalAuth, async (req, res, next) => {
       `SELECT l.*, c.name AS crop_name, c.slug AS crop_slug, c.emoji AS crop_emoji, c.image_url AS crop_image_url,
               u.name AS farmer_name, u.phone AS farmer_phone, u.rating AS farmer_rating,
               u.reviews_count AS farmer_reviews, u.is_verified AS farmer_verified, u.avatar AS farmer_avatar,
-              fp.land_size, fp.experience_years
+              fp.land_size, fp.experience_years, fp.state AS location_state
        FROM produce_listings l
        JOIN crops c ON l.crop_id = c.id
        JOIN users u ON l.farmer_id = u.id
@@ -289,7 +293,7 @@ router.get('/:id', optionalAuth, async (req, res, next) => {
         organic: Boolean(item.organic_certified),
         district: item.location_district,
         village: item.location_village,
-        state: 'Gujarat',
+        state: item.location_state || item.state || 'India',
         status: item.status,
         description: item.description,
         specs: attrs,

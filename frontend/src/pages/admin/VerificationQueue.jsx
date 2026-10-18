@@ -206,7 +206,7 @@ export default function VerificationQueue() {
                     <span className="badge badge-gray" style={{ fontSize: '0.7rem' }}>{user.type}</span>
                   </div>
                   <p style={{ fontSize: '0.8rem', margin: 0, color: 'var(--text-muted)' }}>
-                    📍 {user.village || user.district || user.city || 'Gujarat'} • Registered {user.appliedAt}
+                    📍 {[user.village, user.district, user.city, user.state].filter(Boolean).join(', ') || 'India'} • Registered {user.appliedAt}
                   </p>
                 </div>
                 <div style={{ display: 'flex', gap: 8 }}>
@@ -298,7 +298,7 @@ export default function VerificationQueue() {
                         </div>
                         <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid var(--border)', paddingBottom: 8 }}>
                           <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>District</span>
-                          <strong style={{ fontSize: '0.9rem', color: 'var(--text-primary)' }}>{selectedUser.district || 'Gujarat'}</strong>
+                          <strong style={{ fontSize: '0.9rem', color: 'var(--text-primary)' }}>{selectedUser.district || selectedUser.state || 'India'}</strong>
                         </div>
                         <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid var(--border)', paddingBottom: 8 }}>
                           <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>Land Size</span>
@@ -320,8 +320,8 @@ export default function VerificationQueue() {
                           <strong className="notranslate" style={{ fontSize: '0.9rem', color: 'var(--text-primary)' }}>{selectedUser.iec || 'N/A'}</strong>
                         </div>
                         <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid var(--border)', paddingBottom: 8 }}>
-                          <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>City</span>
-                          <strong style={{ fontSize: '0.9rem', color: 'var(--text-primary)' }}>{selectedUser.city || 'Gujarat'}</strong>
+                          <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>City / State</span>
+                          <strong style={{ fontSize: '0.9rem', color: 'var(--text-primary)' }}>{selectedUser.city || selectedUser.state || 'India'}</strong>
                         </div>
                       </>
                     )}

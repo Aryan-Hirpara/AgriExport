@@ -94,10 +94,10 @@ export default function ProduceDetail() {
   }
 
   const farmer = listing.farmer || {
-    name: 'Gujarat Farmer',
+    name: 'Farmer',
     village: listing.village || '',
     district: listing.district || '',
-    state: 'Gujarat',
+    state: listing.state || 'India',
     rating: 5.0,
     reviews: 0,
     verified: true,
@@ -254,7 +254,7 @@ export default function ProduceDetail() {
                     <div style={{ display: 'flex', alignItems: 'center', gap: 4, marginBottom: 8 }}>
                       <MapPin size={14} color="var(--text-muted)" />
                       <span style={{ fontSize: '0.875rem', color: 'var(--text-secondary)' }}>
-                        {listing.village || farmer.village}, {listing.district || farmer.district}, Gujarat
+                        {[listing.village || farmer.village, listing.district || farmer.district, listing.state || farmer.state].filter(Boolean).join(', ') || 'India'}
                       </span>
                     </div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>

@@ -147,7 +147,7 @@ export default function OffersInbox() {
         id: offer.enterpriseId || '',
         name: offer.enterpriseName || 'Export Enterprise',
         type: offer.buyerType || 'Export House',
-        city: offer.city || 'Gujarat, India',
+        city: offer.city || 'India',
         phone: offer.phone || '',
         rating: offer.rating || 4.8,
         reviews: 0,
@@ -689,7 +689,7 @@ export default function OffersInbox() {
                         )}
                       </div>
                       <p style={{ margin: '3px 0 0', fontSize: '0.85rem', color: 'var(--text-muted)' }}>
-                        {enterprise.type || 'Export House'} • 📍 {enterprise.city || 'Gujarat'} • ⭐ {enterprise.rating || 4.7} ({enterprise.reviews || 10} reviews)
+                        {enterprise.type || 'Export House'} • 📍 {[enterprise.city, enterprise.state].filter(Boolean).join(', ') || 'India'} • ⭐ {enterprise.rating || 4.7} ({enterprise.reviews || 10} reviews)
                       </p>
                     </div>
                   </div>

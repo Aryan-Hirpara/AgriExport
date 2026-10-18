@@ -65,7 +65,7 @@ export default function EnterpriseHome() {
               <div style={{ flex: 1 }}>
                 <p style={{ fontWeight: 700, color: 'var(--green-primary)', margin: 0 }}>Enterprise Verified ✓</p>
                 <p style={{ fontSize: '0.8125rem', margin: 0, color: 'var(--text-secondary)' }}>
-                  You can post buying requirements, receive direct quotes from Gujarat farmers, and make purchase offers.
+                  You can post buying requirements, receive direct quotes from Indian farmers, and make purchase offers.
                 </p>
               </div>
             </div>
@@ -186,7 +186,7 @@ export default function EnterpriseHome() {
         {/* New Matching Produce */}
         <FadeUpItem>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
-            <h3 style={{ fontFamily: 'var(--font-heading)', margin: 0 }}>Available Produce from Gujarat Farmers</h3>
+            <h3 style={{ fontFamily: 'var(--font-heading)', margin: 0 }}>Available Produce from Indian Farmers</h3>
             <Link to="/browse" style={{ color: 'var(--green-primary)', fontWeight: 600, fontSize: '0.875rem' }}>Browse All Produce →</Link>
           </div>
           {newMatches.length === 0 ? (

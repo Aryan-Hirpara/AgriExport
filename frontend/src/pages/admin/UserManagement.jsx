@@ -33,7 +33,7 @@ export default function UserManagement() {
           phone: f.phone,
           avatar: f.avatar || '🧑‍🌾',
           village: f.village || '',
-          district: f.district || 'Gujarat',
+          district: f.district || f.state || 'India',
           since: new Date(f.created_at).toLocaleDateString(),
           status: f.is_verified ? 'verified' : 'pending',
           deals: f.deals_count || 0,
@@ -46,8 +46,8 @@ export default function UserManagement() {
           phone: e.phone,
           gst: e.gst_number || '',
           avatar: e.avatar || '🏢',
-          city: e.city || 'Gujarat',
-          district: e.city || 'Gujarat',
+          city: e.city || 'India',
+          district: e.city || e.state || 'India',
           since: new Date(e.created_at).toLocaleDateString(),
           status: e.is_verified ? 'verified' : 'pending',
           deals: e.deals_count || 0,
@@ -252,7 +252,7 @@ export default function UserManagement() {
                     </div>
                   </td>
                   <td style={{ padding: '16px 20px', fontSize: '0.875rem', color: 'var(--text-secondary)' }}>
-                    {[user.village || user.city, user.district].filter(Boolean).join(', ') || 'Gujarat'}
+                    {[user.village || user.city, user.district].filter(Boolean).join(', ') || 'India'}
                   </td>
                   <td style={{ padding: '16px 20px', fontSize: '0.875rem', color: 'var(--text-muted)' }}>{user.since}</td>
                   <td style={{ padding: '16px 20px' }}>

@@ -136,7 +136,7 @@ export default function MyOffers() {
       grade: offer.grade || 'Grade A',
       village: offer.village || 'Unjha',
       district: offer.district || 'Mehsana',
-      description: offer.description || 'High-quality agricultural lot from Gujarat farmlands. Cleaned, graded, and prepared for commercial dispatch.',
+      description: offer.description || 'High-quality agricultural lot from Indian farmlands. Cleaned, graded, and prepared for commercial dispatch.',
       specs: offer.specs || { grade: offer.grade || 'Grade A' },
       photos: [offer.emoji || '🌿', '📦'],
     };
@@ -144,7 +144,7 @@ export default function MyOffers() {
 
   const resolveFarmer = (offer, listing) => {
     return {
-      name: offer.farmerName || listing?.farmer?.name || listing?.farmerName || 'Gujarat Farmer',
+      name: offer.farmerName || listing?.farmer?.name || listing?.farmerName || 'Farmer',
       village: offer.village || listing?.village || 'Unjha',
       district: offer.district || listing?.district || 'Mehsana',
       rating: listing?.farmer?.rating || listing?.farmerRating || 4.9,
@@ -234,7 +234,7 @@ export default function MyOffers() {
                 No {TAB_LABELS[activeTab]} offers
               </h3>
               <p style={{ color: 'var(--text-secondary)', fontSize: '0.875rem', marginBottom: 20 }}>
-                Browse verified produce listings from Gujarat farmers and send direct price offers.
+                Browse verified produce listings from Indian farmers and send direct price offers.
               </p>
               <Link to="/browse" className="btn btn-primary">
                 🌾 Browse Produce Listings
@@ -579,7 +579,7 @@ export default function MyOffers() {
                       {selectedOfferForDetail.farmer.verified && <ShieldCheck size={16} color="var(--green-primary)" />}
                     </div>
                     <p style={{ margin: 0, fontSize: '0.8rem', color: 'var(--text-muted)' }}>
-                      📍 {selectedOfferForDetail.listing.village}, {selectedOfferForDetail.listing.district || 'Gujarat'} • ⭐ {selectedOfferForDetail.farmer.rating} ({selectedOfferForDetail.farmer.reviews} reviews)
+                      📍 {[selectedOfferForDetail.listing.village, selectedOfferForDetail.listing.district, selectedOfferForDetail.listing.state].filter(Boolean).join(', ') || 'India'} • ⭐ {selectedOfferForDetail.farmer.rating} ({selectedOfferForDetail.farmer.reviews} reviews)
                     </p>
                   </div>
                 </div>

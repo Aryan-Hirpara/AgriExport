@@ -1,6 +1,6 @@
 # AgriExport Connect – Full Stack Platform
 
-AgriExport Connect is a digital agricultural marketplace and contract export platform connecting Gujarat farmers with national and global export enterprises.
+AgriExport Connect is a digital agricultural marketplace and contract export platform connecting Indian farmers across all states with national and global export enterprises.
 
 ---
 
@@ -90,7 +90,7 @@ npm run dev
 16. `saved_items` – User bookmarks for listings and requirements
 17. `saved_searches` – Saved search queries
 18. `complaints` – Dispute resolution tickets
-19. `mandi_prices` – APMC prices with trends across Gujarat markets
+19. `mandi_prices` – APMC prices with trends across Indian markets
 20. `export_guides` – Country compliance manuals & document checklists
 21. `announcements` – Platform broadcast bulletins
 22. `activity_logs` – Security and administrative audit trail

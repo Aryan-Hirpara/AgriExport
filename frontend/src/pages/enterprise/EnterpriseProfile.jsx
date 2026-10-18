@@ -31,7 +31,7 @@ export default function EnterpriseProfile() {
   const [profileData, setProfileData] = useState({
     name: ep.companyName || user?.name || 'My Enterprise',
     type: ep.companyType || user?.businessType || 'Exporter',
-    city: [ep.city || user?.city, ep.state || user?.state].filter(Boolean).join(', ') || 'Gujarat, India',
+    city: [ep.city || user?.city, ep.state || user?.state].filter(Boolean).join(', ') || 'India',
     contactPerson: user?.name || 'Owner',
     phone: user?.phone || 'Not provided',
     email: user?.email || '',
@@ -48,7 +48,7 @@ export default function EnterpriseProfile() {
       setProfileData({
         name: p.companyName || user.name || 'My Enterprise',
         type: p.companyType || user.businessType || 'Exporter',
-        city: [p.city || user.city, p.state || user.state].filter(Boolean).join(', ') || 'Gujarat, India',
+        city: [p.city || user.city, p.state || user.state].filter(Boolean).join(', ') || 'India',
         contactPerson: user.name || 'Owner',
         phone: user.phone || 'Not provided',
         email: user.email || '',

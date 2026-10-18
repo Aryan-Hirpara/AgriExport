@@ -25,9 +25,12 @@ export default function AddProduce() {
   const [unit, setUnit] = useState('ton');
   const [price, setPrice] = useState(315);
   const [photos, setPhotos] = useState([]);
-  const [photoDragOver, setPhotoDragOver] = useState(false);
-  const [location, setLocation] = useState({ village: 'Unjha', district: 'Mehsana', state: 'Gujarat', detected: false });
-  const [exportPrefs, setExportPrefs] = useState({ otherStates: true, otherCountries: false });
+  const [location, setLocation] = useState({
+    village: user?.farmerProfile?.village || user?.village || '',
+    district: user?.farmerProfile?.district || user?.district || '',
+    state: user?.farmerProfile?.state || user?.state || 'India',
+    detected: false
+  });
 
   const handlePhotoFiles = (fileList) => {
     const files = Array.from(fileList).filter(f => f.type.startsWith('image/'));
@@ -109,12 +112,12 @@ export default function AddProduce() {
         grade: selectedGradeLabel || cropObj.grade,
         organic,
         exportReady: exportPrefs.otherCountries,
-        district: location.district || 'Mehsana',
-        village: location.village || 'Unjha',
-        state: location.state || 'Gujarat',
+        district: location.district || user?.district || '',
+        village: location.village || user?.village || '',
+        state: location.state || user?.farmerProfile?.state || user?.state || 'India',
         status: 'active',
         photos: photos.length > 0 ? photos : [cropObj.emoji || '🌿', '📦'],
-        description: `${cropObj.name} – ${selectedGradeLabel || 'Grade A'}. From ${location.village}, ${location.district}. ${organic ? 'Organic certified. ' : ''}${exportPrefs.otherCountries ? 'Export quality lot.' : 'Fresh harvest.'}`,
+        description: `${cropObj.name} – ${selectedGradeLabel || 'Grade A'}. From ${[location.village, location.district, location.state].filter(Boolean).join(', ') || 'farm'}. ${organic ? 'Organic certified. ' : ''}${exportPrefs.otherCountries ? 'Export quality lot.' : 'Fresh harvest.'}`,
         specs: { grade: selectedGradeLabel, packaging, ...specValues },
       };
       await addProduceListing(newListing);
@@ -135,7 +138,7 @@ export default function AddProduce() {
         },
         () => {
           setLocation(prev => ({ ...prev, detected: true }));
-          addToast('Location detected: Mehsana, Gujarat', 'info');
+          addToast('Location updated', 'info');
         }
       );
     } else {

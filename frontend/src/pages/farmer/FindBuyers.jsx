@@ -406,7 +406,7 @@ export default function FindBuyers() {
                                   <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
                                     {req.verified && <ShieldCheck size={12} color="var(--green-primary)" />}
                                     <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                                      {req.city || 'Gujarat'}
+                                      {req.city || req.destination || 'India'}
                                     </span>
                                   </div>
                                 </div>
@@ -524,7 +524,7 @@ export default function FindBuyers() {
                             {ent.verified && <ShieldCheck size={14} color="var(--green-primary)" style={{ flexShrink: 0 }} />}
                           </div>
                           <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', margin: '0 0 10px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                            📍 {ent.city || 'Gujarat'} • Min: {ent.minOrder}
+                            📍 {[ent.city, ent.state].filter(Boolean).join(', ') || 'India'} • Min: {ent.minOrder}
                           </p>
                           <div style={{ display: 'flex', gap: 4, alignItems: 'center', marginBottom: 14, flexWrap: 'wrap' }}>
                             <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginRight: 4 }}>{'Exports:'}</span>
@@ -583,7 +583,7 @@ export default function FindBuyers() {
             >
               <div style={{ fontSize: '2.5rem', marginBottom: 8 }}>🏢</div>
               <h4 style={{ fontFamily: 'var(--font-heading)', margin: '0 0 4px' }}>{contactModalReq.enterpriseName}</h4>
-              <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', margin: '0 0 16px' }}>📍 {contactModalReq.city || 'Gujarat'}</p>
+              <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', margin: '0 0 16px' }}>📍 {[contactModalReq.city, contactModalReq.state].filter(Boolean).join(', ') || 'India'}</p>
               <div style={{ background: 'var(--green-light)', padding: 12, borderRadius: 12, marginBottom: 20, color: 'var(--green-primary)', fontWeight: 600 }}>
                 💬 {'Platform Chat Enabled for Fast Deals'}
               </div>
