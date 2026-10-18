@@ -36,6 +36,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
+app.set('trust proxy', 1);
 const server = http.createServer(app);
 
 const CLIENT_URL = process.env.CLIENT_URL || 'http://localhost:5173';
@@ -65,20 +66,20 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 // Static file serving for uploads
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-// Rate Limiter – General API (300 req / 15 min per IP in prod, 2000 in dev)
+// Rate Limiter – General API (500 req / 15 min per IP in prod, 2000 in dev)
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  max: process.env.NODE_ENV === 'production' ? 300 : 2000,
+  max: process.env.NODE_ENV === 'production' ? 1000 : 2000,
   standardHeaders: true,
   legacyHeaders: false,
   message: { success: false, message: 'Too many requests. Please try again later.' },
 });
 app.use('/api', limiter);
 
-// Strict Rate Limiter – Auth endpoints (20 req / 15 min per IP in production)
+// Strict Rate Limiter – Auth endpoints (150 req / 15 min per IP)
 const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  max: process.env.NODE_ENV === 'production' ? 20 : 500,
+  max: process.env.NODE_ENV === 'production' ? 150 : 500,
   standardHeaders: true,
   legacyHeaders: false,
   message: { success: false, message: 'Too many authentication attempts. Please try again in 15 minutes.' },
