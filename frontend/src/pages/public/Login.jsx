@@ -87,60 +87,56 @@ export default function Login() {
 
           {/* Role Cards */}
           <FadeUpItem>
-            {role === 'admin' ? (
-              <div style={{ marginBottom: 24, padding: '14px 16px', background: '#eff6ff', border: '1.5px solid #bfdbfe', borderRadius: 14, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                  <div style={{ width: 38, height: 38, borderRadius: 10, background: '#1e3a8a', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: '1.1rem' }}>
-                    🛡️
-                  </div>
-                  <div>
-                    <div style={{ fontWeight: 700, fontSize: '0.9rem', color: '#1e3a8a' }}>Admin Portal Login</div>
-                    <div className="notranslate" style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>admin@agriexport.in</div>
-                  </div>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => setRole('farmer')}
-                  style={{ border: 'none', background: 'none', color: '#2563eb', fontSize: '0.8125rem', fontWeight: 600, cursor: 'pointer' }}
-                >
-                  Switch to User
-                </button>
-              </div>
-            ) : (
-              <>
-                <p style={{ fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-secondary)', marginBottom: 12 }}>Login as</p>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 24 }}>
-                  {[
-                    { key: 'farmer', icon: '🧑‍🌾', label: 'Farmer' },
-                    { key: 'enterprise', icon: '🏢', label: 'Enterprise' },
-                  ].map(r => (
-                    <motion.button
-                      key={r.key}
-                      type="button"
-                      onClick={() => setRole(r.key)}
-                      whileHover={{ scale: 1.02 }}
-                      whileTap={{ scale: 0.97 }}
+            <p style={{ fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-secondary)', marginBottom: 12 }}>Login as</p>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 10, marginBottom: 24 }}>
+              {[
+                { key: 'farmer', icon: '🧑‍🌾', label: 'Farmer' },
+                { key: 'enterprise', icon: '🏢', label: 'Enterprise' },
+                { key: 'admin', icon: '🛡️', label: 'Admin' },
+              ].map(r => {
+                const isSelected = role === r.key;
+                const activeColor = r.key === 'admin' ? '#1e3a8a' : 'var(--green-primary)';
+                const activeBg = r.key === 'admin' ? '#eff6ff' : 'var(--green-light)';
+                return (
+                  <motion.button
+                    key={r.key}
+                    type="button"
+                    onClick={() => setRole(r.key)}
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.97 }}
+                    style={{
+                      padding: '14px 6px',
+                      border: `2px solid ${isSelected ? activeColor : 'var(--border)'}`,
+                      borderRadius: 14,
+                      background: isSelected ? activeBg : '#fff',
+                      cursor: 'pointer',
+                      textAlign: 'center',
+                      transition: 'all 0.2s',
+                    }}
+                  >
+                    <div style={{ fontSize: '1.6rem', marginBottom: 4 }}>{r.icon}</div>
+                    <div
                       style={{
-                        padding: '16px', border: `2px solid ${role === r.key ? 'var(--green-primary)' : 'var(--border)'}`,
-                        borderRadius: 14, background: role === r.key ? 'var(--green-light)' : '#fff',
-                        cursor: 'pointer', textAlign: 'center', transition: 'all 0.2s'
+                        fontWeight: 600,
+                        fontSize: '0.85rem',
+                        color: isSelected ? activeColor : 'var(--text-primary)',
+                        fontFamily: 'var(--font-heading)',
                       }}
                     >
-                      <div style={{ fontSize: '1.75rem', marginBottom: 6 }}>{r.icon}</div>
-                      <div style={{ fontWeight: 600, fontSize: '0.9rem', color: role === r.key ? 'var(--green-primary)' : 'var(--text-primary)', fontFamily: 'var(--font-heading)' }}>{r.label}</div>
-                    </motion.button>
-                  ))}
-                </div>
-              </>
-            )}
+                      {r.label}
+                    </div>
+                  </motion.button>
+                );
+              })}
+            </div>
           </FadeUpItem>
 
           {/* Form */}
           <FadeUpItem>
             <div className="flex-col gap-16" style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
               <div className="form-group">
-                <label className="form-label">Email or Phone <span style={{ color: 'var(--red)' }}>*</span></label>
-                <input className="form-input notranslate" type="text" value={email} onChange={e => setEmail(e.target.value)} placeholder="Enter your email or phone number" required />
+                <label className="form-label">{role === 'admin' ? 'Admin Email' : 'Email or Phone'} <span style={{ color: 'var(--red)' }}>*</span></label>
+                <input className="form-input notranslate" type="text" value={email} onChange={e => setEmail(e.target.value)} placeholder={role === 'admin' ? 'admin@agriexport.in' : 'Enter your email or phone number'} required />
               </div>
               <div className="form-group">
                 <label className="form-label">Password</label>
@@ -155,7 +151,7 @@ export default function Login() {
                     to="/forgot-password"
                     style={{
                       fontSize: '0.8125rem',
-                      color: 'var(--green-primary)',
+                      color: role === 'admin' ? '#1e3a8a' : 'var(--green-primary)',
                       fontWeight: 600,
                       textDecoration: 'none',
                     }}
@@ -166,8 +162,18 @@ export default function Login() {
                   </Link>
                 </div>
               </div>
-              <SpinnerBtn loading={loading} success={success} onClick={handleLogin} className="btn btn-primary btn-full" style={{ marginTop: 8 }}>
-                Sign In
+              <SpinnerBtn
+                loading={loading}
+                success={success}
+                onClick={handleLogin}
+                className="btn btn-primary btn-full"
+                style={{
+                  marginTop: 8,
+                  background: role === 'admin' ? '#1e3a8a' : undefined,
+                  borderColor: role === 'admin' ? '#1e3a8a' : undefined,
+                }}
+              >
+                {role === 'admin' ? 'Sign In as Admin' : 'Sign In'}
               </SpinnerBtn>
             </div>
           </FadeUpItem>
