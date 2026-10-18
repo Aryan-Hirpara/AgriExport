@@ -36,7 +36,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
-app.set('trust proxy', 1);
+app.set('trust proxy', true);
 const server = http.createServer(app);
 
 const CLIENT_URL = process.env.CLIENT_URL || 'http://localhost:5173';
@@ -66,24 +66,15 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 // Static file serving for uploads
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-// Rate Limiter – General API (500 req / 15 min per IP in prod, 2000 in dev)
+// Rate Limiter – General API & Auth (Bypassed for cloud proxying and demo testing)
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  max: process.env.NODE_ENV === 'production' ? 1000 : 2000,
+  max: 100000,
+  skip: () => true, // Bypass rate limiting completely to prevent cloud proxy lockouts
   standardHeaders: true,
   legacyHeaders: false,
-  message: { success: false, message: 'Too many requests. Please try again later.' },
 });
 app.use('/api', limiter);
-
-// Strict Rate Limiter – Auth endpoints (150 req / 15 min per IP)
-const authLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: process.env.NODE_ENV === 'production' ? 150 : 500,
-  standardHeaders: true,
-  legacyHeaders: false,
-  message: { success: false, message: 'Too many authentication attempts. Please try again in 15 minutes.' },
-});
 
 // Global request logger and mutation tracker
 let lastWriteTime = new Date().toISOString();
@@ -163,7 +154,7 @@ app.get('/', (req, res) => {
 });
 
 // API Routes
-app.use('/api/auth', authLimiter, authRoutes);
+app.use('/api/auth', authRoutes);
 app.use('/api/crops', cropRoutes);
 app.use('/api/listings', listingRoutes);
 app.use('/api/requirements', requirementRoutes);
