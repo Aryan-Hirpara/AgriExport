@@ -131,14 +131,52 @@ app.get('/api/health', async (req, res) => {
   }
 });
 
-// Root welcome route for browser checks
+// Root welcome route for browser checks and health inspection
 app.get('/', (req, res) => {
+  if (req.accepts('html')) {
+    return res.send(`
+      <!DOCTYPE html>
+      <html lang="en">
+      <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>AgriExport Connect – Backend API</title>
+        <style>
+          body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #0f172a; color: #f8fafc; display: flex; align-items: center; justify-content: center; min-height: 100vh; margin: 0; padding: 20px; }
+          .card { background: #1e293b; border: 1px solid #334155; border-radius: 16px; padding: 36px; max-width: 520px; width: 100%; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.4); }
+          .badge { display: inline-flex; align-items: center; gap: 8px; background: #064e3b; color: #34d399; padding: 6px 14px; border-radius: 9999px; font-size: 13px; font-weight: 600; margin-bottom: 20px; }
+          .badge span { width: 8px; height: 8px; border-radius: 50%; background: #34d399; box-shadow: 0 0 10px #34d399; }
+          h1 { margin: 0 0 12px 0; font-size: 26px; font-weight: 700; color: #ffffff; }
+          p { color: #94a3b8; line-height: 1.6; margin: 0 0 24px 0; font-size: 15px; }
+          .links { display: flex; flex-direction: column; gap: 10px; }
+          .btn { display: flex; align-items: center; justify-content: center; padding: 12px 18px; border-radius: 10px; text-decoration: none; font-weight: 600; font-size: 14px; transition: all 0.2s; }
+          .btn-primary { background: #16a34a; color: #ffffff; }
+          .btn-primary:hover { background: #15803d; }
+          .btn-secondary { background: #334155; color: #e2e8f0; }
+          .btn-secondary:hover { background: #475569; }
+        </style>
+      </head>
+      <body>
+        <div class="card">
+          <div class="badge"><span></span> API Server Online</div>
+          <h1>AgriExport Connect Backend</h1>
+          <p>The Express.js REST API and Socket.io engine are running and securely connected to the Railway MySQL database.</p>
+          <div class="links">
+            <a href="https://agriexport-connect.vercel.app" class="btn btn-primary" target="_blank">🌐 Open Frontend Web Application</a>
+            <a href="/api/health" class="btn btn-secondary">🔍 View Database & API Health Diagnostics</a>
+          </div>
+        </div>
+      </body>
+      </html>
+    `);
+  }
   res.json({
     status: 'online',
     service: 'AgriExport Connect Backend API',
     database: 'connected',
     message: '🚀 Backend server is running and connected to Railway MySQL database.',
-    healthCheck: '/api/health'
+    healthCheck: '/api/health',
+    frontend: 'https://agriexport-connect.vercel.app'
   });
 });
 
