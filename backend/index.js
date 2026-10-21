@@ -3,7 +3,6 @@ import http from 'http';
 import { Server } from 'socket.io';
 import cors from 'cors';
 import helmet from 'helmet';
-import rateLimit from 'express-rate-limit';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import dotenv from 'dotenv';
@@ -65,16 +64,6 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
 // Static file serving for uploads
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
-
-// Rate Limiter – General API & Auth (Bypassed for cloud proxying and demo testing)
-const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 100000,
-  skip: () => true, // Bypass rate limiting completely to prevent cloud proxy lockouts
-  standardHeaders: true,
-  legacyHeaders: false,
-});
-app.use('/api', limiter);
 
 // Global request logger and mutation tracker
 let lastWriteTime = new Date().toISOString();
